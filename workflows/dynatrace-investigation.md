@@ -3,6 +3,7 @@
 Use Dynatrace as a primary evidence source for rollout checks, PagerDuty-backed investigations, service debugging, and identifier-based data validation.
 
 Read `../references/dynatrace-query-patterns.md` when you need starter DQL shapes for metrics, logs, spans, events, or GUID tracing.
+Read `../templates/dynatrace-investigation-result.md` when this workflow is being used as a bounded child investigation that must return a structured evidence package.
 
 ## Use Cases
 
@@ -296,6 +297,44 @@ Use this branch when the user wants to prove that an identifier or BI event did 
 - For GUID tracing, search exact identifiers first and only relax the search if exact filters miss and there is evidence the identifier may be transformed.
 - For BI-event validation, identify the actual telemetry object and field names before concluding an event is missing.
 - Distinguish direct evidence from inference in every branch.
+
+## Child-Investigation Contract
+
+Use this section when another workflow, such as PagerDuty incident analysis, invokes this workflow as a bounded sub-investigation.
+
+1. Take one narrow question.
+- Accept one exact question, not a broad incident brief.
+- Good examples:
+  - whether one service path failed because of one downstream dependency
+  - whether one database call family regressed in the incident window
+  - where one identifier trail stopped
+
+2. Keep the scope explicit.
+- Record the exact time window.
+- Record the exact entities, dependencies, objects, and fields searched.
+- Do not silently widen from one scope to another.
+
+3. Gather evidence using the matching branch.
+- Use the incident branch for a narrow service-path or dependency-path investigation.
+- Use the debugging branch for a specific failure path.
+- Use the GUID or data-validation branch for propagation and missing-event questions.
+
+4. Return a structured result package.
+- Use `../templates/dynatrace-investigation-result.md`.
+- Include:
+  - exact question answered
+  - exact time window searched
+  - exact scoped entities and objects
+  - direct evidence
+  - interpretation
+  - confidence
+  - strongest unresolved gap
+  - next best narrow query if unresolved
+
+5. Do not act like the parent incident orchestrator.
+- Do not try to explain the whole incident from one narrow track.
+- Do not overwrite a shared parent document unless explicitly assigned sole ownership of a subpage or scratch artifact.
+- Optimize for defensible evidence, not narrative completeness.
 
 ## Output Rules
 

@@ -8,6 +8,7 @@ description: "Investigate a deployment rollout, PagerDuty-backed incident, servi
 Read [../../workflows/dynatrace-investigation.md](../../workflows/dynatrace-investigation.md) before starting.
 Read [../../references/dynatrace-query-patterns.md](../../references/dynatrace-query-patterns.md) when you need starter DQL shapes or a trace-friendly query pattern.
 Read [../../templates/incident-analysis-page.md](../../templates/incident-analysis-page.md) when the user wants an incident-style write-up.
+Read [../../templates/dynatrace-investigation-result.md](../../templates/dynatrace-investigation-result.md) when this is a bounded child investigation feeding a parent incident workflow.
 Read [../../references/confluence-routing.md](../../references/confluence-routing.md) only when the user wants the result published or routed to Confluence by owning team.
 
 Choose the shared workflow branch that matches the user's starting artifact:
@@ -16,3 +17,5 @@ Choose the shared workflow branch that matches the user's starting artifact:
 - incident
 - debugging
 - GUID or data validation trace
+
+When invoked as a child investigation, stay within the assigned scope and return a structured evidence package instead of trying to narrate the entire incident.

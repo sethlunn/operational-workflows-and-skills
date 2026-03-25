@@ -8,5 +8,6 @@ description: "Analyze a PagerDuty incident from an incident id or PagerDuty inci
 Read [../../workflows/pagerduty-incident-analysis.md](../../workflows/pagerduty-incident-analysis.md) before starting.
 Read [../../references/confluence-routing.md](../../references/confluence-routing.md) before choosing a Confluence destination.
 Read [../../templates/incident-analysis-page.md](../../templates/incident-analysis-page.md) when creating or updating a Confluence page.
+Read [../../templates/dynatrace-investigation-result.md](../../templates/dynatrace-investigation-result.md) when coordinating child Dynatrace investigations.
 
-Follow the shared workflow and preserve the timestamp-prefixed page-title rule.
+Follow the shared workflow, preserve the timestamp-prefixed page-title rule, create the parent page early, and keep the parent incident workflow as the canonical writer for that page.

@@ -14,12 +14,35 @@
 - Source systems:
 - Supporting links:
 
+# Initial Triage
+
+- PagerDuty alert surface:
+- Initial Dynatrace sweep:
+- Early blast-radius assessment:
+- Initial working hypotheses:
+
 # Service and Entity Mapping
 
 - PagerDuty service:
 - PagerDuty escalation policy:
 - Dynatrace entity ids:
 - Mapping confidence:
+
+# Investigation Queue
+
+- Active investigation tracks:
+- Deferred or rejected tracks:
+- Canonical parent writer:
+
+# Parallel Investigations
+
+- Add one subsection per child investigation with:
+  - exact question
+  - exact scope
+  - direct evidence
+  - interpretation
+  - confidence
+  - unresolved gap
 
 # Findings
 
@@ -36,6 +59,13 @@
 - Most likely explanation:
 - Alternate explanations:
 - Known gaps:
+
+# Cross-Investigation Assessment
+
+- Strongest explanation across all tracks:
+- Supporting tracks:
+- Contradictory or weak tracks:
+- Remaining blind spots:
 
 # Impact
 
