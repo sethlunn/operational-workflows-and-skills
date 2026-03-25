@@ -1,0 +1,6 @@
+interface:
+  display_name: "Babysit PR"
+  short_description: "Triage PR comments and replies."
+  default_prompt: "Use $babysit-pr to review a PR, inspect comments, ask before code changes, and draft signed replies."
+policy:
+  allow_implicit_invocation: true

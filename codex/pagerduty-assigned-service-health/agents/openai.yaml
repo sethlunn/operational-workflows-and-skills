@@ -1,0 +1,17 @@
+interface:
+  display_name: "PagerDuty Assigned Service Health"
+  short_description: "Assess on-call services with Dynatrace."
+  default_prompt: "Use $pagerduty-assigned-service-health to assess the health of my currently assigned PagerDuty services for last weekend."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "pagerduty"
+      description: "Resolve active on-calls and escalation-policy services."
+    - type: "mcp"
+      value: "dynatrace"
+      description: "Map services to prod entities and assess health."
+    - type: "mcp"
+      value: "slack"
+      description: "Optionally publish the rollup and threaded service summaries."
+policy:
+  allow_implicit_invocation: true

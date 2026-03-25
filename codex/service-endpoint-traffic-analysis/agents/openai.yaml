@@ -1,0 +1,14 @@
+interface:
+  display_name: "Endpoint Traffic Analysis"
+  short_description: "Map service endpoints to traffic."
+  default_prompt: "Use $service-endpoint-traffic-analysis to analyze risk-manager endpoint traffic and create or update the Confluence documentation."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "dynatrace"
+      description: "Resolve runtime entities and pull endpoint traffic data."
+    - type: "mcp"
+      value: "atlassian"
+      description: "Create or update the Confluence documentation page."
+policy:
+  allow_implicit_invocation: true

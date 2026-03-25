@@ -1,6 +1,6 @@
-# Operational Analysis Skills
+# Operational Workflows and Skills
 
-Portable, company-specific operational workflows for LLM agents.
+Portable, company-specific operational workflows and reusable skill adapters for LLM agents.
 
 This repo keeps the core logic in shared Markdown so multiple agent systems can reuse the same process with thin model-specific adapters.
 
@@ -17,10 +17,16 @@ This repo keeps the core logic in shared Markdown so multiple agent systems can 
 
 ## Current Workflows
 
+- `babysit-pr`
+  - Review a pull request, triage review threads, decide which comments are valid, and draft or post signed replies.
 - `pagerduty-incident-analysis`
   - Resolve a PagerDuty incident, investigate it in Dynatrace, and publish a Confluence write-up.
 - `dynatrace-investigation`
   - Investigate rollout health, incidents, service bugs, and GUID-based data validation in Dynatrace.
+- `pagerduty-assigned-service-health`
+  - Discover the current user's PagerDuty-owned services, map them to Dynatrace production entities, and summarize health for an exact time window.
+- `service-endpoint-traffic-analysis`
+  - Inventory a service's HTTP endpoints from code, map those endpoints to Dynatrace traffic, and publish Confluence guidance on usage tiers and cleanup candidates.
 
 ## Portability Rules
 
