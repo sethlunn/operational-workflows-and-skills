@@ -131,6 +131,35 @@ The operating modes are:
 - `publish mode`
   Run the same investigation and create or update the Confluence page as part of the workflow.
 
+## Incident Session Launcher
+
+There is a dedicated launcher for incident investigations:
+
+- `codex-incident-session trial`
+- `codex-incident-session publish`
+
+The launcher script lives at:
+
+- `scripts/codex-incident-session`
+
+The PATH command is installed as:
+
+- `~/.local/bin/codex-incident-session`
+
+What it does:
+
+- starts Codex in the trusted `quadpay-services/services` workspace
+- adds this workflows repo as an extra writable directory
+- starts in interactive mode with the right sandbox posture
+- runs a short preflight prompt before any real incident work
+- intentionally warms the likely PagerDuty and Dynatrace reads, including Dynatrace `execute_dql`
+
+Why this helps:
+
+- the first MCP approval prompts happen at session start instead of in the middle of an incident run
+- you can choose `Allow for this session` once during preflight
+- after preflight completes, the session waits for the incident id
+
 ## Repository Layout
 
 - `workflows/`
@@ -141,6 +170,8 @@ The operating modes are:
   Reusable output templates for parent pages, child investigation results, and endpoint analysis pages.
 - `codex/`
   Thin Codex adapters that wrap the shared workflow docs as `SKILL.md` skills.
+- `scripts/`
+  Helper launchers for repeatable investigation sessions.
 
 ## Current Workflows
 
@@ -190,6 +221,8 @@ To use a skill with Codex, copy or symlink one of the folders under `codex/` int
 
 Good demo prompts:
 
+- `codex-incident-session trial`
+- `codex-incident-session publish`
 - `Use $pagerduty-incident-analysis to investigate PagerDuty incident Q2YLVYYF9DVCJK in trial mode. Do not publish anything unless I ask.`
 - `Use $pagerduty-incident-analysis to analyze PagerDuty incident Q2YLVYYF9DVCJK, run deeper Dynatrace investigations as needed, and publish the parent Confluence write-up.`
 - `Use $dynatrace-investigation to determine whether a deployment rollout degraded decision-engine in production.`

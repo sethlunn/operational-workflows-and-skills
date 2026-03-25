@@ -1,0 +1,56 @@
+#!/bin/zsh
+
+set -euo pipefail
+
+MODE="${1:-trial}"
+
+case "$MODE" in
+  trial|publish)
+    ;;
+  *)
+    echo "Usage: $(basename "$0") [trial|publish]" >&2
+    exit 1
+    ;;
+esac
+
+WORKDIR="/Users/sethlunn/RiderProjects/quadpay-services/services"
+SKILL_REPO="/Users/sethlunn/RiderProjects/operational-workflows-and-skills"
+
+if [[ "$MODE" == "trial" ]]; then
+  MODE_LINE="Start a PagerDuty/Dynatrace incident-investigation session in trial mode."
+  MODE_RULES="- Do not create, update, or publish anything during preflight or the initial handoff.\n- After preflight, wait for me to provide the incident id."
+  ATLASSIAN_STEP="- Skip Atlassian unless you need one harmless read-only lookup."
+else
+  MODE_LINE="Start a PagerDuty/Dynatrace incident-investigation session in publish mode."
+  MODE_RULES="- Do not create, update, or publish anything during preflight.\n- After preflight, wait for me to provide the incident id before starting the real investigation."
+  ATLASSIAN_STEP="- Do one harmless Atlassian read-only lookup so any read approval happens up front. Do not write anything yet."
+fi
+
+INITIAL_PROMPT=$(
+  cat <<EOF
+${MODE_LINE}
+
+Before taking a real incident, preflight the session so likely MCP approvals happen now instead of mid-investigation.
+
+Perform these minimal, harmless checks:
+- Call PagerDuty \`get_user_data\`.
+- Call Dynatrace \`get_environment_info\`.
+- Call Dynatrace \`find_entity_by_name\` for \`admin-primary\`.
+- Call Dynatrace \`execute_dql\` with a tiny read-only query over the last 5 minutes. Prefer:
+  \`fetch dt.davis.problems, from: now()-5m, to: now() | limit 1\`
+${ATLASSIAN_STEP}
+
+Rules:
+${MODE_RULES}
+- Do not investigate a specific incident yet.
+- If a tool approval prompt appears, wait for me to approve it for this session.
+- Stop after the checks and tell me preflight is complete and I can provide an incident id.
+EOF
+)
+
+exec codex \
+  --cd "$WORKDIR" \
+  --add-dir "$SKILL_REPO" \
+  --sandbox workspace-write \
+  --ask-for-approval on-request \
+  "$INITIAL_PROMPT"
