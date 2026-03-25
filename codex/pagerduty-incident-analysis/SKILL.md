@@ -10,4 +10,6 @@ Read [../../references/confluence-routing.md](../../references/confluence-routin
 Read [../../templates/incident-analysis-page.md](../../templates/incident-analysis-page.md) when creating or updating a Confluence page.
 Read [../../templates/dynatrace-investigation-result.md](../../templates/dynatrace-investigation-result.md) when coordinating child Dynatrace investigations.
 
-Follow the shared workflow, preserve the timestamp-prefixed page-title rule, create the parent page early, and keep the parent incident workflow as the canonical writer for that page.
+Follow the shared workflow, default to `trial mode` unless the user explicitly asks to publish, preserve the timestamp-prefixed page-title rule in `publish mode`, and keep the parent incident workflow as the canonical writer for the parent page.
+
+Do not interrupt for routine read-only local inspection or read-only MCP lookups while running this workflow.

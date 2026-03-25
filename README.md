@@ -24,7 +24,9 @@ That workflow now acts as an orchestrator:
 
 1. Resolve the PagerDuty incident, owning service, and exact incident window.
 2. Run a high-level Dynatrace sweep over the incident alert surface.
-3. Create the parent Confluence page early so the investigation has a canonical home.
+3. Create the parent investigation surface early:
+   - parent Confluence page in `publish mode`
+   - parent-page-ready outline in `trial mode`
 4. Turn the high-level sweep into a small queue of narrow child investigations.
 5. Run deeper Dynatrace investigations on specific scopes such as:
    - one service path
@@ -33,13 +35,20 @@ That workflow now acts as an orchestrator:
    - one identifier or propagation path
 6. Require each child investigation to return a structured evidence package.
 7. Synthesize those child results into a final cross-investigation assessment.
-8. Update the parent Confluence page with the stitched result.
+8. Update the parent investigation surface with the stitched result.
 
 The important operating rule is:
 
 - the parent incident workflow is the canonical writer for the parent Confluence page
 
 Child investigations gather bounded evidence. They do not each try to narrate the whole incident.
+
+For live demos and trial runs, the workflow should also feel low-friction:
+
+- default to `trial mode` unless publishing is explicitly requested
+- execute routine read-only local inspection directly
+- execute PagerDuty, Dynatrace, and Atlassian read operations directly
+- only interrupt when an external write, destructive action, or sandbox escalation is actually required
 
 ## Current Skill Suite
 
@@ -108,12 +117,19 @@ In practice, the flow looks like this:
 PagerDuty incident
   -> parent incident workflow
   -> high-level Dynatrace sweep
-  -> parent Confluence page
+  -> parent investigation surface
   -> bounded child Dynatrace investigations
   -> structured child evidence packages
   -> cross-investigation synthesis
-  -> finalized parent incident document
+  -> finalized parent result
 ```
+
+The operating modes are:
+
+- `trial mode`
+  Investigate fully, return a parent-page-ready result, and do not publish to Confluence.
+- `publish mode`
+  Run the same investigation and create or update the Confluence page as part of the workflow.
 
 ## Repository Layout
 
@@ -174,6 +190,7 @@ To use a skill with Codex, copy or symlink one of the folders under `codex/` int
 
 Good demo prompts:
 
+- `Use $pagerduty-incident-analysis to investigate PagerDuty incident Q2YLVYYF9DVCJK in trial mode. Do not publish anything unless I ask.`
 - `Use $pagerduty-incident-analysis to analyze PagerDuty incident Q2YLVYYF9DVCJK, run deeper Dynatrace investigations as needed, and publish the parent Confluence write-up.`
 - `Use $dynatrace-investigation to determine whether a deployment rollout degraded decision-engine in production.`
 - `Use $dynatrace-investigation to trace this GUID through logs, spans, and events and tell me where the trail stops.`

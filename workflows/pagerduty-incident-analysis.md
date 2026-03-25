@@ -1,6 +1,6 @@
 # PagerDuty Incident Analysis
 
-Analyze a PagerDuty incident end to end: resolve the incident and owning service in PagerDuty, run a high-level Dynatrace investigation, create the parent Confluence page early, coordinate deeper bounded Dynatrace investigations, then synthesize the results into a timestamped incident write-up.
+Analyze a PagerDuty incident end to end: resolve the incident and owning service in PagerDuty, run a high-level Dynatrace investigation, create the parent investigation surface early, coordinate deeper bounded Dynatrace investigations, then synthesize the results into a publish-ready or published incident write-up.
 
 ## Inputs
 
@@ -13,6 +13,49 @@ Accept any of:
 Read `../workflows/dynatrace-investigation.md` before running the high-level sweep or any child investigation.
 Read `../templates/incident-analysis-page.md` for the parent Confluence page shape.
 Read `../templates/dynatrace-investigation-result.md` for the child-investigation return contract.
+
+## Execution Posture
+
+Default to `trial mode` unless the user explicitly asks to create, update, or publish a Confluence page.
+
+### Trial Mode
+
+Use this when the user wants the incident investigated but has not explicitly asked for publishing.
+
+In `trial mode`:
+
+- investigate the incident fully
+- use PagerDuty, Dynatrace, and Atlassian read operations as needed
+- use local read-only shell commands as needed
+- do not create or update the Confluence page
+- return a parent-page-ready result that can be published later
+
+### Publish Mode
+
+Use this when the user explicitly asks to create, update, or publish the Confluence document.
+
+In `publish mode`:
+
+- run the same investigation as `trial mode`
+- create or update the parent Confluence page early
+- keep that page current as child investigations return
+
+### Permission Rules
+
+Do not interrupt the investigation to ask permission for routine read-only work.
+
+Execute these directly when needed:
+
+- local read-only commands such as `rg`, `sed`, `ls`, `find`, `cat`, `git diff`, `git show`, and `git status`
+- PagerDuty MCP reads
+- Dynatrace MCP reads
+- Atlassian read operations
+
+Only interrupt when one of these is true:
+
+- the action would create, update, or publish an external artifact and the user did not ask for that
+- the action is destructive or config-changing
+- the action needs sandbox or network escalation that cannot be avoided
 
 ## Workflow
 
@@ -51,7 +94,12 @@ Read `../templates/dynatrace-investigation-result.md` for the child-investigatio
 - Expand the window when notes, alerts, or change events indicate earlier degradation or slower recovery.
 - Always convert the final window into exact absolute timestamps in the user's timezone.
 
-4. Run the high-level Dynatrace sweep first.
+4. Choose the operating mode.
+- If the user explicitly asks to create, update, or publish the Confluence document, use `publish mode`.
+- Otherwise use `trial mode`.
+- State the chosen mode in the investigation notes or parent-page-ready output.
+
+5. Run the high-level Dynatrace sweep first.
 - Start with a broad but scoped incident investigation using the incident branch of `../workflows/dynatrace-investigation.md`.
 - Use the alert surface, primary service, mapped entities, and incident window as the starting scope.
 - Start with the highest-signal, lowest-cost checks:
@@ -69,19 +117,23 @@ Read `../templates/dynatrace-investigation-result.md` for the child-investigatio
   - which deeper investigation tracks are justified
 - Distinguish observed evidence from hypotheses. The purpose of this step is to narrow the queue, not to prove every possible root cause.
 
-5. Create or update the parent Confluence page early.
-- Search for an existing page for the same incident id before creating a new one.
-- Update an existing page unless the user explicitly asks for a new page.
-- Use the timestamp prefix rule from `../references/confluence-routing.md`.
-- Create the page before deep child investigations so the incident has a canonical parent document from the start.
-- Populate the initial page with:
+6. Create the parent investigation surface.
+- In `publish mode`:
+  - search for an existing page for the same incident id before creating a new one
+  - update an existing page unless the user explicitly asks for a new page
+  - use the timestamp prefix rule from `../references/confluence-routing.md`
+  - create the page before deep child investigations so the incident has a canonical parent document from the start
+- In `trial mode`:
+  - do not create or update the Confluence page
+  - create an in-memory parent-page-ready outline using `../templates/incident-analysis-page.md`
+- In both modes, populate the parent investigation surface with:
   - incident summary and routing
   - exact investigation window
   - PagerDuty and Dynatrace entity mapping
   - initial high-level Dynatrace findings
   - the current investigation queue
 
-6. Build the bounded child-investigation queue.
+7. Build the bounded child-investigation queue.
 - Convert the high-level sweep into a small number of narrow tracks.
 - Prefer a few high-signal tracks over many weak ones.
 - Typical tracks include:
@@ -97,7 +149,7 @@ Read `../templates/dynatrace-investigation-result.md` for the child-investigatio
   - one reason it is worth investigating
 - Do not spawn parallel tracks for every alert or every dependency. The queue should stay small enough that the parent can still synthesize it coherently.
 
-7. Run child Dynatrace investigations.
+8. Run child Dynatrace investigations.
 - When child agents are available, use them for bounded tracks in parallel.
 - When child agents are not available, run the same tracks sequentially while preserving the same scope boundaries and result contract.
 - Each child should use `../workflows/dynatrace-investigation.md` as the evidence-gathering playbook for its assigned track.
@@ -109,7 +161,7 @@ Read `../templates/dynatrace-investigation-result.md` for the child-investigatio
 - The parent incident workflow remains the canonical writer for the parent page.
 - If the platform supports subpages or temporary scratch docs and they materially help, child investigations may write there, but the parent must still merge the final result into the main incident page.
 
-8. Collect child results using a strict evidence contract.
+9. Collect child results using a strict evidence contract.
 - Each child must return a structured result package using `../templates/dynatrace-investigation-result.md`.
 - Required fields:
   - exact question answered
@@ -123,13 +175,14 @@ Read `../templates/dynatrace-investigation-result.md` for the child-investigatio
   - next best narrow query if still unresolved
 - Reject vague child conclusions that do not cite scope and evidence.
 
-9. Update the parent page with child findings.
+10. Update the parent investigation surface with child findings.
 - Add one subsection per completed child investigation.
 - Preserve which findings are direct evidence versus interpretation.
 - Note unresolved or contradictory tracks explicitly instead of forcing a premature conclusion.
-- Keep the parent page current as the investigations return so responders can follow progress.
+- In `publish mode`, keep the parent Confluence page current as the investigations return.
+- In `trial mode`, keep the in-memory parent-page-ready result current as the investigations return.
 
-10. Run a cross-investigation assessment.
+11. Run a cross-investigation assessment.
 - After the child tracks return, perform a synthesis pass in the parent workflow or a dedicated synthesis agent.
 - The synthesis pass should answer:
   - which explanation is best supported across all tracks
@@ -138,19 +191,26 @@ Read `../templates/dynatrace-investigation-result.md` for the child-investigatio
   - where the strongest remaining blind spot sits
 - The final assessment should stitch together the broad sweep and the child investigations, not replace them.
 
-11. Finalize the Confluence page.
-- Ensure the page contains the high-level sweep, the child investigations, the cross-investigation assessment, and the follow-ups.
-- Leave exact timestamps, entity ids, and key queries in the page so the write-up is auditable.
+12. Finalize the result.
+- In `publish mode`:
+  - ensure the page contains the high-level sweep, the child investigations, the cross-investigation assessment, and the follow-ups
+  - leave exact timestamps, entity ids, and key queries in the page so the write-up is auditable
+- In `trial mode`:
+  - return the same parent-page-ready content without publishing it
+  - if useful, tell the user that the result is ready to publish without requiring the investigation to be rerun
 
 ## Output Rules
 
 - Prefer PagerDuty incident and service metadata over guesswork.
 - Prefer scoped Dynatrace evidence over broad scans.
+- Default to `trial mode` unless the user explicitly asks to publish.
 - Use the high-level Dynatrace sweep to decide what deserves deeper work before spawning child investigations.
 - Keep one canonical writer for the parent Confluence page.
 - Use child investigations only for narrow, defensible scopes.
 - Require every child investigation to return a structured evidence package.
 - Synthesize child results into a cross-investigation assessment before finalizing the page.
+- Do not ask permission for routine local read-only inspection or read-only MCP lookups.
 - Use exact absolute dates and timestamps, not only relative phrases.
-- Link the PagerDuty incident and the created or updated Confluence page.
+- In `publish mode`, link the PagerDuty incident and the created or updated Confluence page.
+- In `trial mode`, return a publish-ready result without creating or updating the page.
 - State clearly when the result is partial because mapping or evidence is ambiguous.
