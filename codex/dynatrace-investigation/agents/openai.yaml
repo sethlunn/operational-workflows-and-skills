@@ -1,0 +1,17 @@
+interface:
+  display_name: "Dynatrace Investigation"
+  short_description: "Debug rollouts, incidents, and GUID traces."
+  default_prompt: "Use $dynatrace-investigation to check whether a deployment rollout degraded decision-engine in production."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "dynatrace"
+      description: "Resolve entities, inspect problems, and run scoped DQL across metrics, logs, spans, and events."
+    - type: "mcp"
+      value: "pagerduty"
+      description: "Optionally resolve incident context when the investigation starts from PagerDuty."
+    - type: "mcp"
+      value: "atlassian"
+      description: "Optionally publish incident-style findings to Confluence."
+policy:
+  allow_implicit_invocation: true

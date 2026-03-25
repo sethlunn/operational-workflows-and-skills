@@ -1,0 +1,17 @@
+interface:
+  display_name: "PagerDuty Incident Analysis"
+  short_description: "Analyze incidents with Dynatrace and Confluence."
+  default_prompt: "Use $pagerduty-incident-analysis to analyze PagerDuty incident Q2YLVYYF9DVCJK, investigate it in Dynatrace, and publish a Confluence write-up."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "pagerduty"
+      description: "Resolve the incident, impacted service, escalation policy, alerts, notes, and related incident context."
+    - type: "mcp"
+      value: "dynatrace"
+      description: "Map the impacted service to runtime entities and investigate the incident window."
+    - type: "mcp"
+      value: "atlassian"
+      description: "Search for an existing incident page and create or update the Confluence analysis document."
+policy:
+  allow_implicit_invocation: true
