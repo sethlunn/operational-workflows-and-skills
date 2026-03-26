@@ -253,6 +253,16 @@ For this repo, the preferred setup is to symlink the repo-managed skill folders 
 
 That script links every folder under `codex/` into `~/.codex/skills/` and safely backs up any existing copied folders with a timestamped `.bak.<timestamp>` suffix. Once that is done, updating this repo updates the skills for future Codex sessions without another sync step. If you add a brand-new skill folder later, rerun the script once so the new folder gets linked too.
 
+It also links the shared repo roots into `~/.codex/`:
+
+- `workflows/`
+- `references/`
+- `templates/`
+- `reviews/`
+- `scripts/`
+
+That matters because the `SKILL.md` files intentionally reference shared docs like `../../workflows/...` and `../../templates/...`. Without those shared-root links, copied or symlinked skill folders can load `SKILL.md` itself but fail to resolve the supporting materials.
+
 Good demo prompts:
 
 - `codex-incident-session trial`

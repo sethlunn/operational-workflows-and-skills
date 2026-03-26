@@ -4,38 +4,57 @@ set -euo pipefail
 
 script_dir=${0:A:h}
 repo_root=${script_dir:h}
+codex_home="${CODEX_HOME:-${HOME}/.codex}"
 source_root="${repo_root}/codex"
-target_root="${CODEX_HOME:-${HOME}/.codex}/skills"
+target_root="${codex_home}/skills"
 timestamp=$(date +%Y%m%d-%H%M%S)
+shared_roots=(workflows references templates reviews scripts)
 
 mkdir -p "${target_root}"
+
+link_path() {
+  local source_path=$1
+  local target_path=$2
+  local label=$3
+
+  if [[ -L "${target_path}" ]]; then
+    local current_target
+    current_target=$(readlink "${target_path}")
+    if [[ "${current_target}" == "${source_path}" ]]; then
+      echo "ok     ${label} -> ${source_path}"
+      return
+    fi
+
+    local backup_path="${target_path}.bak.${timestamp}"
+    mv "${target_path}" "${backup_path}"
+    echo "backup ${label} symlink -> ${backup_path}"
+  elif [[ -e "${target_path}" ]]; then
+    local backup_path="${target_path}.bak.${timestamp}"
+    mv "${target_path}" "${backup_path}"
+    echo "backup ${label} -> ${backup_path}"
+  fi
+
+  ln -s "${source_path}" "${target_path}"
+  echo "link   ${label} -> ${source_path}"
+}
+
+for root_name in "${shared_roots[@]}"; do
+  source_path="${repo_root}/${root_name}"
+  [[ -d "${source_path}" ]] || continue
+
+  target_path="${codex_home}/${root_name}"
+  link_path "${source_path}" "${target_path}" "${root_name}"
+done
 
 for source_path in "${source_root}"/*; do
   [[ -d "${source_path}" ]] || continue
 
   skill_name=${source_path:t}
   target_path="${target_root}/${skill_name}"
-
-  if [[ -L "${target_path}" ]]; then
-    current_target=$(readlink "${target_path}")
-    if [[ "${current_target}" == "${source_path}" ]]; then
-      echo "ok     ${skill_name} -> ${source_path}"
-      continue
-    fi
-
-    backup_path="${target_path}.bak.${timestamp}"
-    mv "${target_path}" "${backup_path}"
-    echo "backup ${skill_name} symlink -> ${backup_path}"
-  elif [[ -e "${target_path}" ]]; then
-    backup_path="${target_path}.bak.${timestamp}"
-    mv "${target_path}" "${backup_path}"
-    echo "backup ${skill_name} -> ${backup_path}"
-  fi
-
-  ln -s "${source_path}" "${target_path}"
-  echo "link   ${skill_name} -> ${source_path}"
+  link_path "${source_path}" "${target_path}" "${skill_name}"
 done
 
 echo
 echo "Repo-managed Codex skill links are installed."
+echo "Shared repo roots are linked into ${codex_home} so relative references from SKILL.md resolve correctly."
 echo "New Codex sessions will load the repo-backed skills automatically."
