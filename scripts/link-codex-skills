@@ -1,0 +1,41 @@
+#!/bin/zsh
+
+set -euo pipefail
+
+script_dir=${0:A:h}
+repo_root=${script_dir:h}
+source_root="${repo_root}/codex"
+target_root="${CODEX_HOME:-${HOME}/.codex}/skills"
+timestamp=$(date +%Y%m%d-%H%M%S)
+
+mkdir -p "${target_root}"
+
+for source_path in "${source_root}"/*; do
+  [[ -d "${source_path}" ]] || continue
+
+  skill_name=${source_path:t}
+  target_path="${target_root}/${skill_name}"
+
+  if [[ -L "${target_path}" ]]; then
+    current_target=$(readlink "${target_path}")
+    if [[ "${current_target}" == "${source_path}" ]]; then
+      echo "ok     ${skill_name} -> ${source_path}"
+      continue
+    fi
+
+    backup_path="${target_path}.bak.${timestamp}"
+    mv "${target_path}" "${backup_path}"
+    echo "backup ${skill_name} symlink -> ${backup_path}"
+  elif [[ -e "${target_path}" ]]; then
+    backup_path="${target_path}.bak.${timestamp}"
+    mv "${target_path}" "${backup_path}"
+    echo "backup ${skill_name} -> ${backup_path}"
+  fi
+
+  ln -s "${source_path}" "${target_path}"
+  echo "link   ${skill_name} -> ${source_path}"
+done
+
+echo
+echo "Repo-managed Codex skill links are installed."
+echo "New Codex sessions will load the repo-backed skills automatically."

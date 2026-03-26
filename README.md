@@ -245,6 +245,14 @@ That makes the workflow better for real incidents and better for demos, because 
 
 To use a skill with Codex, copy or symlink one of the folders under `codex/` into `~/.codex/skills/`.
 
+For this repo, the preferred setup is to symlink the repo-managed skill folders so new Codex sessions automatically see repo updates. Use:
+
+```bash
+/Users/sethlunn/RiderProjects/operational-workflows-and-skills/scripts/link-codex-skills
+```
+
+That script links every folder under `codex/` into `~/.codex/skills/` and safely backs up any existing copied folders with a timestamped `.bak.<timestamp>` suffix. Once that is done, updating this repo updates the skills for future Codex sessions without another sync step. If you add a brand-new skill folder later, rerun the script once so the new folder gets linked too.
+
 Good demo prompts:
 
 - `codex-incident-session trial`
