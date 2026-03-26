@@ -254,27 +254,208 @@ The doc should define:
 - metrics, dashboards, and alerts
 - audit/event requirements
 
-## Suggested Inline Comments For The Design Doc
+## Suggested Review Comments For The Design Doc
 
-### `1 Existing State and Problem Statement`
+### 1. `1 Existing State and Problem Statement`
 
-This section should describe the current implementation more precisely. EFA is not just a manual process wrapped around a missing system. We already have bureau-owned persisted EFA status, Decision Engine rules that depend on that status, and limited Kustomer integration in FEO. The later service-placement discussion should build from that baseline.
+**Location to comment on**
 
-### `3.1 EFA Service`
+- Paragraph beginning `The existing state diagrammed above...`
 
-The pros/cons here are framed around whether the EFA business logic is "lightweight," but that is not the main architectural question. The real reason to introduce a dedicated component would be to own cross-bureau workflow correlation and Kustomer callback handling. If that is not the intent, then the section should say so. If it is the intent, the section should describe that explicitly rather than talking about owning a generic EFA process.
+**Comment to add**
 
-### `3.2 Kustomer CRM Gateway`
+This section should inventory the actual current implementation, not just the manual operational workflow. We already have bureau-owned persisted EFA status and Decision Engine behavior that depends on it, so the later service-placement discussion should start from that baseline.
 
-This section should compare exact required Kustomer operations against the existing FEO integration. Today we already have some Kustomer support in FEO, but not an obvious internal workflow surface, callback handler, or create-conversation/note contract. The decision should be based on that concrete gap analysis, not on speculative future reuse.
+**Clarification / likely follow-up explanation**
 
-### `3.3 Ingress Point`
+The current section reads as if EFA handling is mostly a manual process wrapped around a missing system. That is not quite true in the codebase today. We already persist EFA status in bureau-owned stores, and Decision Engine already consumes that status as underwriting input. That means the document is not starting from a greenfield architecture problem.
 
-The ingress choice cannot just be preference. It determines who owns callback auth, idempotency, correlation, bureau resolution, and the state machine for updating the existing EFA records. This section should define those responsibilities explicitly.
+If the page does not call that out explicitly, the later alternatives can drift into the wrong framing, for example:
 
-### `2 Proposed Architecture`
+- proposing a new component to "own the EFA tables" when those tables or equivalent persisted fields already exist in bureau-owned systems
+- describing callback ingress as a new problem without acknowledging that internal update paths already exist
+- treating EFA as purely an operations workflow when it is already tied to live underwriting behavior
 
-The page should say that Kustomer artifact creation is asynchronous relative to the underwriting decision path, and it should describe what happens when Kustomer is unavailable or the callback never arrives.
+This comment is meant to push the page to define the real baseline before comparing options. Without that, the alternatives section risks optimizing around an inaccurate mental model of the current system.
+
+### 2. `2 Proposed Architecture`
+
+**Location to comment on**
+
+- Sentence `Then, as soon as the CX agent finishes the call, the customer’s status will be updated in the database immediately.`
+
+**Comment to add**
+
+Which record is authoritative here? The doc should explicitly separate underwriting state from any new Kustomer workflow/correlation state; otherwise we risk split ownership between bureau EFA records and new automation metadata.
+
+**Clarification / likely follow-up explanation**
+
+This sentence sounds simple, but it skips the hardest modeling question in the design: what exactly is being updated, and which service owns that truth?
+
+Today the underwriting-relevant EFA status already lives in bureau-specific persistence. The proposed workflow introduces additional state that does not obviously belong in those same records, such as:
+
+- Kustomer conversation, workflow, or note identifiers
+- callback correlation identifiers
+- outbound delivery attempts and retry metadata
+- source or actor of the latest update
+- callback processing status and idempotency markers
+
+Those concerns are different from the minimal status state used by underwriting. If the design does not explicitly separate them, the implementation can easily end up with two competing "sources of truth":
+
+- one for the status Decision Engine reads
+- one for the status the Kustomer workflow thinks it has written
+
+This comment is asking the author to define that boundary up front. If bureau-owned records remain authoritative for underwriting, the doc should say so plainly and describe any new storage as workflow metadata only.
+
+### 3. `2 Proposed Architecture`
+
+**Location to comment on**
+
+- Sentence `It also means that if future changes are made to the EFA process, they can live inside Kustomer itself.`
+
+**Comment to add**
+
+I’d be careful with this boundary. Kustomer can own workflow automation, but underwriting-critical semantics and authoritative EFA status should stay in our services. The doc should call that ownership split out explicitly.
+
+**Clarification / likely follow-up explanation**
+
+There is a difference between allowing Kustomer to automate operational steps and allowing Kustomer to become the effective owner of business state. The former is reasonable. The latter is risky.
+
+The EFA statuses are not just CRM workflow labels. They have underwriting meaning in Decision Engine. Because of that, Kustomer should be treated as an integration participant, not as the canonical owner of whether a customer is in an approved, awaiting, declined, or not-available EFA state.
+
+If the page says future EFA changes can "live inside Kustomer" without qualification, that invites ambiguity around:
+
+- whether status transition rules move into Kustomer workflows
+- whether the source of truth for a customer’s EFA outcome becomes a third-party system
+- whether product or underwriting behavior can change indirectly through CRM config
+
+This comment is not arguing against using Kustomer Workflows. It is asking the doc to make the boundary explicit: Kustomer may orchestrate tasks and emit callbacks, but our services should continue to own underwriting-critical semantics and persisted status.
+
+### 4. `2 Proposed Architecture`
+
+**Location to comment on**
+
+- Sentence `This does, however, leave some questions as to how this should be implemented.`
+
+**Comment to add**
+
+We should add reliability, migration, and recovery requirements here: async/outbox behavior for outbound Kustomer work, retry/reconciliation for failed creates or missing callbacks, and a backfill plan for customers already in an active EFA state.
+
+**Clarification / likely follow-up explanation**
+
+Right now the page describes the happy-path workflow, but it does not describe what makes the automation production-safe. That gap is material because this design is replacing manual operational handling with a third-party integration.
+
+At minimum, the page should answer:
+
+- Is outbound Kustomer creation in-band with the customer decision flow, or async?
+- What happens if Kustomer is down when we try to create the artifact?
+- What happens if the artifact is created, but our system never records that fact?
+- What happens if the CX-side callback is delayed, duplicated, or never sent?
+- How do we take over customers already sitting in active EFA states when this launches?
+
+Without those answers, the design is incomplete in a way that will surface later as operational toil. This comment is meant to force reliability and migration concerns into the design itself, instead of leaving them as implementation details.
+
+### 5. `3.1 EFA Service`
+
+**Location to comment on**
+
+- Paragraph beginning `We could, instead, elect to create a separate EFA service.`
+
+**Comment to add**
+
+The main question here is less "is the logic lightweight?" and more "do we need one owner for cross-bureau workflow correlation, callback handling, and Kustomer orchestration?" If yes, say that explicitly. If no, this section should avoid implying a new service would replace the existing bureau-owned EFA persistence.
+
+**Clarification / likely follow-up explanation**
+
+The current pros/cons are framed around whether EFA logic is large enough to justify its own service. That is not the strongest architectural criterion here.
+
+The real reason to introduce a dedicated owner would be if we want one component to be responsible for the new workflow-specific concerns that do not cleanly belong to either bureau integration or Decision Engine alone, for example:
+
+- correlation across Kustomer and internal EFA records
+- callback validation and idempotent processing
+- centralized transition handling across TransUnion and Experian
+- unified observability and reconciliation for the automation
+
+If that is the actual motivation, the page should say so directly. If it is not, then the section should not imply that a new service would somehow become the natural owner of all EFA data, because the authoritative underwriting state already has bureau-specific ownership.
+
+This comment is trying to sharpen the decision criterion so the design compares architectures on the real axis of value, not on an abstract "is the logic heavy enough?" question.
+
+### 6. `3.2 Kustomer CRM Gateway`
+
+**Location to comment on**
+
+- First paragraph under `3.2 Kustomer CRM Gateway`
+
+**Comment to add**
+
+Before deciding on a new gateway, this section should compare the exact Kustomer operations needed for DQ-8931 against the Kustomer capabilities we already have. The decision should be based on that concrete gap analysis, not on speculative future reuse.
+
+**Clarification / likely follow-up explanation**
+
+The current text discusses a dedicated gateway as a general separation-of-concerns option, but it does not anchor that discussion in the actual Kustomer surface area required for this initiative.
+
+That comparison matters because we are not starting from zero. We already have some Kustomer integration in FEO, but it appears limited. The design should enumerate the exact operations DQ-8931 needs, such as:
+
+- create or trigger the Kustomer artifact/workflow
+- attach note or tags if needed
+- store or return a correlation identifier
+- accept some form of callback or completion signal
+- expose an internal system-to-system interface if customer-authenticated endpoints are not sufficient
+
+Once those requirements are listed, the decision becomes concrete:
+
+- extend the existing integration if the gap is small and ownership fits
+- or build a narrowly scoped orchestration surface if the gap is substantial
+
+This comment is pushing the author away from a hypothetical "org-wide Kustomer gateway" discussion and toward a capability-driven decision for this specific project.
+
+### 7. `3.3 Ingress Point`
+
+**Location to comment on**
+
+- Sentence `This is largely preference...`
+
+**Comment to add**
+
+I don’t think this is just preference. The ingress owner determines callback auth, idempotency, duplicate/out-of-order handling, correlation to the correct customer and bureau-owned EFA record, and who invokes the existing internal update path. This section should define those responsibilities and the allowed status transitions.
+
+**Clarification / likely follow-up explanation**
+
+This is the highest-risk integration point in the design, because it is where a third-party-driven event becomes a write to underwriting-relevant internal state.
+
+Calling it "preference" understates the design impact. The chosen ingress point becomes responsible for several implementation-defining behaviors:
+
+- authenticating the caller
+- validating payload shape and versioning
+- resolving which customer and which bureau record should be updated
+- deduplicating retries or repeated workflow callbacks
+- rejecting invalid or late transitions
+- deciding whether processing is synchronous or queued
+- invoking the existing internal update path correctly
+
+If the page does not define that contract, different implementations could make incompatible assumptions. This comment is asking for the ingress section to describe the state machine and ownership model, not just list candidate services.
+
+### 8. `4 Questions/Notes from Team Review`
+
+**Location to comment on**
+
+- Placeholder text `(To be captured)`
+
+**Comment to add**
+
+Before approval, this section should capture the concrete unresolved decisions: authoritative state model, chosen owner for Kustomer orchestration, callback contract, reliability/reconciliation plan, and migration/backfill plan.
+
+**Clarification / likely follow-up explanation**
+
+This section is currently just a placeholder, but for a design in this state it should function as the explicit blocker list for approval. The page already surfaces open questions across multiple sections, but they are not consolidated into one actionable review checklist.
+
+Capturing them here would make the review process much clearer by separating:
+
+- informational notes
+- implementation details that can wait
+- design decisions that must be resolved before build starts
+
+This also helps avoid the common problem where a design feels "directionally right" but still lacks the handful of concrete decisions that determine whether implementation will be safe and coherent.
 
 ## Bottom Line
 
