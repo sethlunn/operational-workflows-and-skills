@@ -113,6 +113,40 @@ Run these steps before branching.
 - Use `fetch dt.semantic_dictionary.models` when the right data object or field is unclear before guessing at schema names.
 - Prefer proving or disproving one concrete hypothesis per query over writing one broad query that mixes concerns.
 
+## Shared Interpretation Rules
+
+Apply these rules in every branch before declaring a root cause.
+
+1. Separate onset from late secondary events.
+- Anchor the first bad interval with exact timestamps before interpreting later changes.
+- Do not treat events near mitigation, recovery, or incident closure as onset evidence unless they line up exactly with the first confirmed degradation.
+- If a late event is real but probably secondary, say so explicitly.
+
+2. Compare caller-side and callee-side evidence before blaming the callee.
+- When a caller shows heavy downstream failures but the downstream service does not show matching local failure, CPU pressure, or error evidence, classify this as a caller-vs-callee mismatch.
+- In that mismatch case, consider:
+  - network or service-mesh path issues
+  - client timeout or retry behavior
+  - draining or rollout behavior
+  - routing, DNS, or proxy issues
+- Treat those as hypotheses until direct evidence proves one of them.
+
+3. Handle telemetry gaps explicitly.
+- If service-scoped logs, exceptions, or events return `0` rows, do not immediately treat that as proof of service silence.
+- Distinguish among:
+  - genuinely quiet service behavior
+  - wrong entity or field scope
+  - telemetry or ingestion gap
+- Record the gap in the result and say how it weakens the conclusion.
+
+4. Distinguish deployment correlation from code causation.
+- A rollout can be incident-relevant even when the deployed code is not the functional root cause.
+- If the deployment lines up with the first bad interval but the diff does not touch the failing path, classify the result more precisely:
+  - rollout correlated
+  - code change likely unrelated
+  - rollout or platform behavior may have amplified the issue
+- Do not collapse those into a generic "deployment caused it" conclusion.
+
 ## Branch Playbooks
 
 ### Deployment Rollout Check
@@ -152,6 +186,7 @@ Use this branch when the user is asking whether a release or deployment caused c
 - `inconclusive because comparison quality is weak`
 - `degradation started before rollout`
 - `degradation appears driven by downstream dependency or shared platform`
+- `rollout correlated but code change likely unrelated`
 
 6. Support the conclusion with direct evidence.
 - Include the exact windows compared.
@@ -196,6 +231,11 @@ Use this branch when the investigation starts from an incident or from an incide
 5. Correlate with change context.
 - Check whether deployments, config changes, or change events align with the first bad interval.
 - Distinguish correlation from causation. If the change is only adjacent in time, say so.
+- If the evidence points to caller-side failure without matching callee-side degradation, say whether the incident looks:
+  - service-local
+  - downstream-driven
+  - network or service-mesh mediated
+  - inconclusive because the telemetry is missing
 
 6. Produce an incident-ready conclusion.
 - Lead with exact incident window, primary service, and primary conclusion.

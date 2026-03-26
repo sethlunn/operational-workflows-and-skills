@@ -13,3 +13,5 @@ Read [../../templates/dynatrace-investigation-result.md](../../templates/dynatra
 Follow the shared workflow, default to `trial mode` unless the user explicitly asks to publish, preserve the timestamp-prefixed page-title rule in `publish mode`, and keep the parent incident workflow as the canonical writer for the parent page.
 
 Do not interrupt for routine read-only local inspection or read-only MCP lookups while running this workflow.
+
+When an incident resolves or the user asks for a final pass, run retrospective cleanup before treating the page as final: refresh PagerDuty and Dynatrace status, normalize exact timestamps, remove stale live-state wording, separate onset evidence from late secondary events, and prune follow-ups to only the unresolved work that still matters.

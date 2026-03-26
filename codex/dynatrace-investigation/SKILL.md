@@ -19,3 +19,5 @@ Choose the shared workflow branch that matches the user's starting artifact:
 - GUID or data validation trace
 
 When invoked as a child investigation, stay within the assigned scope and return a structured evidence package instead of trying to narrate the entire incident.
+
+When the evidence shows caller-side failure without matching callee-side degradation, or when service-local logs are missing, treat network or service-mesh explanations and telemetry-gap conclusions as hypotheses until the supporting evidence is explicit. Distinguish onset evidence from late secondary events.

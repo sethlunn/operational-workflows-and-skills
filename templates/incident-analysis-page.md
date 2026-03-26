@@ -1,12 +1,24 @@
 # Summary
 
 - Incident or topic:
-- Status:
+- Investigation mode: live or retrospective
+- Current or final status:
 - Severity or urgency:
 - Primary service:
 - Escalation policy or owner:
 - Investigation window:
 - Conclusion:
+- Confidence:
+
+# Timeline
+
+- First confirmed bad interval:
+- PagerDuty created:
+- PagerDuty resolved:
+- Dynatrace problem opened:
+- Dynatrace problem closed:
+- Late secondary or mitigation-adjacent events:
+- Timeline notes or timezone cautions:
 
 # Context
 
@@ -72,6 +84,7 @@
 - Customer impact:
 - Internal impact:
 - Duration:
+- Historical live-snapshot note:
 
 # Evidence and Queries
 
@@ -79,5 +92,6 @@
 
 # Follow-ups
 
-- Action items:
-- Open questions:
+- Still worth doing:
+- Platform hardening or observability improvements:
+- Closed or resolved questions:

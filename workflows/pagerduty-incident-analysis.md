@@ -191,9 +191,26 @@ Only interrupt when one of these is true:
   - where the strongest remaining blind spot sits
 - The final assessment should stitch together the broad sweep and the child investigations, not replace them.
 
-12. Finalize the result.
+12. Run retrospective cleanup when the incident is resolved or when the user asks for a final pass.
+- Refresh the PagerDuty incident status and timestamps before finalizing the page.
+- Refresh the Dynatrace problem status and timestamps before finalizing the page.
+- Normalize every key time reference into exact absolute timestamps and correct mixed UTC or local-time wording.
+- Rewrite the top summary in final tense once the incident is resolved.
+- Remove or rewrite stale live-state phrases such as:
+  - `ACTIVE`
+  - `acknowledged`
+  - `still resolving`
+  - `best read so far`
+- Separate onset evidence from late secondary or mitigation-adjacent events.
+- If the page keeps live snapshots for auditability, label them as historical point-in-time notes rather than current status.
+- Re-check the final conclusion after status normalization:
+  - deployment correlated does not necessarily mean code-caused
+  - downstream hot service does not necessarily mean downstream code-caused
+  - late workload churn does not necessarily explain onset
+
+13. Finalize the result.
 - In `publish mode`:
-  - ensure the page contains the high-level sweep, the child investigations, the cross-investigation assessment, and the follow-ups
+  - ensure the page contains the high-level sweep, the child investigations, the cross-investigation assessment, the final status, and the follow-ups that still matter
   - leave exact timestamps, entity ids, and key queries in the page so the write-up is auditable
 - In `trial mode`:
   - return the same parent-page-ready content without publishing it
@@ -209,6 +226,9 @@ Only interrupt when one of these is true:
 - Use child investigations only for narrow, defensible scopes.
 - Require every child investigation to return a structured evidence package.
 - Synthesize child results into a cross-investigation assessment before finalizing the page.
+- When the incident is resolved or the user asks for a final pass, run a retrospective cleanup pass before treating the write-up as final.
+- Do not leave stale live-state wording at the top of a resolved incident page unless it is clearly labeled as a historical snapshot.
+- Prune follow-ups so the final page keeps only unresolved, still-valuable work rather than every question that appeared during live triage.
 - Do not ask permission for routine local read-only inspection or read-only MCP lookups.
 - Use exact absolute dates and timestamps, not only relative phrases.
 - In `publish mode`, link the PagerDuty incident and the created or updated Confluence page.
