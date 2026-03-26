@@ -8,10 +8,12 @@ This repo keeps the business logic in shared Markdown so the same operating mode
 
 This repo is a small operational playbook system for AI agents.
 
-It is designed around three ideas:
+It is designed around four ideas:
 
 - shared workflows hold the real procedure
-- shared references and templates keep output consistent
+- shared references keep routing and environment details stable
+- shared reviews capture design, code, and plan assessments
+- shared templates keep output consistent
 - model-specific adapters stay thin
 
 That split lets one investigation pattern be reused across Codex today and other agent environments later.
@@ -166,6 +168,8 @@ Why this helps:
   Shared operational procedures written to be readable by any model.
 - `references/`
   Stable routing, query-pattern, naming, and environment-specific reference material.
+- `reviews/`
+  Opinionated review artifacts such as design reviews, code review notes, and planning assessments.
 - `templates/`
   Reusable output templates for parent pages, child investigation results, and endpoint analysis pages.
 - `codex/`
@@ -233,6 +237,7 @@ Good demo prompts:
 ## Portability Rules
 
 - Keep business logic in `workflows/`, `references/`, and `templates/`.
+- Keep review artifacts in `reviews/`, organized by review type such as `design/`, `code/`, or `plans/`.
 - Keep model-specific files as thin wrappers only.
 - Avoid embedding secrets, tokens, or environment credentials in the repo.
 - Prefer exact dates, entity ids, and query snippets over vague summaries.
