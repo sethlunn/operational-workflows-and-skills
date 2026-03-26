@@ -6,18 +6,17 @@ description: "Investigate a deployment rollout, PagerDuty-backed incident, servi
 # Dynatrace Investigation
 
 Read [../../workflows/dynatrace-investigation.md](../../workflows/dynatrace-investigation.md) before starting.
+Then read exactly one branch playbook:
+
+- [../../workflows/dynatrace-rollout-check.md](../../workflows/dynatrace-rollout-check.md)
+- [../../workflows/dynatrace-incident-path-analysis.md](../../workflows/dynatrace-incident-path-analysis.md)
+- [../../workflows/dynatrace-service-debugging.md](../../workflows/dynatrace-service-debugging.md)
+- [../../workflows/dynatrace-guid-trace.md](../../workflows/dynatrace-guid-trace.md)
+
 Read [../../references/dynatrace-query-patterns.md](../../references/dynatrace-query-patterns.md) when you need starter DQL shapes or a trace-friendly query pattern.
+Read [../../references/dynatrace-evidence-interpretation.md](../../references/dynatrace-evidence-interpretation.md) when the evidence shows caller-side failure without matching callee-side degradation, when service-local logs are missing, or when you need to distinguish rollout correlation from code causation or onset from late secondary events.
 Read [../../templates/incident-analysis-page.md](../../templates/incident-analysis-page.md) when the user wants an incident-style write-up.
 Read [../../templates/dynatrace-investigation-result.md](../../templates/dynatrace-investigation-result.md) when this is a bounded child investigation feeding a parent incident workflow.
 Read [../../references/confluence-routing.md](../../references/confluence-routing.md) only when the user wants the result published or routed to Confluence by owning team.
 
-Choose the shared workflow branch that matches the user's starting artifact:
-
-- deployment rollout
-- incident
-- debugging
-- GUID or data validation trace
-
 When invoked as a child investigation, stay within the assigned scope and return a structured evidence package instead of trying to narrate the entire incident.
-
-When the evidence shows caller-side failure without matching callee-side degradation, or when service-local logs are missing, treat network or service-mesh explanations and telemetry-gap conclusions as hypotheses until the supporting evidence is explicit. Distinguish onset evidence from late secondary events.

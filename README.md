@@ -70,7 +70,7 @@ It combines:
 
 ### `dynatrace-investigation`
 
-The core evidence-gathering playbook.
+The core Dynatrace router and evidence-gathering playbook.
 
 Use it for:
 
@@ -78,6 +78,8 @@ Use it for:
 - incident investigations
 - direct debugging
 - GUID and data-validation tracing
+
+Internally, it now routes into smaller branch docs instead of one large workflow.
 
 This workflow can run either as:
 
@@ -182,7 +184,15 @@ Why this helps:
 - `workflows/pagerduty-incident-analysis.md`
   Orchestrated PagerDuty-to-Dynatrace-to-Confluence incident workflow.
 - `workflows/dynatrace-investigation.md`
-  Shared Dynatrace investigation playbook for rollouts, incidents, debugging, and data tracing.
+  Shared Dynatrace router with preflight, child-investigation contract, and output rules.
+- `workflows/dynatrace-rollout-check.md`
+  Deployment and rollout regression playbook.
+- `workflows/dynatrace-incident-path-analysis.md`
+  Incident-path and dependency-path investigation playbook.
+- `workflows/dynatrace-service-debugging.md`
+  Direct service and failure-path debugging playbook.
+- `workflows/dynatrace-guid-trace.md`
+  Identifier tracing and missing-event validation playbook.
 - `workflows/pagerduty-assigned-service-health.md`
   PagerDuty ownership discovery plus Dynatrace health assessment.
 - `workflows/service-endpoint-traffic-analysis.md`
@@ -198,6 +208,18 @@ Why this helps:
   Structured return contract for child Dynatrace investigations.
 - `templates/endpoint-traffic-analysis-page.md`
   Confluence page structure for endpoint traffic analysis.
+
+## Dynatrace Breakdown
+
+The Dynatrace skill now uses a thin shared router plus branch-specific docs.
+
+- use `workflows/dynatrace-investigation.md` for shared preflight, scope discipline, child-investigation rules, and output rules
+- then read only the branch you need
+- use `references/dynatrace-evidence-interpretation.md` when the evidence is ambiguous, especially for:
+  - caller-vs-callee mismatch
+  - telemetry gaps
+  - rollout correlation vs code causation
+  - late secondary events vs onset
 
 ## Why The Incident Workflow Changed
 

@@ -11,6 +11,7 @@ Accept any of:
 - A request to investigate and document an incident in Confluence
 
 Read `../workflows/dynatrace-investigation.md` before running the high-level sweep or any child investigation.
+Read `../workflows/dynatrace-incident-path-analysis.md` before the high-level incident sweep.
 Read `../templates/incident-analysis-page.md` for the parent Confluence page shape.
 Read `../templates/dynatrace-investigation-result.md` for the child-investigation return contract.
 
@@ -100,7 +101,7 @@ Only interrupt when one of these is true:
 - State the chosen mode in the investigation notes or parent-page-ready output.
 
 5. Run the high-level Dynatrace sweep first.
-- Start with a broad but scoped incident investigation using the incident branch of `../workflows/dynatrace-investigation.md`.
+- Start with a broad but scoped incident investigation using `../workflows/dynatrace-incident-path-analysis.md` after the shared router and preflight in `../workflows/dynatrace-investigation.md`.
 - Use the alert surface, primary service, mapped entities, and incident window as the starting scope.
 - Start with the highest-signal, lowest-cost checks:
   - active or recent problems
@@ -152,11 +153,16 @@ Only interrupt when one of these is true:
 8. Run child Dynatrace investigations.
 - When child agents are available, use them for bounded tracks in parallel.
 - When child agents are not available, run the same tracks sequentially while preserving the same scope boundaries and result contract.
-- Each child should use `../workflows/dynatrace-investigation.md` as the evidence-gathering playbook for its assigned track.
+- Each child should use `../workflows/dynatrace-investigation.md` as the router, then read the branch playbook that matches the assigned track.
 - Child investigations should focus on one scope such as:
   - one service path
   - one dependency path
   - one data-validation chain
+- Typical branch mapping:
+  - service path or dependency path: `../workflows/dynatrace-incident-path-analysis.md`
+  - specific failure-path debugging: `../workflows/dynatrace-service-debugging.md`
+  - propagation or missing-event questions: `../workflows/dynatrace-guid-trace.md`
+  - rollout-correlation questions: `../workflows/dynatrace-rollout-check.md`
 - Child investigations should not all write directly to the parent Confluence page.
 - The parent incident workflow remains the canonical writer for the parent page.
 - If the platform supports subpages or temporary scratch docs and they materially help, child investigations may write there, but the parent must still merge the final result into the main incident page.
