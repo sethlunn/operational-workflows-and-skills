@@ -14,6 +14,7 @@ Read `../workflows/dynatrace-investigation.md` before running the high-level swe
 Read `../workflows/dynatrace-incident-path-analysis.md` before the high-level incident sweep.
 Read `../templates/incident-analysis-page.md` for the parent Confluence page shape.
 Read `../templates/dynatrace-investigation-result.md` for the child-investigation return contract.
+Read `../references/incident-investigation-lessons-2026-03-27.md` only when you want the concrete incident examples that motivated the current guardrails.
 
 ## Execution Posture
 
@@ -77,6 +78,8 @@ Only interrupt when one of these is true:
   - `list_incident_change_events`
   - `get_past_incidents`
   - `get_related_incidents`
+- If the alert title, notes, or linked vendor surface includes an external problem id such as a Dynatrace `P-...`, check whether PagerDuty opened concurrent incidents on the same service for that same underlying problem.
+- Treat those concurrent incidents as related or duplicate alert surfaces unless the evidence shows clearly separate failing paths.
 
 2. Resolve service ownership and routing.
 - Use the incident's primary `service.id` as the default ownership key.
@@ -84,6 +87,8 @@ Only interrupt when one of these is true:
 - Treat `service.escalation_policy.id` as the authoritative escalation-policy mapping.
 - Call `get_escalation_policy` to get the human-facing escalation policy name and related services.
 - Read `../references/confluence-routing.md` before choosing a Confluence destination.
+- If the trigger is environment-scoped or composite but PagerDuty routed it to one primary service, keep that primary service as the default document owner unless evidence clearly proves the main failing path belongs elsewhere.
+- Record mixed ownership explicitly in the page instead of re-homing the write-up mid-investigation just because one alert bundles multiple services.
 - If the escalation policy is not mapped there, stop and ask the user where to save the page.
 - If the incident clearly spans services owned by multiple mapped policies, ask the user which folder should own the write-up.
 
@@ -103,6 +108,11 @@ Only interrupt when one of these is true:
 5. Run the high-level Dynatrace sweep first.
 - Start with a broad but scoped incident investigation using `../workflows/dynatrace-incident-path-analysis.md` after the shared router and preflight in `../workflows/dynatrace-investigation.md`.
 - Use the alert surface, primary service, mapped entities, and incident window as the starting scope.
+- Classify the alert surface before root-cause guessing:
+  - service-local problem
+  - environment-scoped or composite problem
+  - low-load or traffic-drop alert
+  - custom metric threshold alert
 - Start with the highest-signal, lowest-cost checks:
   - active or recent problems
   - request or processing volume changes
@@ -110,6 +120,8 @@ Only interrupt when one of these is true:
   - latency or duration
   - top failing endpoints or operations
   - relevant logs, exceptions, spans, or events
+- For low-load alerts, explicitly test quiet traffic versus service failure before writing an outage story.
+- For custom metric alerts, validate the metric dimensions, dominant series, and emission semantics when the monitor meaning is not already clear.
 - Scope queries to the mapped entity ids and the incident window.
 - Produce an initial answer to:
   - what looks broken
@@ -129,6 +141,8 @@ Only interrupt when one of these is true:
   - create an in-memory parent-page-ready outline using `../templates/incident-analysis-page.md`
 - In both modes, populate the parent investigation surface with:
   - incident summary and routing
+  - alert scope and ownership notes
+  - related or duplicate incident notes
   - exact investigation window
   - PagerDuty and Dynatrace entity mapping
   - initial high-level Dynatrace findings
@@ -194,6 +208,7 @@ Only interrupt when one of these is true:
   - which explanation is best supported across all tracks
   - which tracks support, weaken, or contradict each other
   - whether the incident is primarily service-local, downstream-driven, or platform-wide
+  - whether the page is documenting a real service outage, a mixed-ownership alert, or alert-surface noise around a weaker service-local symptom
   - where the strongest remaining blind spot sits
 - The final assessment should stitch together the broad sweep and the child investigations, not replace them.
 
@@ -240,3 +255,4 @@ Only interrupt when one of these is true:
 - In `publish mode`, link the PagerDuty incident and the created or updated Confluence page.
 - In `trial mode`, return a publish-ready result without creating or updating the page.
 - State clearly when the result is partial because mapping or evidence is ambiguous.
+- Call out duplicate PagerDuty incidents, composite environment alerts, and alert-surface or routing noise explicitly when they are better supported than a clean service-local outage story.

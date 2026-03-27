@@ -4,6 +4,7 @@
 - Investigation mode: live or retrospective
 - Current or final status:
 - Severity or urgency:
+- Alert scope: service-local, environment-scoped, or composite
 - Primary service:
 - Escalation policy or owner:
 - Investigation window:
@@ -24,6 +25,7 @@
 
 - Trigger:
 - Source systems:
+- Related or duplicate incidents:
 - Supporting links:
 
 # Initial Triage
@@ -62,6 +64,7 @@
 
 - Problems:
 - Metrics:
+- Metric semantics or monitor math:
 - Logs:
 - Spans or traces:
 - Events or change context:
@@ -77,6 +80,7 @@
 - Strongest explanation across all tracks:
 - Supporting tracks:
 - Contradictory or weak tracks:
+- Ownership and routing assessment:
 - Remaining blind spots:
 
 # Impact

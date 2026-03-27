@@ -16,6 +16,12 @@ Use these mappings when an analysis page should be routed by owning PagerDuty es
   - Folder id: `5289279502`
   - URL: `https://quadpay.atlassian.net/wiki/spaces/QD/folder/5289279502`
 
+## Folder Handling
+
+- The mapped ids above are Confluence folder ids, not page ids.
+- When publishing programmatically, use the mapped folder id as the page `parentId` and expect the resulting parent type to be `folder`.
+- Do not try to validate a folder id with page lookup APIs such as `getConfluencePage`; those calls return `404` for valid folders.
+
 ## Naming Rule
 
 Prefix new analysis pages with the current timestamp in the user's timezone so pages sort by recency.

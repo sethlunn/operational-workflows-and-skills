@@ -14,7 +14,7 @@ Then read exactly one branch playbook:
 - [../../workflows/dynatrace-guid-trace.md](../../workflows/dynatrace-guid-trace.md)
 
 Read [../../references/dynatrace-query-patterns.md](../../references/dynatrace-query-patterns.md) when you need starter DQL shapes or a trace-friendly query pattern.
-Read [../../references/dynatrace-evidence-interpretation.md](../../references/dynatrace-evidence-interpretation.md) when the evidence shows caller-side failure without matching callee-side degradation, when service-local logs are missing, or when you need to distinguish rollout correlation from code causation or onset from late secondary events.
+Read [../../references/dynatrace-evidence-interpretation.md](../../references/dynatrace-evidence-interpretation.md) when the evidence shows caller-side failure without matching callee-side degradation, when service-local logs are missing, when a low-load or custom-metric alert may be misleading, or when you need to distinguish rollout correlation from code causation or onset from late secondary events.
 Read [../../templates/incident-analysis-page.md](../../templates/incident-analysis-page.md) when the user wants an incident-style write-up.
 Read [../../templates/dynatrace-investigation-result.md](../../templates/dynatrace-investigation-result.md) when this is a bounded child investigation feeding a parent incident workflow.
 Read [../../references/confluence-routing.md](../../references/confluence-routing.md) only when the user wants the result published or routed to Confluence by owning team.
