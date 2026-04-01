@@ -98,6 +98,20 @@ The service inventory and traffic-mapping skill.
 
 Use it to inspect a repo service, inventory its HTTP endpoints from code, map those endpoints to Dynatrace traffic, and publish a Confluence page with usage tiers and cleanup candidates.
 
+### `incident-followup-planning`
+
+The post-incident validation and Jira follow-up skill.
+
+Use it when an incident already has a Confluence page, RAC, or another agent's assessment and the goal is to validate the claims, tighten the final assessment, and create actionable follow-up stories under an incident epic.
+
+It combines:
+
+- Confluence and RAC validation
+- PagerDuty, Dynatrace, and code-backed claim checks
+- actionable story breakdown
+- Jira field-aware story creation
+- optional epic cleanup and incident-channel summary
+
 ### `babysit-pr`
 
 The PR review-triage skill.
@@ -197,6 +211,8 @@ Why this helps:
   PagerDuty ownership discovery plus Dynatrace health assessment.
 - `workflows/service-endpoint-traffic-analysis.md`
   Code-derived endpoint inventory plus Dynatrace traffic analysis.
+- `workflows/incident-followup-planning.md`
+  Validate incident documents and external analysis, then create follow-up Jira stories under an epic.
 - `workflows/babysit-pr.md`
   PR review triage and signed reply workflow.
 

@@ -1,0 +1,17 @@
+interface:
+  display_name: "Incident Follow-up Planning"
+  short_description: "Validate incident write-ups and create Jira follow-up stories."
+  default_prompt: "Use $incident-followup-planning to validate this incident Confluence page and RAC, then draft actionable IFU stories under the linked epic."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "atlassian"
+      description: "Read Confluence incident pages, inspect Jira epics and fields, and create or update follow-up stories."
+    - type: "mcp"
+      value: "pagerduty"
+      description: "Refresh incident state, duplicates, and routed service context when the supplied write-up is stale or incomplete."
+    - type: "mcp"
+      value: "dynatrace"
+      description: "Validate alert semantics, ownership, and incident claims against current problems, metrics, logs, and spans."
+policy:
+  allow_implicit_invocation: true
