@@ -1,0 +1,14 @@
+interface:
+  display_name: "Service Metric Analysis"
+  short_description: "Analyze service metrics and document them."
+  default_prompt: "Use $service-metric-analysis to inspect a repo service, identify its emitted metrics, analyze production telemetry in Dynatrace, and create or update Confluence documentation."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "dynatrace"
+      description: "Inspect custom metric dimensions and query telemetry history."
+    - type: "mcp"
+      value: "atlassian"
+      description: "Create or update the Confluence analysis page."
+policy:
+  allow_implicit_invocation: true

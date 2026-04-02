@@ -98,6 +98,12 @@ The service inventory and traffic-mapping skill.
 
 Use it to inspect a repo service, inventory its HTTP endpoints from code, map those endpoints to Dynatrace traffic, and publish a Confluence page with usage tiers and cleanup candidates.
 
+### `service-metric-analysis`
+
+The service metric and telemetry-analysis skill.
+
+Use it to inspect a repo service or component, identify emitted metrics from code, analyze production telemetry in Dynatrace, and publish a Confluence page with trends, breakdowns, semantics, and caveats.
+
 ### `incident-followup-planning`
 
 The post-incident validation and Jira follow-up skill.
@@ -211,6 +217,8 @@ Why this helps:
   PagerDuty ownership discovery plus Dynatrace health assessment.
 - `workflows/service-endpoint-traffic-analysis.md`
   Code-derived endpoint inventory plus Dynatrace traffic analysis.
+- `workflows/service-metric-analysis.md`
+  Code-derived metric inventory plus Dynatrace telemetry analysis.
 - `workflows/incident-followup-planning.md`
   Validate incident documents and external analysis, then create follow-up Jira stories under an epic.
 - `workflows/babysit-pr.md`
@@ -224,6 +232,8 @@ Why this helps:
   Structured return contract for child Dynatrace investigations.
 - `templates/endpoint-traffic-analysis-page.md`
   Confluence page structure for endpoint traffic analysis.
+- `templates/service-metric-analysis-page.md`
+  Confluence page structure for service metric and telemetry analysis.
 
 ## Dynatrace Breakdown
 
