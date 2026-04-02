@@ -2,13 +2,13 @@
 
 Inventory a service's HTTP endpoints from code, map them to Dynatrace traffic, and publish the results to Confluence.
 
+Read `../workflows/service-analysis-common.md` before starting.
 Read `../templates/endpoint-traffic-analysis-page.md` when creating or updating the page body.
 
 ## Workflow
 
-1. Resolve the service and page title.
+1. Resolve the service-specific output target.
 - Start from the service name the user gives, usually under `services/<service-name>`.
-- Read the service's local `AGENTS.md` guidance if present and the shared `services/AGENTS.md`.
 - Derive the default page title as `<Service Display Name> Endpoint Traffic Analysis`.
 - Search Confluence for an existing page with that title and update it if present unless the user explicitly asks for a new page.
 
@@ -92,7 +92,6 @@ Include the exact DQL used in the final page.
 
 - Use the service name to inspect the repo; do not rely on memory for endpoint inventory.
 - Prefer primary evidence from code, topology, and Dynatrace metrics.
-- Use exact absolute dates in the page and in the response to the user.
 - Link the created or updated Confluence page in the final response.
 - Summarize the high-signal outcomes for the user:
   - where the page lives

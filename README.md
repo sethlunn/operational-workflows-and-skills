@@ -215,6 +215,8 @@ Why this helps:
   Identifier tracing and missing-event validation playbook.
 - `workflows/pagerduty-assigned-service-health.md`
   PagerDuty ownership discovery plus Dynatrace health assessment.
+- `workflows/service-analysis-common.md`
+  Shared code-plus-telemetry analysis rules for service documentation workflows.
 - `workflows/service-endpoint-traffic-analysis.md`
   Code-derived endpoint inventory plus Dynatrace traffic analysis.
 - `workflows/service-metric-analysis.md`

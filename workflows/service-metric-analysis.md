@@ -2,22 +2,21 @@
 
 Inspect a repo service or component to identify emitted metrics from code, analyze the metric telemetry in Dynatrace, and create or update a Confluence page.
 
+Read `../workflows/service-analysis-common.md` before starting.
 Read `../templates/service-metric-analysis-page.md` when creating or updating the page body.
 Read `../references/dynatrace-query-patterns.md` when you need starter DQL shapes.
 Read `../references/dynatrace-evidence-interpretation.md` when metric evidence is ambiguous, when long-window rollups do not match fixed-window sums, or when the user asks a customer-level question that metrics may not support.
+Read `../references/telemetry-measurability.md` when the question depends on metric dimensions, historical rollups, or distinct-entity claims.
 
 ## Workflow
 
-1. Resolve the analysis target and page.
-- Start from the service, component, or code path the user gives.
-- Read the local `AGENTS.md` guidance for that codebase and any shared parent `AGENTS.md`.
+1. Resolve the analysis-specific question and page target.
 - Write down the exact question being answered:
   - metric inventory
   - bypass or outcome breakdown
   - daily or monthly trends
   - duration analysis
   - customer-level question that may or may not be supported
-- Default the environment to production unless the user explicitly asks for something else.
 - If the user gives a Confluence page, update that page. Otherwise, search for an existing page with the expected title and update it if present.
 
 2. Identify the metrics in code.
@@ -52,7 +51,6 @@ Read `../references/dynatrace-evidence-interpretation.md` when metric evidence i
   - ingestion or retention issue
 
 4. Calculate the requested analysis.
-- Use fixed windows for historical analysis.
 - For long histories, prefer:
   - fixed calendar months for monthly reporting
   - fixed days for daily averages
@@ -111,8 +109,6 @@ If fixed-window sums and one-shot long-range scalars disagree, say this explicit
 
 ## Output Rules
 
-- Use exact dates, not relative dates.
-- Default to production unless the user says otherwise.
 - Link the created or updated Confluence page in the final response.
 - Distinguish:
   - event counts

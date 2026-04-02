@@ -6,6 +6,5 @@ description: "Analyze a service in the repo by service name, inventory its HTTP 
 # Service Endpoint Traffic Analysis
 
 Read [../../workflows/service-endpoint-traffic-analysis.md](../../workflows/service-endpoint-traffic-analysis.md) before starting.
-Read [../../templates/endpoint-traffic-analysis-page.md](../../templates/endpoint-traffic-analysis-page.md) when creating or updating the Confluence page body.
 
 Follow the shared workflow and include exact absolute dates in both the page and the user-facing summary.
