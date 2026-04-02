@@ -5,6 +5,7 @@ Inventory a service's HTTP endpoints from code, map them to Dynatrace traffic, a
 Read `../workflows/service-analysis-common.md` before starting.
 Read `../templates/endpoint-traffic-analysis-page.md` when creating or updating the page body.
 Read `../references/subagent-usage.md` when deciding whether to split code inventory from Dynatrace mapping.
+Read `../templates/analysis-child-result.md` when bounded child investigations are being used.
 
 ## Subagent Posture
 
@@ -14,6 +15,7 @@ Read `../references/subagent-usage.md` when deciding whether to split code inven
   - Dynatrace entity mapping and traffic rollups
 - Keep the parent as the canonical writer for the Confluence page.
 - Avoid splitting small services or trivial endpoint surfaces.
+- When split, have each child return `../templates/analysis-child-result.md`.
 
 ## Workflow
 

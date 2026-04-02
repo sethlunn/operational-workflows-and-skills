@@ -56,6 +56,11 @@ Child responsibilities:
 - keep interpretation clearly separated from evidence
 - return a compact result package, not a sprawling narrative
 
+Use a shared child-result contract when one exists for the workflow family:
+
+- incident-style Dynatrace tracks: `../templates/dynatrace-investigation-result.md`
+- non-incident bounded analysis tracks: `../templates/analysis-child-result.md`
+
 ## Context Management Rules
 
 - Prefer 2 to 3 small bounded subagents over one vague large one.
@@ -89,6 +94,7 @@ Child responsibilities:
   - code-path and metric-semantics discovery
   - Dynatrace history, breakdowns, and rollups
 - Parent should remain the canonical writer for the Confluence page.
+- When used, child results should follow `../templates/analysis-child-result.md`.
 
 ### Service Endpoint Traffic Analysis
 
@@ -97,18 +103,21 @@ Child responsibilities:
   - endpoint inventory from code
   - Dynatrace entity mapping and traffic rollups
 - Avoid splitting if the service is small or the endpoint surface is already trivial.
+- When used, child results should follow `../templates/analysis-child-result.md`.
 
 ### Incident Follow-up Planning
 
 - Optional fit.
 - Use subagents only when there are many independent claims to validate or multiple bounded evidence tracks to re-check.
 - Keep story synthesis and final Jira-writing decisions in the parent thread.
+- When used, child results should follow `../templates/analysis-child-result.md`.
 
 ### PagerDuty Assigned Service Health
 
 - Usually stay local.
 - Consider subagents only when the owned service set is large enough that independent per-service health checks can run in parallel.
 - Keep the parent responsible for the final rollup and any Slack publication.
+- When used, child results should follow `../templates/analysis-child-result.md`.
 
 ### PR Review And Triage
 

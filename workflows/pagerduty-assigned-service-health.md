@@ -6,12 +6,14 @@ Read `../workflows/service-analysis-common.md` before starting.
 Read `../references/dynatrace-fast-path.md` when you start Dynatrace mapping or health queries.
 Read `../references/slack-setup.md` when Slack publishing is requested or Slack is not configured.
 Read `../references/subagent-usage.md` when deciding whether a large owned-service set is worth splitting.
+Read `../templates/analysis-child-result.md` when bounded child investigations are being used.
 
 ## Subagent Posture
 
 - Usually stay local.
 - Consider subagents only when the owned service set is large enough that per-service health checks can run in parallel without overlapping scope.
 - Keep the parent responsible for the final health rollup and any Slack publication.
+- When split, have each child return `../templates/analysis-child-result.md`.
 
 ## Workflow
 

@@ -193,6 +193,7 @@ Shared concerns such as environment defaults, evidence discipline, measurability
 
 - `templates/incident-analysis-page.md`
 - `templates/dynatrace-investigation-result.md`
+- `templates/analysis-child-result.md`
 - `templates/endpoint-traffic-analysis-page.md`
 - `templates/service-metric-analysis-page.md`
 - `templates/incident-followup-story.md`

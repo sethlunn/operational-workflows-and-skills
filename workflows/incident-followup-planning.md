@@ -14,6 +14,7 @@ Accept any of:
 Read `../references/incident-investigation-lessons-2026-03-27.md` before tightening claims that involve duplicate incidents, environment-scoped alerts, quiet-traffic noise, chronic background defects, or custom-metric semantics.
 Read `../references/jira-incident-followup.md` before creating or updating Jira work.
 Read `../references/subagent-usage.md` when deciding whether to split claim validation into independent evidence tracks.
+Read `../templates/analysis-child-result.md` when bounded child investigations are being used.
 Read `../templates/incident-followup-story.md` when drafting stories.
 Read `../workflows/pagerduty-incident-analysis.md` only when the supplied document and summary are too weak and you need to refresh the incident from raw evidence.
 
@@ -22,6 +23,7 @@ Read `../workflows/pagerduty-incident-analysis.md` only when the supplied docume
 - Optional, not default.
 - Use subagents only when there are multiple independent claims or evidence tracks worth validating in parallel.
 - Keep final story synthesis, epic cleanup decisions, and Jira writing in the parent thread.
+- When split, have each child return `../templates/analysis-child-result.md`.
 
 ## Execution Posture
 

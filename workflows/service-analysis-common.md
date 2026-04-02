@@ -4,6 +4,7 @@ Shared procedure for service or component analysis workflows that combine servic
 
 Read `../references/confluence-analysis-writing-standard.md` when writing or updating a Confluence page body.
 Read `../references/telemetry-measurability.md` when the question depends on metric dimensions, historical rollups, or distinct-entity conclusions.
+Read `../templates/analysis-child-result.md` when bounded child investigations are being used for a service-analysis workflow.
 
 ## Common Workflow
 
@@ -50,6 +51,20 @@ Read `../references/telemetry-measurability.md` when the question depends on met
 - Include exact scope, exact dates, and exact filters.
 - Put important caveats in the artifact itself, not only in the chat response.
 - Include the exact query shapes used for the core evidence when the workflow depends on telemetry analysis.
+
+## Child Result Contract
+
+Use this section when a service-analysis workflow splits into bounded child investigations.
+
+- Keep the parent workflow as the canonical writer for the final artifact.
+- Have each child return a compact evidence package using `../templates/analysis-child-result.md`.
+- Each child package should preserve:
+  - exact question
+  - exact scope
+  - strongest direct evidence
+  - interpretation
+  - unresolved gap
+  - parent-ready summary
 
 ## Output Rules
 
