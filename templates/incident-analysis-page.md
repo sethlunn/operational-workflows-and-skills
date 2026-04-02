@@ -8,8 +8,10 @@
 - Primary service:
 - Escalation policy or owner:
 - Investigation window:
+- Executive summary:
 - Conclusion:
 - Confidence:
+- Root-cause status: confirmed, most likely, contributing factor only, or unresolved
 
 # Timeline
 
@@ -28,19 +30,38 @@
 - Related or duplicate incidents:
 - Supporting links:
 
-# Initial Triage
-
-- PagerDuty alert surface:
-- Initial Dynatrace sweep:
-- Early blast-radius assessment:
-- Initial working hypotheses:
-
 # Service and Entity Mapping
 
 - PagerDuty service:
 - PagerDuty escalation policy:
 - Dynatrace entity ids:
 - Mapping confidence:
+
+# Root Cause Analysis
+
+- Strongest explanation:
+- Root-cause classification:
+- Direct supporting evidence:
+- Contributing factors:
+- Alternate explanations considered:
+- Why the link is strong, weak, or unresolved:
+- Remaining blind spots:
+
+# Impact Analysis
+
+- Customer impact:
+- Internal impact:
+- Blast radius:
+- Duration:
+- Historical live-snapshot note:
+
+# Recommended Solutions And Mitigations
+
+- Immediate mitigation or containment:
+- Corrective fix:
+- Monitoring or telemetry improvements:
+- Follow-up actions still worth doing:
+- If no strong root-cause link was found, what would improve the next investigation:
 
 # Investigation Queue
 
@@ -58,9 +79,16 @@
   - confidence
   - unresolved gap
 
-# Findings
+# Deployments And Code References
 
-## Evidence
+- Recent deployments or change events:
+- Why they are relevant or not relevant:
+- Code paths, PRs, diffs, or repository links reviewed:
+- Code-level caveats:
+
+# Evidence For Root Cause And Queries
+
+## Telemetry Proof
 
 - Problems:
 - Metrics:
@@ -69,33 +97,11 @@
 - Spans or traces:
 - Events or change context:
 
-## Interpretation
-
-- Most likely explanation:
-- Alternate explanations:
-- Known gaps:
-
-# Cross-Investigation Assessment
-
-- Strongest explanation across all tracks:
-- Supporting tracks:
-- Contradictory or weak tracks:
-- Ownership and routing assessment:
-- Remaining blind spots:
-
-# Impact
-
-- Customer impact:
-- Internal impact:
-- Duration:
-- Historical live-snapshot note:
-
-# Evidence and Queries
+## Exact Queries
 
 - Include the exact DQL or key filtered queries that materially support the conclusion.
 
-# Follow-ups
+## Evidence Caveats
 
-- Still worth doing:
-- Platform hardening or observability improvements:
-- Closed or resolved questions:
+- Missing proof or ambiguous signals:
+- Why the evidence is sufficient or insufficient:

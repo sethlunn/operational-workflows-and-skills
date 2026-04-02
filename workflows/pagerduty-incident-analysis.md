@@ -141,13 +141,16 @@ Only interrupt when one of these is true:
   - do not create or update the Confluence page
   - create an in-memory parent-page-ready outline using `../templates/incident-analysis-page.md`
 - In both modes, populate the parent investigation surface with:
-  - incident summary and routing
+  - summary
+  - exact investigation window and timeline
   - alert scope and ownership notes
   - related or duplicate incident notes
-  - exact investigation window
   - PagerDuty and Dynatrace entity mapping
-  - initial high-level Dynatrace findings
+  - an initial root-cause section marked as confirmed, most likely, contributing factor only, or unresolved
+  - an impact section
+  - a recommended solutions and mitigations section
   - the current investigation queue
+  - deployments or code references only when relevant to the incident hypothesis
 
 7. Build the bounded child-investigation queue.
 - Convert the high-level sweep into a small number of narrow tracks.
@@ -200,6 +203,7 @@ Only interrupt when one of these is true:
 - Add one subsection per completed child investigation.
 - Preserve which findings are direct evidence versus interpretation.
 - Note unresolved or contradictory tracks explicitly instead of forcing a premature conclusion.
+- Fold returned child evidence into the parent root-cause section, impact section, mitigations section, deployment or code-reference section when relevant, and the final evidence section at the bottom.
 - In `publish mode`, keep the parent Confluence page current as the investigations return.
 - In `trial mode`, keep the in-memory parent-page-ready result current as the investigations return.
 
@@ -211,6 +215,12 @@ Only interrupt when one of these is true:
   - whether the incident is primarily service-local, downstream-driven, or platform-wide
   - whether the page is documenting a real service outage, a mixed-ownership alert, or alert-surface noise around a weaker service-local symptom
   - where the strongest remaining blind spot sits
+- The synthesis pass must update:
+  - the summary
+  - root cause analysis
+  - impact analysis
+  - recommended solutions and mitigations
+  - deployments and code references when relevant
 - The final assessment should stitch together the broad sweep and the child investigations, not replace them.
 
 12. Run retrospective cleanup when the incident is resolved or when the user asks for a final pass.
@@ -232,8 +242,14 @@ Only interrupt when one of these is true:
 
 13. Finalize the result.
 - In `publish mode`:
-  - ensure the page contains the high-level sweep, the child investigations, the cross-investigation assessment, the final status, and the follow-ups that still matter
-  - leave exact timestamps, entity ids, and key queries in the page so the write-up is auditable
+  - ensure the page contains:
+    - summary
+    - root cause analysis
+    - impact analysis
+    - recommended solutions and mitigations
+    - deployments and code references when relevant
+    - evidence for root cause and exact queries at the bottom
+  - leave exact timestamps, entity ids, query evidence, and telemetry proof in the page so the write-up is auditable
 - In `trial mode`:
   - return the same parent-page-ready content without publishing it
   - if useful, tell the user that the result is ready to publish without requiring the investigation to be rerun
@@ -248,6 +264,14 @@ Only interrupt when one of these is true:
 - Use child investigations only for narrow, defensible scopes.
 - Require every child investigation to return a structured evidence package.
 - Synthesize child results into a cross-investigation assessment before finalizing the page.
+- Incident write-ups should always converge on:
+  - summary
+  - root cause analysis
+  - impact analysis
+  - recommended solutions and mitigations
+  - evidence for root cause and exact queries at the bottom
+- Recommended solutions and mitigations should include steps to fix, resolve, or improve telemetry and monitoring when those would materially improve future root-cause analysis.
+- Include recent deployments, change events, PRs, diffs, or code references when they are relevant to the incident hypothesis; do not force them into the page when they are not relevant.
 - When the incident is resolved or the user asks for a final pass, run a retrospective cleanup pass before treating the write-up as final.
 - Do not leave stale live-state wording at the top of a resolved incident page unless it is clearly labeled as a historical snapshot.
 - Prune follow-ups so the final page keeps only unresolved, still-valuable work rather than every question that appeared during live triage.
