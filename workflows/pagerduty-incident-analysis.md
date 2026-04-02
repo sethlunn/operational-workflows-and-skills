@@ -14,6 +14,7 @@ Read `../workflows/dynatrace-investigation.md` before running the high-level swe
 Read `../workflows/dynatrace-incident-path-analysis.md` before the high-level incident sweep.
 Read `../templates/incident-analysis-page.md` for the parent Confluence page shape.
 Read `../templates/dynatrace-investigation-result.md` for the child-investigation return contract.
+Read `../references/subagent-usage.md` before splitting the incident into child investigations.
 Read `../references/incident-investigation-lessons-2026-03-27.md` only when you want the concrete incident examples that motivated the current guardrails.
 
 ## Execution Posture
@@ -165,7 +166,7 @@ Only interrupt when one of these is true:
 - Do not spawn parallel tracks for every alert or every dependency. The queue should stay small enough that the parent can still synthesize it coherently.
 
 8. Run child Dynatrace investigations.
-- When child agents are available, use them for bounded tracks in parallel.
+- When child agents are available, use them for bounded tracks in parallel following `../references/subagent-usage.md`.
 - When child agents are not available, run the same tracks sequentially while preserving the same scope boundaries and result contract.
 - Each child should use `../workflows/dynatrace-investigation.md` as the router, then read the branch playbook that matches the assigned track.
 - Child investigations should focus on one scope such as:

@@ -181,6 +181,7 @@ Shared concerns such as environment defaults, evidence discipline, measurability
 - `references/dynatrace-evidence-interpretation.md`
 - `references/telemetry-measurability.md`
 - `references/confluence-analysis-writing-standard.md`
+- `references/subagent-usage.md`
 
 ### Workflow-Specific Support
 

@@ -4,6 +4,7 @@ Use this file as the top-level router for Dynatrace work.
 
 Read `../references/dynatrace-query-patterns.md` when you need starter DQL shapes for metrics, logs, spans, events, or GUID tracing.
 Read `../references/dynatrace-evidence-interpretation.md` when you need help interpreting caller-vs-callee mismatch, telemetry gaps, late secondary events, or rollout-vs-code ambiguity.
+Read `../references/subagent-usage.md` when deciding whether to split the investigation into independent child scopes.
 Read `../templates/dynatrace-investigation-result.md` when this workflow is being used as a bounded child investigation that must return a structured evidence package.
 
 After reading this router, read exactly one branch playbook:
@@ -120,6 +121,13 @@ Run these steps before branching.
 - Use `generate_dql_from_natural_language` when it is safer or faster than hand-writing DQL.
 - Use `fetch dt.semantic_dictionary.models` when the right data object or field is unclear before guessing at schema names.
 - Prefer proving or disproving one concrete hypothesis per query over writing one broad query that mixes concerns.
+
+## Subagent Posture
+
+- Default to one thread when the question is already narrow and bounded.
+- Use subagents only when the top-level question can be split into clearly independent tracks with separate scopes.
+- If this workflow is being used as a bounded child investigation under a parent orchestrator, usually stay local and return one compact evidence package.
+- When subagents are used, follow `../references/subagent-usage.md`.
 
 ## Cross-Branch Heuristics
 

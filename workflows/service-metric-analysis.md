@@ -7,6 +7,16 @@ Read `../templates/service-metric-analysis-page.md` when creating or updating th
 Read `../references/dynatrace-query-patterns.md` when you need starter DQL shapes.
 Read `../references/dynatrace-evidence-interpretation.md` when metric evidence is ambiguous, when long-window rollups do not match fixed-window sums, or when the user asks a customer-level question that metrics may not support.
 Read `../references/telemetry-measurability.md` when the question depends on metric dimensions, historical rollups, or distinct-entity claims.
+Read `../references/subagent-usage.md` when deciding whether to split code discovery from telemetry analysis.
+
+## Subagent Posture
+
+- Optional, not default.
+- Good split:
+  - code-path and metric-semantics discovery
+  - Dynatrace history, breakdowns, and rollups
+- Keep the parent as the canonical writer for the Confluence page.
+- Avoid splitting small or already-localized questions.
 
 ## Workflow
 
