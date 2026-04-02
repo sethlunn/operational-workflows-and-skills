@@ -2,286 +2,217 @@
 
 Portable, company-specific operational workflows and reusable skill adapters for LLM agents.
 
-This repo keeps the business logic in shared Markdown so the same operating model can be reused across agent systems, with thin model-specific wrappers on top.
+This repo keeps the reusable operating model in shared Markdown and keeps model-specific skill wrappers thin. The goal is to make one investigation or analysis pattern reusable across Codex today and other agent environments later.
 
-## What This Repo Is
+## Core Model
 
-This repo is a small operational playbook system for AI agents.
+This repo is organized around a small set of layers:
 
-It is designed around four ideas:
+1. `skills`
+   Thin entrypoints that tell an agent when to trigger and which shared workflow to read.
+2. `workflows`
+   The real reusable procedure.
+3. `references`
+   Stable facts, query patterns, routing rules, and caveat handling.
+4. `templates`
+   Output structure for Confluence pages and other reusable artifacts.
+5. `reviews`
+   Design, code, and planning assessments.
+6. `scripts`
+   Helper launchers and setup utilities.
 
-- shared workflows hold the real procedure
-- shared references keep routing and environment details stable
-- shared reviews capture design, code, and plan assessments
-- shared templates keep output consistent
-- model-specific adapters stay thin
+The operating rule is simple:
 
-That split lets one investigation pattern be reused across Codex today and other agent environments later.
+```text
+user request
+  -> entry skill
+  -> shared workflow
+  -> optional branch workflow
+  -> references/templates/scripts as needed
+  -> final artifact
+```
 
-## Demo Story
+## Design Principles
 
-The best demo flow in the repo today is the PagerDuty incident analysis workflow.
+- Keep `SKILL.md` files small and routing-oriented.
+- Put reusable business logic in `workflows/`, not in skill wrappers.
+- Put stable supporting knowledge in `references/`, not in workflows unless it is procedural.
+- Put output shape in `templates/`, not process.
+- Add scripts only when a step is brittle or benefits from deterministic execution.
+- Prefer exact dates, exact ids, and exact query shapes over vague summaries.
+- Separate direct evidence from interpretation in every analysis workflow.
+- Use one canonical writer for any published parent artifact.
 
-That workflow now acts as an orchestrator:
+The current design rationale is documented in:
 
-1. Resolve the PagerDuty incident, owning service, and exact incident window.
-2. Run a high-level Dynatrace sweep over the incident alert surface.
-3. Create the parent investigation surface early:
-   - parent Confluence page in `publish mode`
-   - parent-page-ready outline in `trial mode`
-4. Turn the high-level sweep into a small queue of narrow child investigations.
-5. Run deeper Dynatrace investigations on specific scopes such as:
-   - one service path
-   - one downstream database or storage path
-   - one third-party or internal dependency path
-   - one identifier or propagation path
-6. Require each child investigation to return a structured evidence package.
-7. Synthesize those child results into a final cross-investigation assessment.
-8. Update the parent investigation surface with the stitched result.
+- `reviews/design/skills-architecture-and-governance.md`
 
-The important operating rule is:
+## Skill Families
 
-- the parent incident workflow is the canonical writer for the parent Confluence page
+The repo is easier to reason about as a small set of families rather than as a flat list of unrelated skills.
 
-Child investigations gather bounded evidence. They do not each try to narrate the whole incident.
+### Incident And Operational Orchestration
 
-For live demos and trial runs, the workflow should also feel low-friction:
+- `pagerduty-incident-analysis`
+  End-to-end incident orchestrator from PagerDuty through Dynatrace to Confluence.
+- `incident-followup-planning`
+  Validate incident conclusions and create actionable Jira follow-up stories.
 
-- default to `trial mode` unless publishing is explicitly requested
-- execute routine read-only local inspection directly
-- execute PagerDuty, Dynatrace, and Atlassian read operations directly
-- only interrupt when an external write, destructive action, or sandbox escalation is actually required
+These start from an incident or incident-derived artifact and usually produce or update a canonical parent document.
 
-## Current Skill Suite
+### Telemetry Investigation Workers
 
-### `pagerduty-incident-analysis`
+- `dynatrace-investigation`
+  Shared Dynatrace investigation router for rollout checks, incident debugging, service debugging, and GUID tracing.
 
-The end-to-end incident orchestrator.
+This can run standalone or as a bounded child investigation inside a larger workflow.
 
-Use it when the starting point is a PagerDuty incident id or incident URL and the goal is to produce a solid investigation write-up in Confluence.
+### Service Analysis
 
-It combines:
+- `service-endpoint-traffic-analysis`
+  Inspect code, inventory endpoints, map them to Dynatrace traffic, and publish a cleanup-oriented Confluence page.
+- `service-metric-analysis`
+  Inspect code, identify emitted metrics, analyze telemetry history and breakdowns, and publish a Confluence page.
+- `pagerduty-assigned-service-health`
+  Discover the current user's PagerDuty-owned services, map them to Dynatrace production entities, and summarize health over an exact time window.
 
-- PagerDuty incident resolution
-- service ownership and routing
-- high-level Dynatrace triage
-- bounded child investigations
-- synthesis into a parent Confluence document
+These now share a common service-analysis layer:
 
-### `dynatrace-investigation`
+- `workflows/service-analysis-common.md`
+- `references/telemetry-measurability.md`
+- `references/confluence-analysis-writing-standard.md`
 
-The core Dynatrace router and evidence-gathering playbook.
+### Review And Triage
 
-Use it for:
+- `babysit-pr`
+  Review-triage workflow for PR comments, validity checks, reply drafting, and bounded code-fix decisions.
 
-- rollout checks
-- incident investigations
-- direct debugging
-- GUID and data-validation tracing
+## How The Main Flows Fit Together
 
-Internally, it now routes into smaller branch docs instead of one large workflow.
+### Incident Flow
 
-This workflow can run either as:
-
-- a standalone investigation skill
-- a bounded child investigation inside the PagerDuty incident workflow
-
-### `pagerduty-assigned-service-health`
-
-The on-call health rollup skill.
-
-Use it to discover the current user's PagerDuty-owned services, map them to Dynatrace production entities, and summarize service health over an exact time window.
-
-### `service-endpoint-traffic-analysis`
-
-The service inventory and traffic-mapping skill.
-
-Use it to inspect a repo service, inventory its HTTP endpoints from code, map those endpoints to Dynatrace traffic, and publish a Confluence page with usage tiers and cleanup candidates.
-
-### `service-metric-analysis`
-
-The service metric and telemetry-analysis skill.
-
-Use it to inspect a repo service or component, identify emitted metrics from code, analyze production telemetry in Dynatrace, and publish a Confluence page with trends, breakdowns, semantics, and caveats.
-
-### `incident-followup-planning`
-
-The post-incident validation and Jira follow-up skill.
-
-Use it when an incident already has a Confluence page, RAC, or another agent's assessment and the goal is to validate the claims, tighten the final assessment, and create actionable follow-up stories under an incident epic.
-
-It combines:
-
-- Confluence and RAC validation
-- PagerDuty, Dynatrace, and code-backed claim checks
-- actionable story breakdown
-- Jira field-aware story creation
-- optional epic cleanup and incident-channel summary
-
-### `babysit-pr`
-
-The PR review-triage skill.
-
-It is not part of the Dynatrace/PagerDuty investigation flow, but it lives in the same repo because it follows the same pattern of reusable operational workflow plus thin adapter.
-
-## How The Pieces Fit Together
-
-For incident work, the relationships are:
-
-- `pagerduty-incident-analysis` is the orchestrator
-- `dynatrace-investigation` is the worker playbook
-- `incident-analysis-page.md` is the parent page structure
-- `dynatrace-investigation-result.md` is the child investigation contract
-- `confluence-routing.md` controls where the page should live
-- `dynatrace-query-patterns.md` provides starter query shapes for targeted evidence gathering
-
-In practice, the flow looks like this:
+The incident flow is the best end-to-end orchestrated example in the repo:
 
 ```text
 PagerDuty incident
-  -> parent incident workflow
+  -> pagerduty-incident-analysis
   -> high-level Dynatrace sweep
-  -> parent investigation surface
-  -> bounded child Dynatrace investigations
-  -> structured child evidence packages
-  -> cross-investigation synthesis
-  -> finalized parent result
+  -> bounded child dynatrace-investigation work
+  -> structured evidence packages
+  -> final parent-page synthesis
 ```
 
-The operating modes are:
+Important rules:
 
-- `trial mode`
-  Investigate fully, return a parent-page-ready result, and do not publish to Confluence.
-- `publish mode`
-  Run the same investigation and create or update the Confluence page as part of the workflow.
+- the parent incident workflow is the canonical writer for the parent Confluence page
+- child Dynatrace investigations gather bounded evidence instead of narrating the whole incident
+- `trial mode` is the default unless publishing is explicitly requested
 
-## Incident Session Launcher
+### Service Analysis Flow
 
-There is a dedicated launcher for incident investigations:
+The service-analysis family now follows a cleaner pattern:
 
-- `codex-incident-session trial`
-- `codex-incident-session publish`
+```text
+service or component question
+  -> service-analysis skill
+  -> service-analysis-common
+  -> branch-specific workflow
+  -> references/templates
+  -> Confluence page or health summary
+```
 
-The launcher script lives at:
-
-- `scripts/codex-incident-session`
-
-The PATH command is installed as:
-
-- `~/.local/bin/codex-incident-session`
-
-What it does:
-
-- starts Codex in the trusted `quadpay-services/services` workspace
-- adds this workflows repo as an extra writable directory
-- starts in interactive mode with the right sandbox posture
-- runs a short preflight prompt before any real incident work
-- intentionally warms the likely PagerDuty and Dynatrace reads, including Dynatrace `execute_dql`
-
-Why this helps:
-
-- the first MCP approval prompts happen at session start instead of in the middle of an incident run
-- you can choose `Allow for this session` once during preflight
-- after preflight completes, the session waits for the incident id
+Shared concerns such as environment defaults, evidence discipline, measurability caveats, and publishing standards live in the shared service-analysis layer instead of being copied into each skill.
 
 ## Repository Layout
 
-- `workflows/`
-  Shared operational procedures written to be readable by any model.
-- `references/`
-  Stable routing, query-pattern, naming, and environment-specific reference material.
-- `reviews/`
-  Opinionated review artifacts such as design reviews, code review notes, and planning assessments.
-- `templates/`
-  Reusable output templates for parent pages, child investigation results, and endpoint analysis pages.
 - `codex/`
-  Thin Codex adapters that wrap the shared workflow docs as `SKILL.md` skills.
+  Thin Codex adapters. Each folder contains a `SKILL.md` and usually `agents/openai.yaml`.
+- `workflows/`
+  Shared operational procedures and branch playbooks.
+- `references/`
+  Stable routing rules, query patterns, interpretation guidance, and writing standards.
+- `templates/`
+  Reusable artifact structures.
+- `reviews/`
+  Design and assessment artifacts that inform how the repo evolves.
 - `scripts/`
-  Helper launchers for repeatable investigation sessions.
+  Setup and launcher utilities.
+
+## Current Entry Skills
+
+- `codex/pagerduty-incident-analysis`
+- `codex/dynatrace-investigation`
+- `codex/pagerduty-assigned-service-health`
+- `codex/service-endpoint-traffic-analysis`
+- `codex/service-metric-analysis`
+- `codex/incident-followup-planning`
+- `codex/babysit-pr`
 
 ## Current Workflows
 
-- `workflows/pagerduty-incident-analysis.md`
-  Orchestrated PagerDuty-to-Dynatrace-to-Confluence incident workflow.
-- `workflows/dynatrace-investigation.md`
-  Shared Dynatrace router with preflight, child-investigation contract, and output rules.
-- `workflows/dynatrace-rollout-check.md`
-  Deployment and rollout regression playbook.
-- `workflows/dynatrace-incident-path-analysis.md`
-  Incident-path and dependency-path investigation playbook.
-- `workflows/dynatrace-service-debugging.md`
-  Direct service and failure-path debugging playbook.
-- `workflows/dynatrace-guid-trace.md`
-  Identifier tracing and missing-event validation playbook.
-- `workflows/pagerduty-assigned-service-health.md`
-  PagerDuty ownership discovery plus Dynatrace health assessment.
-- `workflows/service-analysis-common.md`
-  Shared service-analysis rules for telemetry-backed documentation and health workflows.
-- `workflows/service-endpoint-traffic-analysis.md`
-  Code-derived endpoint inventory plus Dynatrace traffic analysis.
-- `workflows/service-metric-analysis.md`
-  Code-derived metric inventory plus Dynatrace telemetry analysis.
-- `workflows/incident-followup-planning.md`
-  Validate incident documents and external analysis, then create follow-up Jira stories under an epic.
-- `workflows/babysit-pr.md`
-  PR review triage and signed reply workflow.
+### Shared Orchestrators And Common Layers
 
-## Templates That Matter For The Demo
+- `workflows/pagerduty-incident-analysis.md`
+- `workflows/dynatrace-investigation.md`
+- `workflows/service-analysis-common.md`
+- `workflows/incident-followup-planning.md`
+- `workflows/babysit-pr.md`
+
+### Dynatrace Branch Workflows
+
+- `workflows/dynatrace-rollout-check.md`
+- `workflows/dynatrace-incident-path-analysis.md`
+- `workflows/dynatrace-service-debugging.md`
+- `workflows/dynatrace-guid-trace.md`
+
+### Service Analysis Branch Workflows
+
+- `workflows/pagerduty-assigned-service-health.md`
+- `workflows/service-endpoint-traffic-analysis.md`
+- `workflows/service-metric-analysis.md`
+
+## Current References
+
+### Routing, Querying, And Interpretation
+
+- `references/confluence-routing.md`
+- `references/dynatrace-fast-path.md`
+- `references/dynatrace-query-patterns.md`
+- `references/dynatrace-evidence-interpretation.md`
+- `references/telemetry-measurability.md`
+- `references/confluence-analysis-writing-standard.md`
+
+### Workflow-Specific Support
+
+- `references/jira-incident-followup.md`
+- `references/slack-setup.md`
+- `references/incident-investigation-lessons-2026-03-27.md`
+
+## Current Templates
 
 - `templates/incident-analysis-page.md`
-  Parent Confluence page for incident work, including initial triage, investigation queue, parallel investigations, and cross-investigation assessment.
 - `templates/dynatrace-investigation-result.md`
-  Structured return contract for child Dynatrace investigations.
 - `templates/endpoint-traffic-analysis-page.md`
-  Confluence page structure for endpoint traffic analysis.
 - `templates/service-metric-analysis-page.md`
-  Confluence page structure for service metric and telemetry analysis.
+- `templates/incident-followup-story.md`
 
-## Dynatrace Breakdown
+## Using This Repo With Codex
 
-The Dynatrace skill now uses a thin shared router plus branch-specific docs.
+The preferred setup is to symlink the repo-managed skills into `~/.codex/skills/` so new sessions automatically see repo updates.
 
-- use `workflows/dynatrace-investigation.md` for shared preflight, scope discipline, child-investigation rules, and output rules
-- then read only the branch you need
-- use `references/dynatrace-evidence-interpretation.md` when the evidence is ambiguous, especially for:
-  - caller-vs-callee mismatch
-  - telemetry gaps
-  - rollout correlation vs code causation
-  - late secondary events vs onset
-
-## Why The Incident Workflow Changed
-
-The incident workflow used to be mostly linear.
-
-It now supports a more realistic operating model:
-
-- broad incident triage first
-- deeper investigations second
-- one canonical parent document
-- explicit separation between direct evidence and interpretation
-- synthesis across multiple narrow investigations instead of one sprawling scan
-
-That makes the workflow better for real incidents and better for demos, because it shows:
-
-- orchestration
-- agent specialization
-- controlled parallelism
-- auditable evidence gathering
-- structured final synthesis
-
-## Codex Usage
-
-To use a skill with Codex, copy or symlink one of the folders under `codex/` into `~/.codex/skills/`.
-
-For this repo, the preferred setup is to symlink the repo-managed skill folders so new Codex sessions automatically see repo updates. Use:
+Use:
 
 ```bash
 /Users/sethlunn/RiderProjects/operational-workflows-and-skills/scripts/link-codex-skills
 ```
 
-That script links every folder under `codex/` into `~/.codex/skills/` and safely backs up any existing copied folders with a timestamped `.bak.<timestamp>` suffix. Once that is done, updating this repo updates the skills for future Codex sessions without another sync step. If you add a brand-new skill folder later, rerun the script once so the new folder gets linked too.
+That script:
 
-It also links the shared repo roots into `~/.codex/`:
+- links every folder under `codex/` into `~/.codex/skills/`
+- safely backs up conflicting copied folders with a timestamped suffix
+- links the shared repo roots under `~/.codex/` so relative references inside `SKILL.md` files keep working
+
+The shared roots it links are:
 
 - `workflows/`
 - `references/`
@@ -289,31 +220,89 @@ It also links the shared repo roots into `~/.codex/`:
 - `reviews/`
 - `scripts/`
 
-That matters because the `SKILL.md` files intentionally reference shared docs like `../../workflows/...` and `../../templates/...`. Without those shared-root links, copied or symlinked skill folders can load `SKILL.md` itself but fail to resolve the supporting materials.
+Without those shared-root links, a skill folder may load its own `SKILL.md` but fail to resolve `../../workflows/...` or `../../templates/...`.
 
-Good demo prompts:
+## Incident Session Launcher
+
+There is a dedicated incident launcher:
 
 - `codex-incident-session trial`
 - `codex-incident-session publish`
-- `Use $pagerduty-incident-analysis to investigate PagerDuty incident Q2YLVYYF9DVCJK in trial mode. Do not publish anything unless I ask.`
-- `Use $pagerduty-incident-analysis to analyze PagerDuty incident Q2YLVYYF9DVCJK, run deeper Dynatrace investigations as needed, and publish the parent Confluence write-up.`
+
+The script lives at:
+
+- `scripts/codex-incident-session`
+
+What it does:
+
+- starts Codex in the trusted `quadpay-services/services` workspace
+- adds this repo as an extra writable directory
+- warms likely PagerDuty and Dynatrace reads early
+- reduces approval friction during live incident work
+
+## Example Prompts
+
+- `Use $pagerduty-incident-analysis to investigate PagerDuty incident Q2YLVYYF9DVCJK in trial mode.`
+- `Use $pagerduty-incident-analysis to analyze PagerDuty incident Q2YLVYYF9DVCJK and publish the parent Confluence write-up.`
 - `Use $dynatrace-investigation to determine whether a deployment rollout degraded decision-engine in production.`
 - `Use $dynatrace-investigation to trace this GUID through logs, spans, and events and tell me where the trail stops.`
 - `Use $pagerduty-assigned-service-health to assess the health of my currently assigned PagerDuty services for last weekend.`
 - `Use $service-endpoint-traffic-analysis to analyze risk-manager endpoint traffic and create or update the Confluence page.`
+- `Use $service-metric-analysis to inspect a repo service, analyze its emitted metrics in Dynatrace, and publish the findings to Confluence.`
+- `Use $incident-followup-planning to validate the incident page and create follow-up Jira stories under the incident epic.`
 
-## Portability Rules
+## Adding New Capabilities
 
-- Keep business logic in `workflows/`, `references/`, and `templates/`.
-- Keep review artifacts in `reviews/`, organized by review type such as `design/`, `code/`, or `plans/`.
-- Keep model-specific files as thin wrappers only.
-- Avoid embedding secrets, tokens, or environment credentials in the repo.
-- Prefer exact dates, entity ids, and query snippets over vague summaries.
-- Prefer narrow, defensible scopes over broad scans when investigating operational issues.
+Use these rules before adding more repo surface area.
 
-## Next Adapters
+### Create a New Skill When
 
-This layout is meant to support additional adapters later, for example:
+- the starting object is materially different
+- the output contract is materially different
+- the mode of operation is materially different
+- folding the trigger into an existing skill would make the entrypoint confusing
+
+### Create a New Workflow When
+
+- the reusable procedure is different enough that one shared workflow becomes unclear
+
+### Create a Branch Workflow When
+
+- the top-level flow is the same
+- one phase changes significantly by scenario
+
+This is the model used by `dynatrace-investigation` and now by the service-analysis family.
+
+### Create a New Reference When
+
+- the information is stable
+- multiple workflows need it
+- it is fact-heavy or pattern-heavy rather than procedural
+
+### Create a New Template When
+
+- multiple workflows emit a similar artifact shape
+- the output structure is worth standardizing independently of the procedure
+
+### Create a Script When
+
+- the step is brittle, deterministic, or repeatedly reimplemented
+- a script materially improves reliability rather than just saving tokens
+
+## Portability And Maintenance Rules
+
+- Keep reusable operating logic in `workflows/`, `references/`, and `templates/`.
+- Keep skill wrappers thin.
+- Do not store secrets or credentials in the repo.
+- Default to exact timestamps and explicit ids.
+- Prefer narrow, defensible scopes over broad scans.
+- State caveats in the artifact itself, not only in chat.
+- Distinguish direct evidence from interpretation.
+- If telemetry cannot support a question, say so explicitly instead of inferring beyond the signal.
+
+## Future Adapters
+
+The shared layout is intended to support additional adapters later, for example:
 
 - `claude/`
 - `chatgpt/`
