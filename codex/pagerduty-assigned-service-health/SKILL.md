@@ -6,7 +6,5 @@ description: "Discover the PagerDuty services currently assigned to the current 
 # PagerDuty Assigned Service Health
 
 Read [../../workflows/pagerduty-assigned-service-health.md](../../workflows/pagerduty-assigned-service-health.md) before starting.
-Read [../../references/dynatrace-fast-path.md](../../references/dynatrace-fast-path.md) when you start Dynatrace mapping or health queries.
-Read [../../references/slack-setup.md](../../references/slack-setup.md) when Slack publishing is requested or Slack is not configured.
 
 Follow the shared workflow and report the assessed window with exact absolute dates.

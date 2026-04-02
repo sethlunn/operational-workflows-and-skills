@@ -1,8 +1,8 @@
 # Service Analysis Common
 
-Shared procedure for service or component analysis workflows that combine local code inspection, telemetry evidence, and a Confluence documentation artifact.
+Shared procedure for service or component analysis workflows that combine service understanding, telemetry evidence, and a user-facing artifact such as a Confluence page, health summary, or publishable rollup.
 
-Read `../references/confluence-analysis-writing-standard.md` before writing or updating the page body.
+Read `../references/confluence-analysis-writing-standard.md` when writing or updating a Confluence page body.
 Read `../references/telemetry-measurability.md` when the question depends on metric dimensions, historical rollups, or distinct-entity conclusions.
 
 ## Common Workflow
@@ -15,18 +15,19 @@ Read `../references/telemetry-measurability.md` when the question depends on met
   - a quick answer in chat
   - an updated existing Confluence page
   - a new Confluence page
-- If the user provides a Confluence page, treat it as the canonical output target unless there is a strong reason not to.
+  - a publishable operational summary such as Slack or another destination
+- If the user provides an explicit output target, treat it as the canonical output target unless there is a strong reason not to.
 
 2. Set the defaults explicitly.
 - Use exact absolute dates in all outputs.
 - Default the environment to production unless the user explicitly asks for something else.
 - Default to read-only investigation unless publishing is explicitly requested.
-- When publishing, decide who the canonical writer is. If there is no larger orchestrator, the current workflow is the canonical writer for its page.
+- When publishing, decide who the canonical writer is. If there is no larger orchestrator, the current workflow is the canonical writer for its artifact.
 
 3. Build the code-backed understanding first.
-- Inspect the local codebase before interpreting telemetry.
-- Identify the actual entry path, the important internal boundary points, and the code that defines the telemetry or behavior being analyzed.
-- Record the files that establish:
+- Inspect the local codebase before interpreting telemetry when local code inspection is relevant to the question.
+- Use local code to disambiguate service identity, entrypoints, runtime variants, telemetry emitters, or important short-circuit behavior.
+- When code inspection matters, record the files that establish:
   - ingress or entrypoint
   - core execution path
   - signal emission
@@ -45,9 +46,9 @@ Read `../references/telemetry-measurability.md` when the question depends on met
   - interpretation or inference
 - Call out what the telemetry can answer directly and what it cannot answer from the available signal.
 
-6. Write the Confluence artifact with caveats in the body.
+6. Write the user-facing artifact with caveats in the body.
 - Include exact scope, exact dates, and exact filters.
-- Put important caveats in the page itself, not only in the chat response.
+- Put important caveats in the artifact itself, not only in the chat response.
 - Include the exact query shapes used for the core evidence when the workflow depends on telemetry analysis.
 
 ## Output Rules
@@ -55,4 +56,4 @@ Read `../references/telemetry-measurability.md` when the question depends on met
 - Use exact dates, not relative dates.
 - Do not claim distinct-customer or distinct-entity results unless the telemetry preserves identity strongly enough to support that conclusion.
 - If an important question cannot be answered from the current telemetry surface, say so explicitly.
-- Link the created or updated Confluence page in the final response when publishing is part of the task.
+- Link the created or updated Confluence page in the final response when page publishing is part of the task.

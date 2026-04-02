@@ -2,16 +2,16 @@
 
 Discover the services currently assigned to the current PagerDuty user, map them to Dynatrace, and summarize health with exact dates.
 
+Read `../workflows/service-analysis-common.md` before starting.
 Read `../references/dynatrace-fast-path.md` when you start Dynatrace mapping or health queries.
 Read `../references/slack-setup.md` when Slack publishing is requested or Slack is not configured.
 
 ## Workflow
 
-1. Confirm tool availability and the time window.
+1. Confirm tool availability and resolve the health window.
 - Fail fast if PagerDuty cannot return the current user.
 - If Dynatrace is unavailable, say so explicitly after PagerDuty discovery instead of inventing health data.
 - If the user does not provide a time window, default to the last weekend in the user's timezone.
-- Always convert the chosen window into exact absolute dates before reporting results.
 - A good default is previous Saturday `00:00` through Monday `00:00` in the user's timezone.
 
 2. Resolve the current user's active PagerDuty ownership.
@@ -30,6 +30,7 @@ Read `../references/slack-setup.md` when Slack publishing is requested or Slack 
   - internal projections, workers, or other non-primary internals
   - external or platform services such as shared vendors or infrastructure
 - For repo-backed services, prefer the fast path in `../references/dynatrace-fast-path.md`.
+- Use local code or service naming conventions when needed to disambiguate repo-backed runtime services from workers, sidecars, or helpers.
 - Keep prod and non-prod separate from the start.
 - For repo-backed HTTP services, try the most specific prod-style names first:
   - `<service-name>-primary`
@@ -85,7 +86,6 @@ Read `../references/slack-setup.md` when Slack publishing is requested or Slack 
 
 ## Output Rules
 
-- Prefer exact dates and concrete ids over vague references.
 - Treat PagerDuty escalation-policy services as the source of truth for ownership.
 - Clearly separate prod from non-prod in both analysis and summary.
 - Do not print secrets.
