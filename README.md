@@ -108,6 +108,32 @@ Important rules:
 - child Dynatrace investigations gather bounded evidence instead of narrating the whole incident
 - `trial mode` is the default unless publishing is explicitly requested
 
+### Incident Child Flow
+
+The incident family uses an explicit parent-plus-child pattern:
+
+```text
+parent incident workflow
+  -> high-level sweep
+  -> small queue of bounded child tracks
+  -> child evidence packages
+  -> parent synthesis
+  -> final incident page
+```
+
+Rules:
+
+- the parent defines the exact question, time window, and scope for each child
+- children stay within that scope and do not try to explain the whole incident
+- children do not directly own the parent page
+- the parent merges child findings into the final summary, root cause analysis, impact analysis, mitigations, and bottom-of-page evidence
+
+Child investigations in this family should return:
+
+- `templates/dynatrace-investigation-result.md`
+
+That template is the bounded evidence contract for incident-style telemetry tracks.
+
 ### Service Analysis Flow
 
 The service-analysis family now follows a cleaner pattern:
@@ -122,6 +148,36 @@ service or component question
 ```
 
 Shared concerns such as environment defaults, evidence discipline, measurability caveats, and publishing standards live in the shared service-analysis layer instead of being copied into each skill.
+
+### Service Analysis Child Flow
+
+Service-analysis workflows are more selective about subagents, but when they split work they should also follow an explicit parent-plus-child pattern:
+
+```text
+parent service-analysis workflow
+  -> optional bounded child tracks
+  -> child evidence packages
+  -> parent synthesis
+  -> final page or health summary
+```
+
+Typical split patterns:
+
+- code-path discovery vs telemetry-history analysis
+- endpoint inventory vs Dynatrace entity mapping
+- per-service health checks for a large owned-service set
+
+Rules:
+
+- the parent remains the canonical writer for the final artifact
+- children return compact bounded evidence instead of ad hoc notes
+- use subagents only when the tracks are independent and context reduction is actually worth it
+
+Child investigations in this family should return:
+
+- `templates/analysis-child-result.md`
+
+That template is the default bounded evidence contract for non-incident analysis tracks.
 
 ## Repository Layout
 
@@ -192,11 +248,17 @@ Shared concerns such as environment defaults, evidence discipline, measurability
 ## Current Templates
 
 - `templates/incident-analysis-page.md`
+  Parent incident document shape. This now converges on summary, root cause analysis, impact analysis, recommended solutions and mitigations, deployments or code references when relevant, and bottom-of-page evidence and queries.
 - `templates/dynatrace-investigation-result.md`
+  Child-result contract for incident-style Dynatrace investigations.
 - `templates/analysis-child-result.md`
+  Child-result contract for non-incident bounded analysis tracks such as service analysis and follow-up claim validation.
 - `templates/endpoint-traffic-analysis-page.md`
+  Final page shape for endpoint inventory and traffic analysis.
 - `templates/service-metric-analysis-page.md`
+  Final page shape for service metric and telemetry analysis.
 - `templates/incident-followup-story.md`
+  Story-drafting template for incident follow-up work.
 
 ## Using This Repo With Codex
 
