@@ -2,6 +2,8 @@
 
 Use this reference when a workflow produces an analysis page backed by code inspection and telemetry evidence.
 
+Use `references/diataxis-writing-rules.md` first when the page type itself is still unclear.
+
 ## Writing Rules
 
 - Use concise, decision-oriented prose.

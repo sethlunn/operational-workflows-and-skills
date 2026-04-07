@@ -9,6 +9,15 @@ This repo is being organized around Diataxis:
 
 Use the section that matches your need right now.
 
+## If You Need A Guided First Run
+
+Go to `tutorials/`.
+
+Start with:
+
+- First incident investigation in `trial mode`:
+  `tutorials/first-incident-investigation-trial-mode.md`
+
 ## If You Need To Do Work Now
 
 Go to `workflows/`.
@@ -38,6 +47,8 @@ Go to `references/`, `templates/`, or `scripts/`.
 
 Useful anchors:
 
+- Diataxis authoring rules:
+  `references/diataxis-writing-rules.md`
 - Confluence routing:
   `references/confluence-routing.md`
 - Dynatrace query shapes:
@@ -52,6 +63,14 @@ Useful anchors:
   `templates/dynatrace-investigation-result.md`
 - Non-incident child result contract:
   `templates/analysis-child-result.md`
+- Generic tutorial template:
+  `templates/tutorial-page.md`
+- Generic how-to template:
+  `templates/how-to-page.md`
+- Generic reference template:
+  `templates/reference-page.md`
+- Generic explanation template:
+  `templates/explanation-page.md`
 
 ## If You Need To Understand The System
 
@@ -75,9 +94,9 @@ Use this order:
 
 ## Current Gap
 
-The repo is strongest in how-to guides and reference. It does not yet have true tutorials for first-time contributors or first-time operators.
+The repo is strongest in how-to guides and reference. It now has its first true tutorial, but the tutorial quadrant is still sparse.
 
 The next useful tutorial additions are:
 
-- first incident investigation in `trial` mode
 - first shared workflow plus thin Codex adapter
+- first publish-mode incident write-up

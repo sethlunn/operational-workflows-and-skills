@@ -14,7 +14,9 @@ Diataxis is the simplest useful lens for this repo: choose documentation based o
 
 Use tutorials when the goal is to learn safely through a guided first run.
 
-This is still the weakest quadrant in the repo today. `START-HERE.md` serves as the onboarding entry point until fuller tutorials exist.
+Current tutorial:
+
+- `tutorials/first-incident-investigation-trial-mode.md`
 
 ### How-to Guides
 
@@ -45,10 +47,15 @@ The main reference surface is:
 
 High-value reference files:
 
+- `references/diataxis-writing-rules.md`
 - `references/confluence-routing.md`
 - `references/dynatrace-query-patterns.md`
 - `references/dynatrace-fast-path.md`
 - `references/subagent-usage.md`
+- `templates/tutorial-page.md`
+- `templates/how-to-page.md`
+- `templates/reference-page.md`
+- `templates/explanation-page.md`
 - `templates/incident-analysis-page.md`
 - `templates/dynatrace-investigation-result.md`
 - `templates/analysis-child-result.md`
@@ -285,6 +292,8 @@ Rules:
   Thin Codex adapters. Each folder contains a `SKILL.md` and usually `agents/openai.yaml`.
 - `workflows/`
   Shared operational procedures and branch playbooks.
+- `tutorials/`
+  Guided first-run docs for common repo workflows.
 - `references/`
   Stable routing rules, query patterns, interpretation guidance, and writing standards.
 - `templates/`
@@ -331,11 +340,17 @@ Rules:
 - `workflows/service-endpoint-traffic-analysis.md`
 - `workflows/service-metric-analysis.md`
 
+## Current Tutorials
+
+- `tutorials/first-incident-investigation-trial-mode.md`
+  Guided first run for the PagerDuty incident workflow in `trial mode`.
+
 ## Current References
 
 ### Routing, Querying, And Interpretation
 
 - `references/confluence-routing.md`
+- `references/diataxis-writing-rules.md`
 - `references/dynatrace-fast-path.md`
 - `references/dynatrace-query-patterns.md`
 - `references/dynatrace-evidence-interpretation.md`
@@ -358,6 +373,14 @@ Rules:
   Child-result contract for incident-style Dynatrace investigations.
 - `templates/analysis-child-result.md`
   Child-result contract for non-incident bounded analysis tracks such as service analysis and follow-up claim validation.
+- `templates/tutorial-page.md`
+  Generic guided first-run template for teaching docs.
+- `templates/how-to-page.md`
+  Generic task-oriented template for procedural docs.
+- `templates/reference-page.md`
+  Generic exact-lookup template for contracts, fields, and command docs.
+- `templates/explanation-page.md`
+  Generic rationale and tradeoff template for architecture and design docs.
 - `templates/endpoint-traffic-analysis-page.md`
   Final page shape for endpoint inventory and traffic analysis.
 - `templates/service-metric-analysis-page.md`
