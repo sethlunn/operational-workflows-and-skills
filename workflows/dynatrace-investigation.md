@@ -6,6 +6,7 @@ Read `../references/dynatrace-query-patterns.md` when you need starter DQL shape
 Read `../references/dynatrace-evidence-interpretation.md` when you need help interpreting caller-vs-callee mismatch, telemetry gaps, late secondary events, or rollout-vs-code ambiguity.
 Read `../references/subagent-usage.md` when deciding whether to split the investigation into independent child scopes.
 Read `../templates/dynatrace-investigation-result.md` when this workflow is being used as a bounded child investigation that must return a structured evidence package.
+Read `../explanations/dynatrace-investigation-pattern.md` when you need the rationale for the router structure, narrow entity scope, branch selection, or bounded child investigation rules.
 
 After reading this router, read exactly one branch playbook:
 
@@ -93,7 +94,6 @@ Run these steps before branching.
 - scheduled job or batch process
 - downstream dependency or shared platform issue
 - telemetry or BI validation path
-- This choice determines which signal should be checked first and which regressions are actually meaningful.
 
 4. Choose the first evidence source based on the question.
 - Rollout check:
@@ -120,7 +120,7 @@ Run these steps before branching.
 - Prefer exact-match filters over `contains` when the field is known.
 - Use `generate_dql_from_natural_language` when it is safer or faster than hand-writing DQL.
 - Use `fetch dt.semantic_dictionary.models` when the right data object or field is unclear before guessing at schema names.
-- Prefer proving or disproving one concrete hypothesis per query over writing one broad query that mixes concerns.
+- Prefer one concrete hypothesis per query.
 
 ## Subagent Posture
 
@@ -176,7 +176,7 @@ Use this section when another workflow, such as PagerDuty incident analysis, inv
 5. Do not act like the parent incident orchestrator.
 - Do not try to explain the whole incident from one narrow track.
 - Do not overwrite a shared parent document unless explicitly assigned sole ownership of a subpage or scratch artifact.
-- Optimize for defensible evidence, not narrative completeness.
+- Optimize for defensible evidence.
 
 ## Output Rules
 

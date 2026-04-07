@@ -69,6 +69,7 @@ Start with:
 
 - `explanations/repo-architecture.md`
 - `explanations/incident-analysis-pattern.md`
+- `explanations/dynatrace-investigation-pattern.md`
 - `reviews/design/skills-architecture-and-governance.md`
 
 Some explanation-oriented material still lives under `references/` and should move over time:
@@ -397,6 +398,8 @@ Rules:
   Why the repo is structured around shared workflows, references, templates, and thin skill adapters.
 - `explanations/incident-analysis-pattern.md`
   Why the incident workflow defaults to `trial mode`, creates a parent surface early, uses bounded child tracks, and runs retrospective cleanup.
+- `explanations/dynatrace-investigation-pattern.md`
+  Why the Dynatrace workflow uses a router, narrows entity scope early, prefers one branch, and keeps child investigations bounded.
 
 ## Using This Repo With Codex
 
