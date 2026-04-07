@@ -1,6 +1,6 @@
 ---
 name: babysit-pr
-description: "Review a GitHub pull request when the user gives a PR number or link and wants help triaging comments, reviewing changed code, deciding which review comments are valid, replying on the PR, or preparing fixes. Use for PR babysitting tasks: reading review threads, inspecting the diff against base, deciding whether comments should be accepted or pushed back on, asking the user before making code changes, and posting signed comment replies."
+description: "Babysit a GitHub pull request you own after human or AI review comments land. Use for PR author tasks: reading unresolved review comments and review summaries, checking the current diff, deciding which comments require code changes versus explanation, making safe revisions, running focused verification, pushing branch updates, and replying to all addressed comments with concise rationale and signed replies."
 ---
 
 # Babysit PR
@@ -10,6 +10,7 @@ Read [../../workflows/babysit-pr.md](../../workflows/babysit-pr.md) before start
 Follow the shared workflow:
 
 - identify the PR and current review state first
+- triage review comments from humans and AI against the current code
+- make safe revisions, push updates, and reply to each addressed comment unless the user asked for draft-only handling
 - review the current diff against base before taking a position
-- ask before making code changes
 - sign every PR reply exactly as `sethlunn's pal, Thing 2`

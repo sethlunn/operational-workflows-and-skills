@@ -85,7 +85,16 @@ These now share a common service-analysis layer:
 ### Review And Triage
 
 - `babysit-pr`
-  Review-triage workflow for PR comments, validity checks, reply drafting, and bounded code-fix decisions.
+  Active code-owner workflow for triaging review comments, making safe revisions, pushing updates, and replying to review threads.
+- `review-pr`
+  Requirement-driven PR review workflow that reads Jira, epic, and Confluence context before reviewing the code and discussing findings in session.
+
+These are intentionally separate:
+
+- `babysit-pr`
+  Use when you own the PR and want the agent to move it forward by handling review feedback.
+- `review-pr`
+  Use when you want an independent review of the PR against the story, design context, and current code.
 
 ## How The Main Flows Fit Together
 
@@ -179,6 +188,38 @@ Child investigations in this family should return:
 
 That template is the default bounded evidence contract for non-incident analysis tracks.
 
+### PR Review Flows
+
+The review family now has two distinct flows because the author-side and reviewer-side jobs are materially different:
+
+```text
+PR with human or AI comments
+  -> babysit-pr
+  -> triage current review state
+  -> make safe revisions
+  -> run narrow verification
+  -> push branch updates
+  -> reply to addressed review threads
+```
+
+```text
+PR link or PR number
+  -> review-pr
+  -> read PR body
+  -> read Jira story
+  -> read epic when relevant
+  -> read linked or discoverable Confluence design docs
+  -> inspect current review state and diff
+  -> produce findings in session
+```
+
+Rules:
+
+- `babysit-pr` is author-side and defaults to active handling.
+- `review-pr` is reviewer-side and defaults to a session-only review.
+- `review-pr` should not comment on the PR or change code unless explicitly asked.
+- `babysit-pr` may pull Jira, epic, or Confluence context when needed to answer a review comment correctly, but that is secondary to moving the PR forward.
+
 ## Repository Layout
 
 - `codex/`
@@ -203,6 +244,7 @@ That template is the default bounded evidence contract for non-incident analysis
 - `codex/service-metric-analysis`
 - `codex/incident-followup-planning`
 - `codex/babysit-pr`
+- `codex/review-pr`
 
 ## Current Workflows
 
@@ -213,6 +255,7 @@ That template is the default bounded evidence contract for non-incident analysis
 - `workflows/service-analysis-common.md`
 - `workflows/incident-followup-planning.md`
 - `workflows/babysit-pr.md`
+- `workflows/review-pr.md`
 
 ### Dynatrace Branch Workflows
 
@@ -242,6 +285,7 @@ That template is the default bounded evidence contract for non-incident analysis
 ### Workflow-Specific Support
 
 - `references/jira-incident-followup.md`
+- `references/pr-review-context-gathering.md`
 - `references/slack-setup.md`
 - `references/incident-investigation-lessons-2026-03-27.md`
 
@@ -314,6 +358,8 @@ What it does:
 - `Use $service-endpoint-traffic-analysis to analyze risk-manager endpoint traffic and create or update the Confluence page.`
 - `Use $service-metric-analysis to inspect a repo service, analyze its emitted metrics in Dynatrace, and publish the findings to Confluence.`
 - `Use $incident-followup-planning to validate the incident page and create follow-up Jira stories under the incident epic.`
+- `Use $babysit-pr to handle the review comments on my PR, make any needed code changes, push updates, and reply to the threads.`
+- `Use $review-pr to review this PR against the linked Jira story, epic if needed, Confluence design docs, and the current code, then discuss the findings in session.`
 
 ## Adding New Capabilities
 
