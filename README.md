@@ -4,6 +4,69 @@ Portable, company-specific operational workflows and reusable skill adapters for
 
 This repo keeps the reusable operating model in shared Markdown and keeps model-specific skill wrappers thin. The goal is to make one investigation or analysis pattern reusable across Codex today and other agent environments later.
 
+Start with [START-HERE.md](./START-HERE.md).
+
+## Use This Repo By Need
+
+Diataxis is the simplest useful lens for this repo: choose documentation based on what the reader needs right now.
+
+### Tutorials
+
+Use tutorials when the goal is to learn safely through a guided first run.
+
+This is still the weakest quadrant in the repo today. `START-HERE.md` serves as the onboarding entry point until fuller tutorials exist.
+
+### How-to Guides
+
+Use how-to guides when the goal is to complete an operational task.
+
+The main how-to surface is `workflows/`.
+
+Good starting points:
+
+- `workflows/pagerduty-incident-analysis.md`
+- `workflows/dynatrace-investigation.md`
+- `workflows/pagerduty-assigned-service-health.md`
+- `workflows/service-endpoint-traffic-analysis.md`
+- `workflows/service-metric-analysis.md`
+- `workflows/incident-followup-planning.md`
+- `workflows/babysit-pr.md`
+- `workflows/review-pr.md`
+
+### Reference
+
+Use reference when you need exact facts, patterns, or output contracts.
+
+The main reference surface is:
+
+- `references/`
+- `templates/`
+- `scripts/`
+
+High-value reference files:
+
+- `references/confluence-routing.md`
+- `references/dynatrace-query-patterns.md`
+- `references/dynatrace-fast-path.md`
+- `references/subagent-usage.md`
+- `templates/incident-analysis-page.md`
+- `templates/dynatrace-investigation-result.md`
+- `templates/analysis-child-result.md`
+
+### Explanation
+
+Use explanation when you need rationale, tradeoffs, or the mental model behind the workflows.
+
+Start with:
+
+- `explanations/repo-architecture.md`
+- `reviews/design/skills-architecture-and-governance.md`
+
+Some explanation-oriented material still lives under `references/` and should move over time:
+
+- `references/dynatrace-evidence-interpretation.md`
+- `references/incident-investigation-lessons-2026-03-27.md`
+
 ## Core Model
 
 This repo is organized around a small set of layers:
@@ -42,10 +105,6 @@ user request
 - Prefer exact dates, exact ids, and exact query shapes over vague summaries.
 - Separate direct evidence from interpretation in every analysis workflow.
 - Use one canonical writer for any published parent artifact.
-
-The current design rationale is documented in:
-
-- `reviews/design/skills-architecture-and-governance.md`
 
 ## Skill Families
 
@@ -230,6 +289,8 @@ Rules:
   Stable routing rules, query patterns, interpretation guidance, and writing standards.
 - `templates/`
   Reusable artifact structures.
+- `explanations/`
+  Rationale, architecture, and decision-making guidance.
 - `reviews/`
   Design and assessment artifacts that inform how the repo evolves.
 - `scripts/`
@@ -306,19 +367,19 @@ Rules:
 
 ## Using This Repo With Codex
 
-The preferred setup is to symlink the repo-managed skills into `~/.codex/skills/` so new sessions automatically see repo updates.
+The preferred setup is to symlink the repo-managed skills into your Codex home so new sessions automatically see repo updates.
 
 Use:
 
 ```bash
-/Users/sethlunn/RiderProjects/operational-workflows-and-skills/scripts/link-codex-skills
+./scripts/link-codex-skills
 ```
 
 That script:
 
-- links every folder under `codex/` into `~/.codex/skills/`
+- links every folder under `codex/` into `${CODEX_HOME:-$HOME/.codex}/skills/`
 - safely backs up conflicting copied folders with a timestamped suffix
-- links the shared repo roots under `~/.codex/` so relative references inside `SKILL.md` files keep working
+- links the shared repo roots under `${CODEX_HOME:-$HOME/.codex}/` so relative references inside `SKILL.md` files keep working
 
 The shared roots it links are:
 
@@ -343,10 +404,16 @@ The script lives at:
 
 What it does:
 
-- starts Codex in the trusted `quadpay-services/services` workspace
+- starts Codex in the target workspace
 - adds this repo as an extra writable directory
 - warms likely PagerDuty and Dynatrace reads early
 - reduces approval friction during live incident work
+
+By default, the launcher uses your current directory as the target workspace. If you want a different workspace, pass it explicitly:
+
+- `codex-incident-session trial /path/to/services`
+
+You can also set `CODEX_INCIDENT_WORKDIR`.
 
 ## Example Prompts
 

@@ -4,7 +4,7 @@ Use this only when Slack publishing is requested and Slack is not configured yet
 
 ## Required Environment Variables
 
-Add these to `~/.zshrc`:
+Add these to your shell environment, for example in your shell profile:
 
 - `SLACK_BOT_TOKEN`
   - The bot token for the Slack app.

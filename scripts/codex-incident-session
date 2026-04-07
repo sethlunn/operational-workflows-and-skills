@@ -3,18 +3,26 @@
 set -euo pipefail
 
 MODE="${1:-trial}"
+WORKDIR_ARG="${2:-}"
 
 case "$MODE" in
   trial|publish)
     ;;
   *)
-    echo "Usage: $(basename "$0") [trial|publish]" >&2
+    echo "Usage: $(basename "$0") [trial|publish] [workspace-dir]" >&2
     exit 1
     ;;
 esac
 
-WORKDIR="/Users/sethlunn/RiderProjects/quadpay-services/services"
-SKILL_REPO="/Users/sethlunn/RiderProjects/operational-workflows-and-skills"
+SCRIPT_DIR="${0:P:h}"
+SKILL_REPO="${SCRIPT_DIR:h}"
+WORKDIR="${WORKDIR_ARG:-${CODEX_INCIDENT_WORKDIR:-$PWD}}"
+
+if [[ ! -d "$WORKDIR" ]]; then
+  echo "Could not find the incident workspace at: $WORKDIR" >&2
+  echo "Pass a workspace directory as the second argument or set CODEX_INCIDENT_WORKDIR and rerun." >&2
+  exit 1
+fi
 
 if [[ "$MODE" == "trial" ]]; then
   MODE_LINE="Start a PagerDuty/Dynatrace incident-investigation session in trial mode."
@@ -35,7 +43,6 @@ Before taking a real incident, preflight the session so likely MCP approvals hap
 Perform these minimal, harmless checks:
 - Call PagerDuty \`get_user_data\`.
 - Call Dynatrace \`get_environment_info\`.
-- Call Dynatrace \`find_entity_by_name\` for \`admin-primary\`.
 - Call Dynatrace \`execute_dql\` with a tiny read-only query over the last 5 minutes. Prefer:
   \`fetch dt.davis.problems, from: now()-5m, to: now() | limit 1\`
 ${ATLASSIAN_STEP}
