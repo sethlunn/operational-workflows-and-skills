@@ -48,6 +48,7 @@ The main reference surface is:
 High-value reference files:
 
 - `references/diataxis-writing-rules.md`
+- `references/diataxis-review-checklist.md`
 - `references/confluence-routing.md`
 - `references/dynatrace-query-patterns.md`
 - `references/dynatrace-fast-path.md`
@@ -67,6 +68,7 @@ Use explanation when you need rationale, tradeoffs, or the mental model behind t
 Start with:
 
 - `explanations/repo-architecture.md`
+- `explanations/incident-analysis-pattern.md`
 - `reviews/design/skills-architecture-and-governance.md`
 
 Some explanation-oriented material still lives under `references/` and should move over time:
@@ -351,6 +353,7 @@ Rules:
 
 - `references/confluence-routing.md`
 - `references/diataxis-writing-rules.md`
+- `references/diataxis-review-checklist.md`
 - `references/dynatrace-fast-path.md`
 - `references/dynatrace-query-patterns.md`
 - `references/dynatrace-evidence-interpretation.md`
@@ -387,6 +390,13 @@ Rules:
   Final page shape for service metric and telemetry analysis.
 - `templates/incident-followup-story.md`
   Story-drafting template for incident follow-up work.
+
+## Current Explanations
+
+- `explanations/repo-architecture.md`
+  Why the repo is structured around shared workflows, references, templates, and thin skill adapters.
+- `explanations/incident-analysis-pattern.md`
+  Why the incident workflow defaults to `trial mode`, creates a parent surface early, uses bounded child tracks, and runs retrospective cleanup.
 
 ## Using This Repo With Codex
 

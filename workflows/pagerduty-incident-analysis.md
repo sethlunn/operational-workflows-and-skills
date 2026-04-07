@@ -15,6 +15,7 @@ Read `../workflows/dynatrace-incident-path-analysis.md` before the high-level in
 Read `../templates/incident-analysis-page.md` for the parent Confluence page shape.
 Read `../templates/dynatrace-investigation-result.md` for the child-investigation return contract.
 Read `../references/subagent-usage.md` before splitting the incident into child investigations.
+Read `../explanations/incident-analysis-pattern.md` when you need the rationale for `trial mode`, the early parent surface, bounded child tracks, or retrospective cleanup.
 Read `../references/incident-investigation-lessons-2026-03-27.md` only when you want the concrete incident examples that motivated the current guardrails.
 
 ## Execution Posture
@@ -129,14 +130,15 @@ Only interrupt when one of these is true:
   - when it first became clearly broken
   - whether the blast radius appears isolated or broad
   - which deeper investigation tracks are justified
-- Distinguish observed evidence from hypotheses. The purpose of this step is to narrow the queue, not to prove every possible root cause.
+- Distinguish observed evidence from hypotheses.
+- Use this step to narrow the queue, not to prove every root-cause claim.
 
 6. Create the parent investigation surface.
 - In `publish mode`:
   - search for an existing page for the same incident id before creating a new one
   - update an existing page unless the user explicitly asks for a new page
   - use the timestamp prefix rule from `../references/confluence-routing.md`
-  - create the page before deep child investigations so the incident has a canonical parent document from the start
+  - create the page before deep child investigations
 - In `trial mode`:
   - do not create or update the Confluence page
   - create an in-memory parent-page-ready outline using `../templates/incident-analysis-page.md`
@@ -166,7 +168,8 @@ Only interrupt when one of these is true:
   - one exact time window
   - one bounded entity or dependency scope
   - one reason it is worth investigating
-- Do not spawn parallel tracks for every alert or every dependency. The queue should stay small enough that the parent can still synthesize it coherently.
+- Do not spawn parallel tracks for every alert or every dependency.
+- Keep the queue small enough that the parent can still synthesize it coherently.
 
 8. Run child Dynatrace investigations.
 - When child agents are available, use them for bounded tracks in parallel following `../references/subagent-usage.md`.
@@ -181,9 +184,9 @@ Only interrupt when one of these is true:
   - specific failure-path debugging: `../workflows/dynatrace-service-debugging.md`
   - propagation or missing-event questions: `../workflows/dynatrace-guid-trace.md`
   - rollout-correlation questions: `../workflows/dynatrace-rollout-check.md`
-- Child investigations should not all write directly to the parent Confluence page.
 - The parent incident workflow remains the canonical writer for the parent page.
-- If the platform supports subpages or temporary scratch docs and they materially help, child investigations may write there, but the parent must still merge the final result into the main incident page.
+- Child investigations should not all write directly to the parent Confluence page.
+- If subpages or temporary scratch docs materially help, child investigations may write there, but the parent must still merge the final result into the main incident page.
 
 9. Collect child results using a strict evidence contract.
 - Each child must return a structured result package using `../templates/dynatrace-investigation-result.md`.
@@ -221,7 +224,7 @@ Only interrupt when one of these is true:
   - impact analysis
   - recommended solutions and mitigations
   - deployments and code references when relevant
-- The final assessment should stitch together the broad sweep and the child investigations, not replace them.
+- The final assessment should stitch together the broad sweep and the child investigations.
 
 12. Run retrospective cleanup when the incident is resolved or when the user asks for a final pass.
 - Refresh the PagerDuty incident status and timestamps before finalizing the page.

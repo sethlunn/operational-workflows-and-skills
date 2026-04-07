@@ -49,6 +49,8 @@ Useful anchors:
 
 - Diataxis authoring rules:
   `references/diataxis-writing-rules.md`
+- Diataxis review checklist:
+  `references/diataxis-review-checklist.md`
 - Confluence routing:
   `references/confluence-routing.md`
 - Dynatrace query shapes:
@@ -75,6 +77,8 @@ Useful anchors:
 ## If You Need To Understand The System
 
 Start with `explanations/repo-architecture.md`.
+
+Then read `explanations/incident-analysis-pattern.md` if you want the rationale behind the parent-and-child incident workflow.
 
 That explains:
 

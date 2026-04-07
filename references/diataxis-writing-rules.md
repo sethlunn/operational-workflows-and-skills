@@ -94,3 +94,5 @@ Before merging a documentation change, check:
 - If it mixes modes, are the sections labeled clearly?
 - Is the file in the right repo layer for its job?
 - Is there a better existing template for this artifact?
+
+Use `references/diataxis-review-checklist.md` when you want a fuller section-by-section review pass instead of a quick authoring check.
