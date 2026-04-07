@@ -3,7 +3,7 @@
 Use this file as the top-level router for Dynatrace work.
 
 Read `../references/dynatrace-query-patterns.md` when you need starter DQL shapes for metrics, logs, spans, events, or GUID tracing.
-Read `../references/dynatrace-evidence-interpretation.md` when you need help interpreting caller-vs-callee mismatch, telemetry gaps, late secondary events, or rollout-vs-code ambiguity.
+Read `../explanations/dynatrace-evidence-interpretation.md` when you need help interpreting caller-vs-callee mismatch, telemetry gaps, late secondary events, or rollout-vs-code ambiguity.
 Read `../references/subagent-usage.md` when deciding whether to split the investigation into independent child scopes.
 Read `../templates/dynatrace-investigation-result.md` when this workflow is being used as a bounded child investigation that must return a structured evidence package.
 Read `../explanations/dynatrace-investigation-pattern.md` when you need the rationale for the router structure, narrow entity scope, branch selection, or bounded child investigation rules.

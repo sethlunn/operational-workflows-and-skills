@@ -1,6 +1,8 @@
 # Dynatrace Evidence Interpretation
 
-Use this reference when the telemetry is ambiguous and you need to avoid over-claiming.
+Use this explanation when the telemetry is ambiguous and you need help understanding what competing signals might mean before you finalize a conclusion.
+
+Use the workflows when you need to run the investigation steps. Use this page when the question is how to interpret what the evidence is already showing.
 
 ## Onset vs Late Secondary Events
 

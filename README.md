@@ -70,11 +70,11 @@ Start with:
 - `explanations/repo-architecture.md`
 - `explanations/incident-analysis-pattern.md`
 - `explanations/dynatrace-investigation-pattern.md`
+- `explanations/dynatrace-evidence-interpretation.md`
 - `reviews/design/skills-architecture-and-governance.md`
 
 Some explanation-oriented material still lives under `references/` and should move over time:
 
-- `references/dynatrace-evidence-interpretation.md`
 - `references/incident-investigation-lessons-2026-03-27.md`
 
 ## Core Model
@@ -357,7 +357,6 @@ Rules:
 - `references/diataxis-review-checklist.md`
 - `references/dynatrace-fast-path.md`
 - `references/dynatrace-query-patterns.md`
-- `references/dynatrace-evidence-interpretation.md`
 - `references/telemetry-measurability.md`
 - `references/confluence-analysis-writing-standard.md`
 - `references/subagent-usage.md`
@@ -400,6 +399,8 @@ Rules:
   Why the incident workflow defaults to `trial mode`, creates a parent surface early, uses bounded child tracks, and runs retrospective cleanup.
 - `explanations/dynatrace-investigation-pattern.md`
   Why the Dynatrace workflow uses a router, narrows entity scope early, prefers one branch, and keeps child investigations bounded.
+- `explanations/dynatrace-evidence-interpretation.md`
+  How to interpret ambiguous Dynatrace evidence such as low-load alerts, telemetry gaps, caller-vs-callee mismatch, and rollout correlation.
 
 ## Using This Repo With Codex
 

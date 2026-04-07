@@ -80,6 +80,7 @@ Start with `explanations/repo-architecture.md`.
 
 Then read `explanations/incident-analysis-pattern.md` if you want the rationale behind the parent-and-child incident workflow.
 Read `explanations/dynatrace-investigation-pattern.md` if you want the rationale behind the Dynatrace router and branch model.
+Read `explanations/dynatrace-evidence-interpretation.md` when the hard part is understanding what ambiguous telemetry actually means.
 
 That explains:
 
