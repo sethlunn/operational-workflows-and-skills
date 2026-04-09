@@ -1,0 +1,75 @@
+publishedAt: "2026-04-08T13:13:31Z"
+cloudId: "38569f7e-52d4-4ddd-bb03-00d2c89d3823"
+spaceId: "32969"
+spaceKey: "QD"
+
+publicationRoot:
+  teamPageTitle: "Underwriting Team"
+  teamPageId: "4530274327"
+  teamPageUrl: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/4530274327/Underwriting+Team"
+  investigationsFolderTitle: "Spikes & Investigations, Underwriting"
+  investigationsFolderId: "4612161644"
+  operationalAnalysisFolderTitle: "Operational Analysis"
+  operationalAnalysisFolderId: "5288919047"
+  operationalAnalysisUrl: "https://quadpay.atlassian.net/wiki/spaces/QD/folder/5288919047"
+
+domain:
+  name: "provider-gateways"
+  docsRootTitle: "Provider Gateways Service Documentation"
+  docsRootPageId: "5342429197"
+  url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5342429197/Provider+Gateways+Service+Documentation"
+
+service:
+  name: "machine-learning-gateway"
+  title: "Machine Learning Gateway"
+  landingPageId: "5342724120"
+  url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5342724120/Machine+Learning+Gateway"
+  sourceFiles:
+    overview: "reviews/service-docs/provider-gateways-machine-learning-gateway/service-overview.md"
+    reference: "reviews/service-docs/provider-gateways-machine-learning-gateway/service-reference.md"
+    operability: "reviews/service-docs/provider-gateways-machine-learning-gateway/operability-guide.md"
+  pages:
+    overview:
+      title: "Machine Learning Gateway - Overview"
+      pageId: "5342068769"
+      url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5342068769/Machine+Learning+Gateway+-+Overview"
+    reference:
+      title: "Machine Learning Gateway - Reference"
+      pageId: "5342232583"
+      url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5342232583/Machine+Learning+Gateway+-+Reference"
+    operability:
+      title: "Machine Learning Gateway - Operability Guide"
+      pageId: "5343248385"
+      url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5343248385/Machine+Learning+Gateway+-+Operability+Guide"
+
+relatedPages:
+  domainOverview:
+    title: "Credit Bureau Gateways"
+    pageId: "1863974918"
+    url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/1863974918/Credit+Bureau+Gateways"
+  providerGateways:
+    title: "Provider-Gateways"
+    pageId: "4606066774"
+    url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/4606066774/Provider-Gateways"
+  machineLearningEngineeringGateway:
+    title: "Machine Learning Engineering Gateway"
+    pageId: "4933681160"
+    url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/4933681160/Machine+Learning+Engineering+Gateway"
+  runPredictions:
+    title: "Run Predictions"
+    pageId: "5249237020"
+    url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5249237020/Run+Predictions"
+  endpointTrafficDomain:
+    title: "Provider Gateways Endpoint Traffic Analysis"
+    pageId: "5265096720"
+    url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5265096720/Provider+Gateways+Endpoint+Traffic+Analysis"
+  endpointTrafficService:
+    title: "Machine Learning Gateway Endpoint Traffic Analysis"
+    pageId: "5265686553"
+    url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5265686553/Machine+Learning+Gateway+Endpoint+Traffic+Analysis"
+
+notes:
+  - "Update published pages by pageId, not by title search."
+  - "Keep git markdown as the source of truth."
+  - "The Confluence tree is the published view."
+  - "This service doc set is published under the Underwriting Team operational-analysis branch."

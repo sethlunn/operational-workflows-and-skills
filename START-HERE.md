@@ -28,6 +28,8 @@ Recommended starting points:
   `workflows/pagerduty-incident-analysis.md`
 - Dynatrace investigation router:
   `workflows/dynatrace-investigation.md`
+- Service system documentation set:
+  `workflows/service-system-documentation.md`
 - PagerDuty-owned service health rollup:
   `workflows/pagerduty-assigned-service-health.md`
 - Service endpoint inventory and traffic analysis:
@@ -36,6 +38,8 @@ Recommended starting points:
   `workflows/service-metric-analysis.md`
 - Incident follow-up planning:
   `workflows/incident-followup-planning.md`
+- PR author coaching from recent history:
+  `workflows/pr-author-coaching.md`
 - PR review triage:
   `workflows/babysit-pr.md`
 - Independent PR review:
@@ -57,6 +61,8 @@ Useful anchors:
   `references/dynatrace-query-patterns.md`
 - Fast-path triage rules:
   `references/dynatrace-fast-path.md`
+- PR coaching rubric:
+  `references/pr-coaching-rubric.md`
 - Subagent usage rules:
   `references/subagent-usage.md`
 - Parent incident page contract:
@@ -78,6 +84,7 @@ Useful anchors:
 
 Start with `explanations/repo-architecture.md`.
 
+Read `explanations/service-documentation-pattern.md` when you want the rationale behind producing a service overview, reference page, and operability guide as a doc set.
 Then read `explanations/incident-analysis-pattern.md` if you want the rationale behind the parent-and-child incident workflow.
 Read `explanations/dynatrace-investigation-pattern.md` if you want the rationale behind the Dynatrace router and branch model.
 Read `explanations/dynatrace-evidence-interpretation.md` when the hard part is understanding what ambiguous telemetry actually means.

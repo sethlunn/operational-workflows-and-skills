@@ -1,0 +1,14 @@
+interface:
+  display_name: "Service System Documentation"
+  short_description: "Document a service with code and telemetry."
+  default_prompt: "Use $service-system-documentation to inspect a repo service or system, combine code-backed structure discovery with telemetry evidence, and create or update a service overview, reference page, and operability guide."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "dynatrace"
+      description: "Resolve runtime entities, traffic patterns, dependencies, and service health."
+    - type: "mcp"
+      value: "atlassian"
+      description: "Create or update the published Confluence documentation set when publishing is requested."
+policy:
+  allow_implicit_invocation: true

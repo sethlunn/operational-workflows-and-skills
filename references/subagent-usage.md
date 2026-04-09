@@ -105,6 +105,18 @@ Use a shared child-result contract when one exists for the workflow family:
 - Avoid splitting if the service is small or the endpoint surface is already trivial.
 - When used, child results should follow `../templates/analysis-child-result.md`.
 
+### Service System Documentation
+
+- Strong fit.
+- Good split:
+  - code structure and runtime entrypoints
+  - interfaces and schemas
+  - Dynatrace topology, traffic, and health
+  - operability and debugging guidance
+- Keep the parent as the canonical writer for the final documentation set.
+- Child outputs may live in markdown scratch or temporary notes, but they should still return compact evidence packages rather than final reference pages.
+- When used, child results should follow `../templates/analysis-child-result.md`.
+
 ### Incident Follow-up Planning
 
 - Optional fit.

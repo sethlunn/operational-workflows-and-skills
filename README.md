@@ -28,10 +28,12 @@ Good starting points:
 
 - `workflows/pagerduty-incident-analysis.md`
 - `workflows/dynatrace-investigation.md`
+- `workflows/service-system-documentation.md`
 - `workflows/pagerduty-assigned-service-health.md`
 - `workflows/service-endpoint-traffic-analysis.md`
 - `workflows/service-metric-analysis.md`
 - `workflows/incident-followup-planning.md`
+- `workflows/pr-author-coaching.md`
 - `workflows/babysit-pr.md`
 - `workflows/review-pr.md`
 
@@ -52,6 +54,7 @@ High-value reference files:
 - `references/confluence-routing.md`
 - `references/dynatrace-query-patterns.md`
 - `references/dynatrace-fast-path.md`
+- `references/pr-coaching-rubric.md`
 - `references/subagent-usage.md`
 - `templates/tutorial-page.md`
 - `templates/how-to-page.md`
@@ -68,6 +71,7 @@ Use explanation when you need rationale, tradeoffs, or the mental model behind t
 Start with:
 
 - `explanations/repo-architecture.md`
+- `explanations/service-documentation-pattern.md`
 - `explanations/incident-analysis-pattern.md`
 - `explanations/dynatrace-investigation-pattern.md`
 - `explanations/dynatrace-evidence-interpretation.md`
@@ -138,6 +142,8 @@ This can run standalone or as a bounded child investigation inside a larger work
 
 ### Service Analysis
 
+- `service-system-documentation`
+  Produce a Diataxis-aligned documentation set for a service or larger system using code-backed discovery and Dynatrace telemetry.
 - `service-endpoint-traffic-analysis`
   Inspect code, inventory endpoints, map them to Dynatrace traffic, and publish a cleanup-oriented Confluence page.
 - `service-metric-analysis`
@@ -153,6 +159,8 @@ These now share a common service-analysis layer:
 
 ### Review And Triage
 
+- `pr-author-coaching`
+  Coaching workflow that analyzes one or more engineers by recent PR history, review themes, and code quality patterns.
 - `babysit-pr`
   Active code-owner workflow for triaging review comments, making safe revisions, pushing updates, and replying to review threads.
 - `review-pr`
@@ -160,6 +168,8 @@ These now share a common service-analysis layer:
 
 These are intentionally separate:
 
+- `pr-author-coaching`
+  Use when the starting object is one or more GitHub usernames and the goal is recurring coaching guidance across recent PRs.
 - `babysit-pr`
   Use when you own the PR and want the agent to move it forward by handling review feedback.
 - `review-pr`
@@ -220,9 +230,9 @@ The service-analysis family now follows a cleaner pattern:
 service or component question
   -> service-analysis skill
   -> service-analysis-common
-  -> branch-specific workflow
+  -> branch-specific workflow or documentation-set workflow
   -> references/templates
-  -> Confluence page or health summary
+  -> Confluence page, health summary, or small documentation set
 ```
 
 Shared concerns such as environment defaults, evidence discipline, measurability caveats, and publishing standards live in the shared service-analysis layer instead of being copied into each skill.
@@ -243,6 +253,8 @@ Typical split patterns:
 
 - code-path discovery vs telemetry-history analysis
 - endpoint inventory vs Dynatrace entity mapping
+- runtime structure vs interfaces and schemas
+- telemetry topology vs operability guidance
 - per-service health checks for a large owned-service set
 
 Rules:
@@ -259,7 +271,16 @@ That template is the default bounded evidence contract for non-incident analysis
 
 ### PR Review Flows
 
-The review family now has two distinct flows because the author-side and reviewer-side jobs are materially different:
+The review family now has three distinct flows because coaching, author-side triage, and reviewer-side review start from different objects and produce different outputs:
+
+```text
+GitHub username or author list
+  -> pr-author-coaching
+  -> sample recent authored PRs
+  -> assess historical review and code patterns
+  -> aggregate recurring strengths and issues
+  -> produce coaching-ready guidance
+```
 
 ```text
 PR with human or AI comments
@@ -284,8 +305,10 @@ PR link or PR number
 
 Rules:
 
+- `pr-author-coaching` is author-history side and defaults to session-only coaching analysis.
 - `babysit-pr` is author-side and defaults to active handling.
 - `review-pr` is reviewer-side and defaults to a session-only review.
+- `pr-author-coaching` may use bounded child sessions for larger samples, but the parent remains the canonical writer.
 - `review-pr` should not comment on the PR or change code unless explicitly asked.
 - `babysit-pr` may pull Jira, epic, or Confluence context when needed to answer a review comment correctly, but that is secondary to moving the PR forward.
 
@@ -313,9 +336,11 @@ Rules:
 - `codex/pagerduty-incident-analysis`
 - `codex/dynatrace-investigation`
 - `codex/pagerduty-assigned-service-health`
+- `codex/service-system-documentation`
 - `codex/service-endpoint-traffic-analysis`
 - `codex/service-metric-analysis`
 - `codex/incident-followup-planning`
+- `codex/pr-author-coaching`
 - `codex/babysit-pr`
 - `codex/review-pr`
 
@@ -326,7 +351,9 @@ Rules:
 - `workflows/pagerduty-incident-analysis.md`
 - `workflows/dynatrace-investigation.md`
 - `workflows/service-analysis-common.md`
+- `workflows/service-system-documentation.md`
 - `workflows/incident-followup-planning.md`
+- `workflows/pr-author-coaching.md`
 - `workflows/babysit-pr.md`
 - `workflows/review-pr.md`
 
@@ -376,6 +403,12 @@ Rules:
   Child-result contract for incident-style Dynatrace investigations.
 - `templates/analysis-child-result.md`
   Child-result contract for non-incident bounded analysis tracks such as service analysis and follow-up claim validation.
+- `templates/service-overview-page.md`
+  Explanation-style overview template for what a service or system does, how it is shaped, and its main flows.
+- `templates/service-reference-page.md`
+  Reference-style template for deployables, interfaces, schemas, runtime entities, and ownership anchors.
+- `templates/service-operability-guide.md`
+  How-to-style template for health checks, rollout validation, tracing, and common failure modes.
 - `templates/tutorial-page.md`
   Generic guided first-run template for teaching docs.
 - `templates/how-to-page.md`
@@ -395,6 +428,8 @@ Rules:
 
 - `explanations/repo-architecture.md`
   Why the repo is structured around shared workflows, references, templates, and thin skill adapters.
+- `explanations/service-documentation-pattern.md`
+  Why service documentation should be produced as a Diataxis-aligned doc set, and how evidence, reference, and templates differ.
 - `explanations/incident-analysis-pattern.md`
   Why the incident workflow defaults to `trial mode`, creates a parent surface early, uses bounded child tracks, and runs retrospective cleanup.
 - `explanations/dynatrace-investigation-pattern.md`
@@ -427,6 +462,26 @@ The shared roots it links are:
 - `scripts/`
 
 Without those shared-root links, a skill folder may load its own `SKILL.md` but fail to resolve `../../workflows/...` or `../../templates/...`.
+
+When you want a new session to pick up the latest remote changes first, use:
+
+```bash
+./scripts/sync-codex-skills
+```
+
+That helper:
+
+- requires a clean checkout
+- fast-forwards the local repo from its tracked remote with `git pull --ff-only`
+- reruns `./scripts/link-codex-skills`
+
+If you are intentionally iterating on local uncommitted workflow changes, use:
+
+```bash
+./scripts/sync-codex-skills --link-only
+```
+
+That keeps the local checkout as the source of truth for the next session while still refreshing the Codex links.
 
 ## Incident Session Launcher
 
@@ -462,6 +517,7 @@ You can also set `CODEX_INCIDENT_WORKDIR`.
 - `Use $service-endpoint-traffic-analysis to analyze risk-manager endpoint traffic and create or update the Confluence page.`
 - `Use $service-metric-analysis to inspect a repo service, analyze its emitted metrics in Dynatrace, and publish the findings to Confluence.`
 - `Use $incident-followup-planning to validate the incident page and create follow-up Jira stories under the incident epic.`
+- `Use $pr-author-coaching to analyze davidsgbang's last 5 PRs in quadpay/quadpay-services and tell me the recurring issues and strengths to coach on.`
 - `Use $babysit-pr to handle the review comments on my PR, make any needed code changes, push updates, and reply to the threads.`
 - `Use $review-pr to review this PR against the linked Jira story, epic if needed, Confluence design docs, and the current code, then discuss the findings in session.`
 

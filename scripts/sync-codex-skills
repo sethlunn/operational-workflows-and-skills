@@ -1,0 +1,57 @@
+#!/bin/zsh
+
+set -euo pipefail
+
+script_dir=${0:A:h}
+repo_root=${script_dir:h}
+
+usage() {
+  cat <<'EOF'
+Usage: sync-codex-skills [--link-only]
+
+Refresh Codex skill links from this repo. By default this script first fast-forwards
+the local checkout from its tracked remote and then relinks the repo-managed skills.
+
+Options:
+  --link-only   Skip git pull and only refresh the Codex links from the current checkout.
+  --help        Show this help text.
+EOF
+}
+
+mode="sync"
+
+case "${1:-}" in
+  "")
+    ;;
+  --link-only)
+    mode="link-only"
+    shift
+    ;;
+  --help)
+    usage
+    exit 0
+    ;;
+  *)
+    usage >&2
+    exit 1
+    ;;
+esac
+
+if [[ $# -ne 0 ]]; then
+  usage >&2
+  exit 1
+fi
+
+if [[ "${mode}" == "sync" ]]; then
+  if [[ -n "$(git -C "${repo_root}" status --porcelain)" ]]; then
+    echo "Refusing to sync because the repo has local changes." >&2
+    echo "Commit or stash them first, or rerun with --link-only to refresh links without pulling." >&2
+    exit 1
+  fi
+
+  git -C "${repo_root}" pull --ff-only
+else
+  echo "Skipping git pull; relinking Codex skills from the current local checkout."
+fi
+
+"${script_dir}/link-codex-skills"
