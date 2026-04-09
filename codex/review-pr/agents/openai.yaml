@@ -1,6 +1,6 @@
 interface:
   display_name: "Review PR"
-  short_description: "Review PRs against Jira and design context."
-  default_prompt: "Use $review-pr to review a PR, read the linked Jira story, epic when needed, relevant Confluence docs, inspect the current diff, and discuss the findings in session."
+  short_description: "Review PRs against scope and design context."
+  default_prompt: "Use $review-pr to review a PR, establish its scope and rollout role, read the linked Jira story, epic when needed, relevant Confluence docs, inspect the current diff, and discuss the findings in session."
 policy:
   allow_implicit_invocation: true
