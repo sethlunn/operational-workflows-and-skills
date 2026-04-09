@@ -463,25 +463,30 @@ The shared roots it links are:
 
 Without those shared-root links, a skill folder may load its own `SKILL.md` but fail to resolve `../../workflows/...` or `../../templates/...`.
 
-When you want a new session to pick up the latest remote changes first, use:
+When you want a new session to automatically choose the newest available skill source, use:
+
+```bash
+./scripts/codex-session
+```
+
+That launcher:
+
+- refreshes the skill links before starting Codex
+- prefers the current local checkout when it contains the newest edits or commits
+- fast-forwards the local repo when the tracked upstream is newer and the pull is safe
+- otherwise builds a temporary upstream snapshot and links from that without disturbing local work
+
+If you want to refresh links without starting Codex, use:
 
 ```bash
 ./scripts/sync-codex-skills
 ```
 
-That helper:
-
-- requires a clean checkout
-- fast-forwards the local repo from its tracked remote with `git pull --ff-only`
-- reruns `./scripts/link-codex-skills`
-
-If you are intentionally iterating on local uncommitted workflow changes, use:
+If you are intentionally iterating on local uncommitted workflow changes and want to force the current checkout as the source of truth, use:
 
 ```bash
 ./scripts/sync-codex-skills --link-only
 ```
-
-That keeps the local checkout as the source of truth for the next session while still refreshing the Codex links.
 
 ## Incident Session Launcher
 

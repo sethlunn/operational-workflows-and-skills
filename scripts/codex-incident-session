@@ -18,6 +18,8 @@ SCRIPT_DIR="${0:P:h}"
 SKILL_REPO="${SCRIPT_DIR:h}"
 WORKDIR="${WORKDIR_ARG:-${CODEX_INCIDENT_WORKDIR:-$PWD}}"
 
+"${SCRIPT_DIR}/sync-codex-skills"
+
 if [[ ! -d "$WORKDIR" ]]; then
   echo "Could not find the incident workspace at: $WORKDIR" >&2
   echo "Pass a workspace directory as the second argument or set CODEX_INCIDENT_WORKDIR and rerun." >&2
