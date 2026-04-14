@@ -51,6 +51,7 @@ High-value reference files:
 
 - `references/diataxis-writing-rules.md`
 - `references/diataxis-review-checklist.md`
+- `references/incident-analysis-surfaces.md`
 - `references/confluence-routing.md`
 - `references/dynatrace-query-patterns.md`
 - `references/dynatrace-fast-path.md`
@@ -72,6 +73,7 @@ Start with:
 
 - `explanations/repo-architecture.md`
 - `explanations/service-documentation-pattern.md`
+- `explanations/incident-analysis-family.md`
 - `explanations/incident-analysis-pattern.md`
 - `explanations/dynatrace-investigation-pattern.md`
 - `explanations/dynatrace-evidence-interpretation.md`
