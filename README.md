@@ -16,7 +16,7 @@ Use tutorials when the goal is to learn safely through a guided first run.
 
 Current tutorial:
 
-- `tutorials/first-incident-investigation-trial-mode.md`
+- [tutorials/first-incident-investigation-trial-mode.md](./tutorials/first-incident-investigation-trial-mode.md)
 
 ### How-to Guides
 
@@ -26,16 +26,16 @@ The main how-to surface is `workflows/`.
 
 Good starting points:
 
-- `workflows/pagerduty-incident-analysis.md`
-- `workflows/dynatrace-investigation.md`
-- `workflows/service-system-documentation.md`
-- `workflows/pagerduty-assigned-service-health.md`
-- `workflows/service-endpoint-traffic-analysis.md`
-- `workflows/service-metric-analysis.md`
-- `workflows/incident-followup-planning.md`
-- `workflows/pr-author-coaching.md`
-- `workflows/babysit-pr.md`
-- `workflows/review-pr.md`
+- [workflows/pagerduty-incident-analysis.md](./workflows/pagerduty-incident-analysis.md)
+- [workflows/dynatrace-investigation.md](./workflows/dynatrace-investigation.md)
+- [workflows/service-system-documentation.md](./workflows/service-system-documentation.md)
+- [workflows/pagerduty-assigned-service-health.md](./workflows/pagerduty-assigned-service-health.md)
+- [workflows/service-endpoint-traffic-analysis.md](./workflows/service-endpoint-traffic-analysis.md)
+- [workflows/service-metric-analysis.md](./workflows/service-metric-analysis.md)
+- [workflows/incident-followup-planning.md](./workflows/incident-followup-planning.md)
+- [workflows/pr-author-coaching.md](./workflows/pr-author-coaching.md)
+- [workflows/babysit-pr.md](./workflows/babysit-pr.md)
+- [workflows/review-pr.md](./workflows/review-pr.md)
 
 ### Reference
 
@@ -43,27 +43,27 @@ Use reference when you need exact facts, patterns, or output contracts.
 
 The main reference surface is:
 
-- `references/`
-- `templates/`
-- `scripts/`
+- [references/](./references/)
+- [templates/](./templates/)
+- [scripts/](./scripts/)
 
 High-value reference files:
 
-- `references/diataxis-writing-rules.md`
-- `references/diataxis-review-checklist.md`
-- `references/incident-analysis-surfaces.md`
-- `references/confluence-routing.md`
-- `references/dynatrace-query-patterns.md`
-- `references/dynatrace-fast-path.md`
-- `references/pr-coaching-rubric.md`
-- `references/subagent-usage.md`
-- `templates/tutorial-page.md`
-- `templates/how-to-page.md`
-- `templates/reference-page.md`
-- `templates/explanation-page.md`
-- `templates/incident-analysis-page.md`
-- `templates/dynatrace-investigation-result.md`
-- `templates/analysis-child-result.md`
+- [references/diataxis-writing-rules.md](./references/diataxis-writing-rules.md)
+- [references/diataxis-review-checklist.md](./references/diataxis-review-checklist.md)
+- [references/incident-analysis-surfaces.md](./references/incident-analysis-surfaces.md)
+- [references/confluence-routing.md](./references/confluence-routing.md)
+- [references/dynatrace-query-patterns.md](./references/dynatrace-query-patterns.md)
+- [references/dynatrace-fast-path.md](./references/dynatrace-fast-path.md)
+- [references/pr-coaching-rubric.md](./references/pr-coaching-rubric.md)
+- [references/subagent-usage.md](./references/subagent-usage.md)
+- [templates/tutorial-page.md](./templates/tutorial-page.md)
+- [templates/how-to-page.md](./templates/how-to-page.md)
+- [templates/reference-page.md](./templates/reference-page.md)
+- [templates/explanation-page.md](./templates/explanation-page.md)
+- [templates/incident-analysis-page.md](./templates/incident-analysis-page.md)
+- [templates/dynatrace-investigation-result.md](./templates/dynatrace-investigation-result.md)
+- [templates/analysis-child-result.md](./templates/analysis-child-result.md)
 
 ### Explanation
 
@@ -71,17 +71,17 @@ Use explanation when you need rationale, tradeoffs, or the mental model behind t
 
 Start with:
 
-- `explanations/repo-architecture.md`
-- `explanations/service-documentation-pattern.md`
-- `explanations/incident-analysis-family.md`
-- `explanations/incident-analysis-pattern.md`
-- `explanations/dynatrace-investigation-pattern.md`
-- `explanations/dynatrace-evidence-interpretation.md`
-- `reviews/design/skills-architecture-and-governance.md`
+- [explanations/repo-architecture.md](./explanations/repo-architecture.md)
+- [explanations/service-documentation-pattern.md](./explanations/service-documentation-pattern.md)
+- [explanations/incident-analysis-family.md](./explanations/incident-analysis-family.md)
+- [explanations/incident-analysis-pattern.md](./explanations/incident-analysis-pattern.md)
+- [explanations/dynatrace-investigation-pattern.md](./explanations/dynatrace-investigation-pattern.md)
+- [explanations/dynatrace-evidence-interpretation.md](./explanations/dynatrace-evidence-interpretation.md)
+- [reviews/design/skills-architecture-and-governance.md](./reviews/design/skills-architecture-and-governance.md)
 
 Some explanation-oriented material still lives under `references/` and should move over time:
 
-- `references/incident-investigation-lessons-2026-03-27.md`
+- [references/incident-investigation-lessons-2026-03-27.md](./references/incident-investigation-lessons-2026-03-27.md)
 
 ## Core Model
 
@@ -155,9 +155,9 @@ This can run standalone or as a bounded child investigation inside a larger work
 
 These now share a common service-analysis layer:
 
-- `workflows/service-analysis-common.md`
-- `references/telemetry-measurability.md`
-- `references/confluence-analysis-writing-standard.md`
+- [workflows/service-analysis-common.md](./workflows/service-analysis-common.md)
+- [references/telemetry-measurability.md](./references/telemetry-measurability.md)
+- [references/confluence-analysis-writing-standard.md](./references/confluence-analysis-writing-standard.md)
 
 ### Review And Triage
 
@@ -220,7 +220,7 @@ Rules:
 
 Child investigations in this family should return:
 
-- `templates/dynatrace-investigation-result.md`
+- [templates/dynatrace-investigation-result.md](./templates/dynatrace-investigation-result.md)
 
 That template is the bounded evidence contract for incident-style telemetry tracks.
 
@@ -267,7 +267,7 @@ Rules:
 
 Child investigations in this family should return:
 
-- `templates/analysis-child-result.md`
+- [templates/analysis-child-result.md](./templates/analysis-child-result.md)
 
 That template is the default bounded evidence contract for non-incident analysis tracks.
 
@@ -316,127 +316,127 @@ Rules:
 
 ## Repository Layout
 
-- `codex/`
+- [codex/](./codex/)
   Thin Codex adapters. Each folder contains a `SKILL.md` and usually `agents/openai.yaml`.
-- `workflows/`
+- [workflows/](./workflows/)
   Shared operational procedures and branch playbooks.
-- `tutorials/`
+- [tutorials/](./tutorials/)
   Guided first-run docs for common repo workflows.
-- `references/`
+- [references/](./references/)
   Stable routing rules, query patterns, interpretation guidance, and writing standards.
-- `templates/`
+- [templates/](./templates/)
   Reusable artifact structures.
-- `explanations/`
+- [explanations/](./explanations/)
   Rationale, architecture, and decision-making guidance.
-- `reviews/`
+- [reviews/](./reviews/)
   Design and assessment artifacts that inform how the repo evolves.
-- `scripts/`
+- [scripts/](./scripts/)
   Setup and launcher utilities.
 
 ## Current Entry Skills
 
-- `codex/pagerduty-incident-analysis`
-- `codex/dynatrace-investigation`
-- `codex/pagerduty-assigned-service-health`
-- `codex/service-system-documentation`
-- `codex/service-endpoint-traffic-analysis`
-- `codex/service-metric-analysis`
-- `codex/incident-followup-planning`
-- `codex/pr-author-coaching`
-- `codex/babysit-pr`
-- `codex/review-pr`
+- [codex/pagerduty-incident-analysis](./codex/pagerduty-incident-analysis)
+- [codex/dynatrace-investigation](./codex/dynatrace-investigation)
+- [codex/pagerduty-assigned-service-health](./codex/pagerduty-assigned-service-health)
+- [codex/service-system-documentation](./codex/service-system-documentation)
+- [codex/service-endpoint-traffic-analysis](./codex/service-endpoint-traffic-analysis)
+- [codex/service-metric-analysis](./codex/service-metric-analysis)
+- [codex/incident-followup-planning](./codex/incident-followup-planning)
+- [codex/pr-author-coaching](./codex/pr-author-coaching)
+- [codex/babysit-pr](./codex/babysit-pr)
+- [codex/review-pr](./codex/review-pr)
 
 ## Current Workflows
 
 ### Shared Orchestrators And Common Layers
 
-- `workflows/pagerduty-incident-analysis.md`
-- `workflows/dynatrace-investigation.md`
-- `workflows/service-analysis-common.md`
-- `workflows/service-system-documentation.md`
-- `workflows/incident-followup-planning.md`
-- `workflows/pr-author-coaching.md`
-- `workflows/babysit-pr.md`
-- `workflows/review-pr.md`
+- [workflows/pagerduty-incident-analysis.md](./workflows/pagerduty-incident-analysis.md)
+- [workflows/dynatrace-investigation.md](./workflows/dynatrace-investigation.md)
+- [workflows/service-analysis-common.md](./workflows/service-analysis-common.md)
+- [workflows/service-system-documentation.md](./workflows/service-system-documentation.md)
+- [workflows/incident-followup-planning.md](./workflows/incident-followup-planning.md)
+- [workflows/pr-author-coaching.md](./workflows/pr-author-coaching.md)
+- [workflows/babysit-pr.md](./workflows/babysit-pr.md)
+- [workflows/review-pr.md](./workflows/review-pr.md)
 
 ### Dynatrace Branch Workflows
 
-- `workflows/dynatrace-rollout-check.md`
-- `workflows/dynatrace-incident-path-analysis.md`
-- `workflows/dynatrace-service-debugging.md`
-- `workflows/dynatrace-guid-trace.md`
+- [workflows/dynatrace-rollout-check.md](./workflows/dynatrace-rollout-check.md)
+- [workflows/dynatrace-incident-path-analysis.md](./workflows/dynatrace-incident-path-analysis.md)
+- [workflows/dynatrace-service-debugging.md](./workflows/dynatrace-service-debugging.md)
+- [workflows/dynatrace-guid-trace.md](./workflows/dynatrace-guid-trace.md)
 
 ### Service Analysis Branch Workflows
 
-- `workflows/pagerduty-assigned-service-health.md`
-- `workflows/service-endpoint-traffic-analysis.md`
-- `workflows/service-metric-analysis.md`
+- [workflows/pagerduty-assigned-service-health.md](./workflows/pagerduty-assigned-service-health.md)
+- [workflows/service-endpoint-traffic-analysis.md](./workflows/service-endpoint-traffic-analysis.md)
+- [workflows/service-metric-analysis.md](./workflows/service-metric-analysis.md)
 
 ## Current Tutorials
 
-- `tutorials/first-incident-investigation-trial-mode.md`
+- [tutorials/first-incident-investigation-trial-mode.md](./tutorials/first-incident-investigation-trial-mode.md)
   Guided first run for the PagerDuty incident workflow in `trial mode`.
 
 ## Current References
 
 ### Routing, Querying, And Interpretation
 
-- `references/confluence-routing.md`
-- `references/diataxis-writing-rules.md`
-- `references/diataxis-review-checklist.md`
-- `references/dynatrace-fast-path.md`
-- `references/dynatrace-query-patterns.md`
-- `references/telemetry-measurability.md`
-- `references/confluence-analysis-writing-standard.md`
-- `references/subagent-usage.md`
+- [references/confluence-routing.md](./references/confluence-routing.md)
+- [references/diataxis-writing-rules.md](./references/diataxis-writing-rules.md)
+- [references/diataxis-review-checklist.md](./references/diataxis-review-checklist.md)
+- [references/dynatrace-fast-path.md](./references/dynatrace-fast-path.md)
+- [references/dynatrace-query-patterns.md](./references/dynatrace-query-patterns.md)
+- [references/telemetry-measurability.md](./references/telemetry-measurability.md)
+- [references/confluence-analysis-writing-standard.md](./references/confluence-analysis-writing-standard.md)
+- [references/subagent-usage.md](./references/subagent-usage.md)
 
 ### Workflow-Specific Support
 
-- `references/jira-incident-followup.md`
-- `references/pr-review-context-gathering.md`
-- `references/slack-setup.md`
-- `references/incident-investigation-lessons-2026-03-27.md`
+- [references/jira-incident-followup.md](./references/jira-incident-followup.md)
+- [references/pr-review-context-gathering.md](./references/pr-review-context-gathering.md)
+- [references/slack-setup.md](./references/slack-setup.md)
+- [references/incident-investigation-lessons-2026-03-27.md](./references/incident-investigation-lessons-2026-03-27.md)
 
 ## Current Templates
 
-- `templates/incident-analysis-page.md`
+- [templates/incident-analysis-page.md](./templates/incident-analysis-page.md)
   Parent incident document shape. This now converges on summary, root cause analysis, impact analysis, recommended solutions and mitigations, deployments or code references when relevant, and bottom-of-page evidence and queries.
-- `templates/dynatrace-investigation-result.md`
+- [templates/dynatrace-investigation-result.md](./templates/dynatrace-investigation-result.md)
   Child-result contract for incident-style Dynatrace investigations.
-- `templates/analysis-child-result.md`
+- [templates/analysis-child-result.md](./templates/analysis-child-result.md)
   Child-result contract for non-incident bounded analysis tracks such as service analysis and follow-up claim validation.
-- `templates/service-overview-page.md`
+- [templates/service-overview-page.md](./templates/service-overview-page.md)
   Explanation-style overview template for what a service or system does, how it is shaped, and its main flows.
-- `templates/service-reference-page.md`
+- [templates/service-reference-page.md](./templates/service-reference-page.md)
   Reference-style template for deployables, interfaces, schemas, runtime entities, and ownership anchors.
-- `templates/service-operability-guide.md`
+- [templates/service-operability-guide.md](./templates/service-operability-guide.md)
   How-to-style template for health checks, rollout validation, tracing, and common failure modes.
-- `templates/tutorial-page.md`
+- [templates/tutorial-page.md](./templates/tutorial-page.md)
   Generic guided first-run template for teaching docs.
-- `templates/how-to-page.md`
+- [templates/how-to-page.md](./templates/how-to-page.md)
   Generic task-oriented template for procedural docs.
-- `templates/reference-page.md`
+- [templates/reference-page.md](./templates/reference-page.md)
   Generic exact-lookup template for contracts, fields, and command docs.
-- `templates/explanation-page.md`
+- [templates/explanation-page.md](./templates/explanation-page.md)
   Generic rationale and tradeoff template for architecture and design docs.
-- `templates/endpoint-traffic-analysis-page.md`
+- [templates/endpoint-traffic-analysis-page.md](./templates/endpoint-traffic-analysis-page.md)
   Final page shape for endpoint inventory and traffic analysis.
-- `templates/service-metric-analysis-page.md`
+- [templates/service-metric-analysis-page.md](./templates/service-metric-analysis-page.md)
   Final page shape for service metric and telemetry analysis.
-- `templates/incident-followup-story.md`
+- [templates/incident-followup-story.md](./templates/incident-followup-story.md)
   Story-drafting template for incident follow-up work.
 
 ## Current Explanations
 
-- `explanations/repo-architecture.md`
+- [explanations/repo-architecture.md](./explanations/repo-architecture.md)
   Why the repo is structured around shared workflows, references, templates, and thin skill adapters.
-- `explanations/service-documentation-pattern.md`
+- [explanations/service-documentation-pattern.md](./explanations/service-documentation-pattern.md)
   Why service documentation should be produced as a Diataxis-aligned doc set, and how evidence, reference, and templates differ.
-- `explanations/incident-analysis-pattern.md`
+- [explanations/incident-analysis-pattern.md](./explanations/incident-analysis-pattern.md)
   Why the incident workflow defaults to `trial mode`, creates a parent surface early, uses bounded child tracks, and runs retrospective cleanup.
-- `explanations/dynatrace-investigation-pattern.md`
+- [explanations/dynatrace-investigation-pattern.md](./explanations/dynatrace-investigation-pattern.md)
   Why the Dynatrace workflow uses a router, narrows entity scope early, prefers one branch, and keeps child investigations bounded.
-- `explanations/dynatrace-evidence-interpretation.md`
+- [explanations/dynatrace-evidence-interpretation.md](./explanations/dynatrace-evidence-interpretation.md)
   How to interpret ambiguous Dynatrace evidence such as low-load alerts, telemetry gaps, caller-vs-callee mismatch, and rollout correlation.
 
 ## Using This Repo With Codex
@@ -457,11 +457,11 @@ That script:
 
 The shared roots it links are:
 
-- `workflows/`
-- `references/`
-- `templates/`
-- `reviews/`
-- `scripts/`
+- [workflows/](./workflows/)
+- [references/](./references/)
+- [templates/](./templates/)
+- [reviews/](./reviews/)
+- [scripts/](./scripts/)
 
 Without those shared-root links, a skill folder may load its own `SKILL.md` but fail to resolve `../../workflows/...` or `../../templates/...`.
 
@@ -499,7 +499,7 @@ There is a dedicated incident launcher:
 
 The script lives at:
 
-- `scripts/codex-incident-session`
+- [scripts/codex-incident-session](./scripts/codex-incident-session)
 
 What it does:
 
@@ -581,6 +581,6 @@ This is the model used by `dynatrace-investigation` and now by the service-analy
 
 The shared layout is intended to support additional adapters later, for example:
 
-- `claude/`
-- `chatgpt/`
-- `cursor/`
+- [claude/](./claude/)
+- [chatgpt/](./chatgpt/)
+- [cursor/](./cursor/)
