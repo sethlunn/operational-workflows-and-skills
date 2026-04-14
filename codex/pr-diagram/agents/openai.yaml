@@ -1,0 +1,6 @@
+interface:
+  display_name: "PR Diagram"
+  short_description: "Turn a PR into a concise summary plus focused diagram."
+  default_prompt: "Use $pr-diagram to read a GitHub pull request or local diff, understand the changed flow or interaction sequence, and produce a concise PR description with a focused Mermaid flowchart or sequence diagram, verification notes, and preserved issue or checklist sections."
+policy:
+  allow_implicit_invocation: true
