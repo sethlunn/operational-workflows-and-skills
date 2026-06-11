@@ -64,12 +64,18 @@ Do not use explanation as a substitute for operational instructions.
 - If a doc mixes procedure and exact contract details, keep the procedure in the workflow or how-to and move the contract to reference or templates.
 - If an output artifact must contain mixed modes, label the sections explicitly so the reader can switch modes on purpose.
 
+Technical design docs are the main deliberate exception in this repo.
+
+- Use `workflows/technical-design-documentation.md` and `templates/technical-design-document.md` when the artifact is about a proposed change rather than a steady-state system.
+- Those docs intentionally mix explanation, scoped reference, and transition planning because the reader needs the design decision and the delivery shape in one place.
+
 ## Template Selection
 
 - Use `templates/tutorial-page.md` for guided first-run teaching docs.
 - Use `templates/how-to-page.md` for task-oriented docs.
 - Use `templates/reference-page.md` for exact lookup docs.
 - Use `templates/explanation-page.md` for rationale and mental-model docs.
+- Use `templates/technical-design-document.md` for planned-change design docs that need goals, requirements, solution comparison, and a transition plan.
 
 If a domain-specific template already exists, such as an incident page or child-result contract, prefer that template over the generic one.
 

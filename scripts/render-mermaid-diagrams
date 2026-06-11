@@ -1,0 +1,162 @@
+#!/bin/zsh
+
+set -euo pipefail
+
+script_dir=${0:A:h}
+repo_root="${script_dir:h}"
+config_path="${repo_root}/mermaid.config.json"
+mermaid_cli_package="@mermaid-js/mermaid-cli@11.4.1"
+targets=()
+puppeteer_config_path=""
+
+usage() {
+  cat <<'EOF'
+Usage: render-mermaid-diagrams [--repo-root PATH] [--config PATH] [TARGET ...]
+
+Render Mermaid source files to checked-in SVG snapshots.
+
+Targets may be individual .mmd files or directories. Directories are searched
+recursively for .mmd files. If no targets are provided, the script renders all
+.mmd files under reviews/service-docs.
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --repo-root)
+      [[ $# -ge 2 ]] || {
+        usage >&2
+        exit 1
+      }
+      repo_root="$2"
+      shift 2
+      ;;
+    --config)
+      [[ $# -ge 2 ]] || {
+        usage >&2
+        exit 1
+      }
+      config_path="$2"
+      shift 2
+      ;;
+    --help)
+      usage
+      exit 0
+      ;;
+    *)
+      targets+=("$1")
+      shift
+      ;;
+  esac
+done
+
+if [[ ${#targets[@]} -eq 0 ]]; then
+  targets=("${repo_root}/reviews/service-docs")
+fi
+
+[[ -f "${config_path}" ]] || {
+  echo "Missing Mermaid config: ${config_path}" >&2
+  exit 1
+}
+
+command -v npx >/dev/null 2>&1 || {
+  echo "npx is required to render Mermaid diagrams." >&2
+  exit 1
+}
+
+detect_browser() {
+  local configured_path=${MERMAID_CHROME_PATH:-}
+
+  if [[ -n "${configured_path}" && -x "${configured_path}" ]]; then
+    print -r -- "${configured_path}"
+    return
+  fi
+
+  if [[ -x "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" ]]; then
+    print -r -- "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    return
+  fi
+
+  if command -v google-chrome >/dev/null 2>&1; then
+    command -v google-chrome
+    return
+  fi
+
+  if command -v chromium >/dev/null 2>&1; then
+    command -v chromium
+    return
+  fi
+
+  if command -v chromium-browser >/dev/null 2>&1; then
+    command -v chromium-browser
+    return
+  fi
+}
+
+browser_path=$(detect_browser)
+[[ -n "${browser_path:-}" ]] || {
+  echo "Could not find a Chrome or Chromium executable. Set MERMAID_CHROME_PATH." >&2
+  exit 1
+}
+
+puppeteer_config_path=$(mktemp /tmp/mermaid-puppeteer-config.XXXXXX.json)
+trap 'rm -f "${puppeteer_config_path}"' EXIT
+
+cat > "${puppeteer_config_path}" <<EOF
+{
+  "executablePath": "${browser_path}",
+  "args": ["--no-sandbox", "--disable-setuid-sandbox"]
+}
+EOF
+
+render_file() {
+  local source_path=$1
+  local source_dir output_dir output_path
+
+  source_dir=${source_path:h}
+  output_dir="${source_dir}/rendered"
+  output_path="${output_dir}/${source_path:t:r}.svg"
+
+  mkdir -p "${output_dir}"
+
+  echo "render ${source_path} -> ${output_path}"
+  npx -y "${mermaid_cli_package}" \
+    -i "${source_path}" \
+    -o "${output_path}" \
+    -c "${config_path}" \
+    -p "${puppeteer_config_path}" \
+    -b transparent
+}
+
+collect_files() {
+  local target=$1
+
+  if [[ -f "${target}" ]]; then
+    [[ "${target:e}" == "mmd" ]] && print -r -- "${target}"
+    return
+  fi
+
+  [[ -d "${target}" ]] || {
+    echo "Skipping missing target: ${target}" >&2
+    return
+  }
+
+  find "${target}" -type f -name '*.mmd' | sort
+}
+
+files=()
+for target in "${targets[@]}"; do
+  while IFS= read -r file_path; do
+    [[ -n "${file_path}" ]] || continue
+    files+=("${file_path}")
+  done < <(collect_files "${target}")
+done
+
+[[ ${#files[@]} -gt 0 ]] || {
+  echo "No Mermaid source files found." >&2
+  exit 1
+}
+
+for file_path in "${files[@]}"; do
+  render_file "${file_path}"
+done

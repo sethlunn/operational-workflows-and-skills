@@ -1,0 +1,30 @@
+sequenceDiagram
+    participant E as InitialExposureAssessmentDelayDeclined
+    participant H as AdverseActionNoticeHandler
+    participant D as AchUnderwritingDelayAanManager
+    participant R as CustomerAchUnderwritingRepository
+    participant Bus as Azure Service Bus
+    participant P as PendingAchUnderwritingAssessmentAanHandler
+    participant M as MediatR
+    participant S as CreateAdverseActionNotice.Handler
+
+    E->>H: Delay decline message
+    H->>H: Build CreateAdverseActionNotice.Command
+    H->>D: HandleAchUnderwritingDelayAan(command)
+    D->>R: Create or update ACH record
+    Note over D,R: AchUnderWritingStatus = AchPending\nAanStatus = Pending\nCorrelationId stored
+    D->>Bus: Schedule PendingAchUnderwritingAssessmentAan
+
+    Note over Bus,P: Later at EventCreatedDate + PublishDelayInMinutes
+
+    Bus->>P: PendingAchUnderwritingAssessmentAan
+    P->>R: GetRecord(customerId)
+
+    alt Record no longer pending or correlation changed
+        P-->>Bus: Skip AAN generation
+    else Record still pending
+        P->>M: Send stored CreateAdverseActionNotice.Command
+        M->>S: Run normal shared handler
+        S-->>P: Notice generated or deduped
+        P->>R: Update AanStatus
+    end

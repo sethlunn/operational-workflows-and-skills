@@ -1,0 +1,41 @@
+sequenceDiagram
+    participant E as Inbound decline event
+    participant H as Ingress handler
+    participant M as MediatR
+    participant S as CreateAdverseActionNotice.Handler
+    participant RR as Reason resolution
+    participant DR as Document resolver
+    participant P as PdfGenerator
+    participant B as AanDocumentRepository
+    participant C as AanReferenceRepository
+    participant N as NotificationsManager
+
+    E->>H: Decline message from bus
+    H->>H: Resolve HighestPriorityFailure
+    H->>H: Optionally fetch ML reasons
+    H->>M: Send CreateAdverseActionNotice.Command
+    M->>S: Handle(command)
+    S->>S: AugmentCommand()
+
+    alt FailureRuleType == None
+        S->>N: Emit eligibility event only
+        S-->>M: Return
+    else Generate path continues
+        S->>C: GetByCustomerId()
+        alt Notice already sent within 24 hours
+            S->>N: Emit eligibility event only
+            S-->>M: Return
+        else New notice required
+            S->>RR: Map failed rules to adverse-action reasons
+            RR-->>S: Customer-facing reasons
+            S->>DR: GetDocument(...)
+            DR-->>S: Concrete template
+            S->>P: GeneratePdfFromDocument()
+            P-->>S: PDF stream
+            S->>B: SaveDocument()
+            B-->>S: Success
+            S->>C: RecordNoticeInfo()
+            S->>N: Emit eligibility event
+            S->>N: SendAanNotification()
+        end
+    end

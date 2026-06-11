@@ -1,0 +1,13 @@
+{
+  "theme": "neutral",
+  "look": "classic",
+  "fontFamily": "Helvetica, Arial, sans-serif",
+  "flowchart": {
+    "curve": "basis",
+    "htmlLabels": false
+  },
+  "sequence": {
+    "mirrorActors": false,
+    "showSequenceNumbers": false
+  }
+}

@@ -1,0 +1,71 @@
+publishedAt: "2026-04-21T16:26:06Z"
+cloudId: "38569f7e-52d4-4ddd-bb03-00d2c89d3823"
+spaceId: "32969"
+spaceKey: "QD"
+
+publicationRoot:
+  teamPageTitle: "Underwriting Team"
+  teamPageId: "4530274327"
+  teamPageUrl: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/4530274327/Underwriting+Team"
+  operationalAnalysisFolderTitle: "Operational Analysis"
+  operationalAnalysisFolderId: "5288919047"
+  operationalAnalysisUrl: "https://quadpay.atlassian.net/wiki/spaces/QD/folder/5288919047"
+
+domain:
+  name: "decisioning-services"
+  docsRootTitle: "Decisioning Services Documentation"
+  docsRootPageId: "5396168710"
+  url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5396168710/Decisioning+Services+Documentation"
+
+service:
+  name: "compliance"
+  title: "Compliance System Documentation"
+  landingPageId: "5396561932"
+  url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5396561932/Compliance+System+Documentation"
+  sourceFiles:
+    landing: "reviews/service-docs/decisioning-services-compliance/landing-page.md"
+    overview: "reviews/service-docs/decisioning-services-compliance/service-overview.md"
+    reference: "reviews/service-docs/decisioning-services-compliance/service-reference.md"
+    operability: "reviews/service-docs/decisioning-services-compliance/operability-guide.md"
+    aanGeneration: "reviews/service-docs/decisioning-services-compliance/aan-generation.md"
+  pages:
+    overview:
+      title: "Compliance - Overview"
+      pageId: "5395546162"
+      url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5395546162/Compliance+-+Overview"
+    reference:
+      title: "Compliance - Reference"
+      pageId: "5395185701"
+      url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5395185701/Compliance+-+Reference"
+    operability:
+      title: "Compliance - Operability Guide"
+      pageId: "5396070408"
+      url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5396070408/Compliance+-+Operability+Guide"
+    aanGeneration:
+      title: "Compliance - AAN Generation"
+      pageId: "5397348353"
+      url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5397348353/Compliance+-+AAN+Generation"
+
+relatedPages:
+  servicePage:
+    title: "Compliance"
+    pageId: "4606001162"
+    url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/4606001162/Compliance"
+  endpointTraffic:
+    title: "Compliance Endpoint Traffic Analysis"
+    pageId: "5266636805"
+    url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5266636805/Compliance+Endpoint+Traffic+Analysis"
+  operationClarity:
+    title: "Operation Clarity - Compliance Service Codebase Documentation & Refactor"
+    pageId: "5250449424"
+    url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5250449424/Operation+Clarity+Compliance+Service+Codebase+Documentation+Refactor"
+  createAanFlowMap:
+    title: "CreateAdverseActionNotice Flow Map"
+    pageId: "5250678813"
+    url: "https://quadpay.atlassian.net/wiki/spaces/QD/pages/5250678813/CreateAdverseActionNotice+Flow+Map"
+
+notes:
+  - "Update published pages by pageId, not by title search."
+  - "Keep git markdown as the source of truth."
+  - "The Confluence tree is the published view."
+  - "The Decisioning Services root page was created for this Diataxis documentation family."

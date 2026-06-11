@@ -16,25 +16,24 @@ esac
 
 SCRIPT_DIR="${0:P:h}"
 SKILL_REPO="${SCRIPT_DIR:h}"
-WORKDIR="${WORKDIR_ARG:-${CODEX_INCIDENT_WORKDIR:-$PWD}}"
+WORKDIR="${WORKDIR_ARG:-${CLAUDE_INCIDENT_WORKDIR:-$PWD}}"
 
-if ! "${SCRIPT_DIR}/sync-codex-skills"; then
-  echo "Warning: failed to refresh Codex skills; continuing with existing links." >&2
-fi
+"${SCRIPT_DIR}/update-claude-code"
+"${SCRIPT_DIR}/sync-claude-skills"
 
 if [[ ! -d "$WORKDIR" ]]; then
   echo "Could not find the incident workspace at: $WORKDIR" >&2
-  echo "Pass a workspace directory as the second argument or set CODEX_INCIDENT_WORKDIR and rerun." >&2
+  echo "Pass a workspace directory as the second argument or set CLAUDE_INCIDENT_WORKDIR and rerun." >&2
   exit 1
 fi
 
 if [[ "$MODE" == "trial" ]]; then
   MODE_LINE="Start a PagerDuty/Dynatrace incident-investigation session in trial mode."
-  MODE_RULES=$'- Do not create, update, or publish anything during preflight or the initial handoff.\n- After preflight, wait for me to provide the incident id.'
+  MODE_RULES="- Do not create, update, or publish anything during preflight or the initial handoff.\n- After preflight, wait for me to provide the incident id."
   ATLASSIAN_STEP="- Skip Atlassian unless you need one harmless read-only lookup."
 else
   MODE_LINE="Start a PagerDuty/Dynatrace incident-investigation session in publish mode."
-  MODE_RULES=$'- Do not create, update, or publish anything during preflight.\n- After preflight, wait for me to provide the incident id before starting the real investigation.'
+  MODE_RULES="- Do not create, update, or publish anything during preflight.\n- After preflight, wait for me to provide the incident id before starting the real investigation."
   ATLASSIAN_STEP="- Do one harmless Atlassian read-only lookup so any read approval happens up front. Do not write anything yet."
 fi
 
@@ -59,9 +58,8 @@ ${MODE_RULES}
 EOF
 )
 
-exec codex \
-  --cd "$WORKDIR" \
+cd "$WORKDIR"
+exec claude \
   --add-dir "$SKILL_REPO" \
-  --sandbox workspace-write \
-  --ask-for-approval on-request \
+  --permission-mode default \
   "$INITIAL_PROMPT"

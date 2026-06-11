@@ -4,7 +4,7 @@
 - Repo path: `services/provider-gateways/src/QuadPay.ProviderGateways.MachineLearning`
 - Exact scope: HTTP API surface, live `RunPredictions` behavior, outbound model dependencies, audit-event path, and production runtime footprint as observed on `2026-04-08`
 - Audience: engineers and operators who need the architectural shape before debugging, extending, or publishing fuller documentation
-- Last reviewed: `2026-04-08`
+- Last reviewed: `2026-04-09`
 - Primary conclusion: this service is an internal-only ASP.NET gateway for ML prediction and reason-code endpoints. In production, the dominant path is `POST /machinelearning-gateway/global/return-customer/prediction`, while `POST /machinelearning-gateway/predictions` is the only currently observed source of `500` responses in the last 24 hours and can also return `200 OK` with failed or partially succeeded model-attempt results.
 
 # What This Service Does
@@ -60,26 +60,14 @@
   - the service emits `MachineLearningRunPredictionsCompleted` to Event Hubs as a best-effort side effect that does not fail the API response
 - Important background or batch flow:
   - none found; the service is request-driven
-- Mermaid diagrams or flow visuals:
+- Diagram source files:
+  - `./diagrams/run-predictions-flow.mmd`
+  - `./diagrams/run-predictions-sequence.mmd`
+- Rendered diagram snapshots:
 
-```mermaid
-flowchart LR
-  Caller["Internal callers\nDecision Engine / FEO / Compliance / SessionReceiverManager"] --> API["machinelearning-gateway\nASP.NET controller"]
-  API --> Mediator["MediatR handlers"]
-  Mediator --> Legacy["Legacy Databricks endpoints\nNCM / RCM / AAN"]
-  Mediator --> Unified["Unified Databricks endpoint\nunified_new_customer_model"]
-  Mediator --> EventHub["Event Hub audit write\nMachineLearningRunPredictionsCompleted"]
-```
+![RunPredictions flow](./diagrams/rendered/run-predictions-flow.svg)
 
-```mermaid
-flowchart TD
-  P["POST /machinelearning-gateway/predictions"] --> Select["PredictionModelStrategyFactory"]
-  Select --> NCM["Unified NCM V1\nalways selected"]
-  Select --> Global["Global return-customer model\napp + merchant_id + TU\nor checkout existing-customer"]
-  NCM --> Aggregate["MachineLearningGatewayResult"]
-  Global --> Aggregate
-  Aggregate --> Audit["Best-effort Event Hub audit event"]
-```
+![RunPredictions sequence](./diagrams/rendered/run-predictions-sequence.svg)
 
 # Dependency Model
 

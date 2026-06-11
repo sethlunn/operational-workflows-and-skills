@@ -26,7 +26,12 @@
 - Primary user or request flow:
 - Primary async or event-driven flow:
 - Important background or batch flow:
-- Mermaid diagrams or flow visuals:
+- Diagram source files:
+  - prefer `./diagrams/*.mmd`
+- Rendered diagram snapshots:
+  - prefer checked-in `./diagrams/rendered/*.svg`
+  - use a focused flowchart when branching or aggregation is the important mental model
+  - use a focused sequence diagram when actor interaction order is the important mental model
 
 # Dependency Model
 

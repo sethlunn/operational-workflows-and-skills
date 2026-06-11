@@ -1,0 +1,62 @@
+flowchart TD
+    subgraph ingress[Inbound Decline Messages]
+        ie[InitialExposureAssessmentDeclined]
+        cp[CheckoutPurchaseRequestDenied]
+        cq[CheckoutPreQualificationDenied]
+        ma[MobileAppPurchaseRequestDeclined]
+        achd[InitialExposureAssessmentDelayDeclined]
+        achf[AchUnderwritingAssessmentDeclined]
+        ml[MachineLearningAdverseActionDeclined]
+    end
+
+    subgraph handlers[Compliance Ingress Handlers]
+        apph[App and Checkout\nhandlers]
+        delayh[AdverseActionNoticeHandler]
+        achfh[AchUnderwritingAssessmentDeclinedHandler]
+        mlh[MachineLearningAdverseActionDeclinedHandler]
+    end
+
+    subgraph commands[MediatR Commands]
+        stdcmd[CreateAdverseActionNotice.Command]
+        mlcmd[CreateAdverseActionNotice.MachineLearningCommand]
+        achupdate[CashFlowUnderwritingUpdateAan.Command]
+        pending[PendingAchUnderwritingAssessmentAan]
+    end
+
+    subgraph standard[Shared Standard Handler]
+        augment[Augment command\nhydrate customer and credit data]
+        eligible{FailureRuleType\nrequires AAN?}
+        dedupe{Duplicate within\n24 hours?}
+        reasons[Resolve adverse-action reasons\nmapped rules / Socure override]
+        template[Resolve template\nfeature-flag wrapper]
+        pdf[Generate PDF]
+        blob[Save blob\nadverse-action-notices]
+        ref[Record NoticeInfo\nin Cosmos]
+        fanout[Emit eligibility event\nand sent notification]
+    end
+
+    ie --> apph
+    cp --> apph
+    cq --> apph
+    ma --> apph
+    achd --> delayh
+    achf --> achfh
+    ml --> mlh
+
+    apph --> stdcmd
+    delayh --> stdcmd
+    delayh --> pending
+    achfh --> achupdate --> stdcmd
+    mlh --> mlcmd
+
+    pending --> stdcmd
+
+    stdcmd --> augment --> eligible
+    eligible -->|No| eligonly[Emit eligibility only]
+    eligible -->|Yes| dedupe
+    dedupe -->|Yes| duponly[Emit eligibility only\nPreviousAanWithin24Hours]
+    dedupe -->|No| reasons --> template --> pdf --> blob --> ref --> fanout
+
+    mlcmd --> mldedupe{Duplicate within\n24 hours?}
+    mldedupe -->|Yes| mldup[Emit eligibility only]
+    mldedupe -->|No| mlreasons[Resolve direct ML reasons\nor pre-resolved identity reasons] --> mltemplate[Resolve template] --> mlpdf[Generate PDF] --> mlblob[Save blob] --> mlref[Record NoticeInfo\nin Cosmos] --> mlfanout[Emit eligibility event\nand sent notification]

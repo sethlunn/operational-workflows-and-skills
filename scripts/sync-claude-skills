@@ -4,16 +4,16 @@ set -euo pipefail
 
 script_dir=${0:A:h}
 repo_root=${script_dir:h}
-snapshot_root="${CODEX_SKILL_SNAPSHOT_ROOT:-/tmp/codex-skill-sources}"
+snapshot_root="${CLAUDE_SKILL_SNAPSHOT_ROOT:-/tmp/claude-skill-sources}"
 
 link_only=0
 dry_run=0
 
 usage() {
   cat <<'EOF'
-Usage: sync-codex-skills [--link-only] [--dry-run]
+Usage: sync-claude-skills [--link-only] [--dry-run]
 
-Refresh Codex skill links using the newest available skill source.
+Refresh Claude skill links using the newest available skill source.
 
 Default behavior:
   - fetch the tracked upstream
@@ -43,7 +43,7 @@ run_cmd() {
 
 link_from_repo() {
   local source_repo=$1
-  run_cmd "${script_dir}/link-codex-skills" --repo-root "${source_repo}"
+  run_cmd "${script_dir}/link-claude-skills" --repo-root "${source_repo}"
 }
 
 latest_local_timestamp() {
@@ -93,11 +93,7 @@ if (( link_only )); then
   exit 0
 fi
 
-if ! run_cmd git -C "${repo_root}" fetch --quiet --prune; then
-  echo "Could not refresh the tracked upstream; using the current local checkout." >&2
-  link_from_repo "${repo_root}"
-  exit 0
-fi
+run_cmd git -C "${repo_root}" fetch --quiet --prune
 
 upstream_ref=$(git -C "${repo_root}" rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null || true)
 if [[ -z "${upstream_ref}" ]]; then
@@ -122,7 +118,7 @@ fi
 
 if [[ "${dirty}" -eq 0 && "${local_only_commits}" -eq 0 ]]; then
   echo "Tracked upstream is newer and the local checkout can fast-forward safely."
-  run_cmd git -C "${repo_root}" merge --ff-only "${upstream_ref}"
+  run_cmd git -C "${repo_root}" pull --ff-only
   link_from_repo "${repo_root}"
   exit 0
 fi
@@ -131,7 +127,7 @@ snapshot_name="${repo_root:t}-${${upstream_ref//\//-}//:/-}"
 snapshot_dir="${snapshot_root}/${snapshot_name}"
 
 echo "Tracked upstream is newer, but the local checkout has newer-only local work too."
-echo "Relinking Codex skills from a temporary upstream snapshot without changing the local checkout."
+echo "Relinking Claude skills from a temporary upstream snapshot without changing the local checkout."
 
 if (( dry_run )); then
   printf '+ rm -rf %q\n' "${snapshot_dir}"

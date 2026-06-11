@@ -36,6 +36,7 @@ Good starting points:
 - [workflows/pr-author-coaching.md](./workflows/pr-author-coaching.md)
 - [workflows/babysit-pr.md](./workflows/babysit-pr.md)
 - [workflows/review-pr.md](./workflows/review-pr.md)
+- [workflows/pr-diagram.md](./workflows/pr-diagram.md)
 
 ### Reference
 
@@ -46,6 +47,7 @@ The main reference surface is:
 - [references/](./references/)
 - [templates/](./templates/)
 - [scripts/](./scripts/)
+- [mermaid.config.json](./mermaid.config.json)
 
 High-value reference files:
 
@@ -64,6 +66,8 @@ High-value reference files:
 - [templates/incident-analysis-page.md](./templates/incident-analysis-page.md)
 - [templates/dynatrace-investigation-result.md](./templates/dynatrace-investigation-result.md)
 - [templates/analysis-child-result.md](./templates/analysis-child-result.md)
+- [scripts/render-mermaid-diagrams](./scripts/render-mermaid-diagrams)
+- [mermaid.config.json](./mermaid.config.json)
 
 ### Explanation
 
@@ -121,6 +125,26 @@ user request
 - Prefer exact dates, exact ids, and exact query shapes over vague summaries.
 - Separate direct evidence from interpretation in every analysis workflow.
 - Use one canonical writer for any published parent artifact.
+- Keep Mermaid source in git and render checked-in SVG snapshots for reader-facing docs.
+
+## Diagram Snapshotting
+
+For service-doc diagrams, prefer:
+
+```text
+reviews/service-docs/<service-slug>/
+  diagrams/
+    <diagram-name>.mmd
+    rendered/
+      <diagram-name>.svg
+```
+
+Rules:
+
+- Keep Mermaid source in `.mmd` files.
+- Keep rendered `.svg` snapshots checked in beside the docs.
+- Refresh snapshots with `./scripts/render-mermaid-diagrams`.
+- Use the shared `mermaid.config.json` so snapshots stay visually consistent across services.
 
 ## Skill Families
 
@@ -335,16 +359,18 @@ Rules:
 
 ## Current Entry Skills
 
-- [codex/pagerduty-incident-analysis](./codex/pagerduty-incident-analysis)
-- [codex/dynatrace-investigation](./codex/dynatrace-investigation)
-- [codex/pagerduty-assigned-service-health](./codex/pagerduty-assigned-service-health)
-- [codex/service-system-documentation](./codex/service-system-documentation)
-- [codex/service-endpoint-traffic-analysis](./codex/service-endpoint-traffic-analysis)
-- [codex/service-metric-analysis](./codex/service-metric-analysis)
-- [codex/incident-followup-planning](./codex/incident-followup-planning)
-- [codex/pr-author-coaching](./codex/pr-author-coaching)
-- [codex/babysit-pr](./codex/babysit-pr)
-- [codex/review-pr](./codex/review-pr)
+- [codex/pagerduty-incident-analysis](./codex/pagerduty-incident-analysis/)
+- [codex/dynatrace-investigation](./codex/dynatrace-investigation/)
+- [codex/pagerduty-assigned-service-health](./codex/pagerduty-assigned-service-health/)
+- [codex/technical-design-documentation](./codex/technical-design-documentation/)
+- [codex/service-system-documentation](./codex/service-system-documentation/)
+- [codex/service-endpoint-traffic-analysis](./codex/service-endpoint-traffic-analysis/)
+- [codex/service-metric-analysis](./codex/service-metric-analysis/)
+- [codex/incident-followup-planning](./codex/incident-followup-planning/)
+- [codex/pr-author-coaching](./codex/pr-author-coaching/)
+- [codex/babysit-pr](./codex/babysit-pr/)
+- [codex/review-pr](./codex/review-pr/)
+- [codex/pr-diagram](./codex/pr-diagram/)
 
 ## Current Workflows
 
@@ -353,11 +379,13 @@ Rules:
 - [workflows/pagerduty-incident-analysis.md](./workflows/pagerduty-incident-analysis.md)
 - [workflows/dynatrace-investigation.md](./workflows/dynatrace-investigation.md)
 - [workflows/service-analysis-common.md](./workflows/service-analysis-common.md)
+- [workflows/technical-design-documentation.md](./workflows/technical-design-documentation.md)
 - [workflows/service-system-documentation.md](./workflows/service-system-documentation.md)
 - [workflows/incident-followup-planning.md](./workflows/incident-followup-planning.md)
 - [workflows/pr-author-coaching.md](./workflows/pr-author-coaching.md)
 - [workflows/babysit-pr.md](./workflows/babysit-pr.md)
 - [workflows/review-pr.md](./workflows/review-pr.md)
+- [workflows/pr-diagram.md](./workflows/pr-diagram.md)
 
 ### Dynatrace Branch Workflows
 
@@ -384,6 +412,7 @@ Rules:
 - [references/confluence-routing.md](./references/confluence-routing.md)
 - [references/diataxis-writing-rules.md](./references/diataxis-writing-rules.md)
 - [references/diataxis-review-checklist.md](./references/diataxis-review-checklist.md)
+- [references/technical-design-writing-rules.md](./references/technical-design-writing-rules.md)
 - [references/dynatrace-fast-path.md](./references/dynatrace-fast-path.md)
 - [references/dynatrace-query-patterns.md](./references/dynatrace-query-patterns.md)
 - [references/telemetry-measurability.md](./references/telemetry-measurability.md)
@@ -418,7 +447,9 @@ Rules:
 - [templates/reference-page.md](./templates/reference-page.md)
   Generic exact-lookup template for contracts, fields, and command docs.
 - [templates/explanation-page.md](./templates/explanation-page.md)
-  Generic rationale and tradeoff template for architecture and design docs.
+  Generic rationale and tradeoff template for explanation-style architecture docs.
+- [templates/technical-design-document.md](./templates/technical-design-document.md)
+  Planned-change design-doc template covering goals, requirements, options, and transition plan.
 - [templates/endpoint-traffic-analysis-page.md](./templates/endpoint-traffic-analysis-page.md)
   Final page shape for endpoint inventory and traffic analysis.
 - [templates/service-metric-analysis-page.md](./templates/service-metric-analysis-page.md)

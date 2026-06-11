@@ -1,0 +1,27 @@
+sequenceDiagram
+  participant Caller as Internal caller
+  participant Controller as ML Controller
+  participant Handler as RunPredictions.Handler
+  participant Strategy as Strategy factory
+  participant Unified as Unified NCM V1
+  participant Global as Global return-customer model
+  participant EventHub as Audit writer
+
+  Caller->>Controller: POST /machinelearning-gateway/predictions
+  Controller->>Handler: MediatR command
+  Handler->>Strategy: Select models from request shape
+  Strategy-->>Handler: Unified NCM V1 + optional Global Return Customer
+  par Selected model execution
+      Handler->>Unified: Invoke unified Databricks path
+      Unified-->>Handler: ModelCallAttempt
+  and Optional second model
+      Handler->>Global: Invoke decorated Databricks path
+      Global-->>Handler: ModelCallAttempt
+  end
+  Handler->>Handler: Aggregate attempts into MachineLearningGatewayResult
+  opt Best-effort audit side effect
+      Handler->>EventHub: Publish MachineLearningRunPredictionsCompleted
+      EventHub-->>Handler: Success or logged failure
+  end
+  Handler-->>Controller: Gateway result
+  Controller-->>Caller: HTTP response

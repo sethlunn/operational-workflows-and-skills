@@ -1,0 +1,48 @@
+#!/bin/zsh
+
+set -euo pipefail
+
+# Keep the Claude Code CLI current before launching a session.
+# Checks npm at most once per day (override with --force) and never
+# blocks a launch: any check or install failure falls through to the
+# already-installed version.
+
+check_interval_seconds=$((24 * 60 * 60))
+stamp_file="${CLAUDE_CODE_UPDATE_STAMP:-${HOME}/.cache/claude-code-update-check}"
+
+force=0
+if [[ "${1:-}" == "--force" ]]; then
+  force=1
+fi
+
+if (( ! force )) && [[ -f "${stamp_file}" ]]; then
+  last_check=$(stat -f %m "${stamp_file}" 2>/dev/null || echo 0)
+  now=$(date +%s)
+  if (( now - last_check < check_interval_seconds )); then
+    exit 0
+  fi
+fi
+
+mkdir -p "${stamp_file:h}"
+touch "${stamp_file}"
+
+installed=$(command claude --version 2>/dev/null | awk '{print $1}' || true)
+latest=$(npm view @anthropic-ai/claude-code version 2>/dev/null || true)
+
+if [[ -z "${latest}" ]]; then
+  echo "Could not reach npm to check for a Claude Code update; using the installed version." >&2
+  exit 0
+fi
+
+if [[ "${installed}" == "${latest}" ]]; then
+  exit 0
+fi
+
+echo "Updating Claude Code ${installed:-unknown} -> ${latest}..."
+if npm install -g "@anthropic-ai/claude-code@${latest}"; then
+  echo "Claude Code updated to ${latest}."
+else
+  echo "Claude Code update failed; using the installed version (${installed:-unknown})." >&2
+fi
+
+exit 0

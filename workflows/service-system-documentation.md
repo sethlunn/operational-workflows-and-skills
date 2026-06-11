@@ -33,6 +33,7 @@ Read `../explanations/service-documentation-pattern.md` when you need the ration
   - operability guide
   - full documentation set
   - larger system documentation spanning multiple services
+- If the user really needs a future-state design artifact for a planned change, route to `../workflows/technical-design-documentation.md` instead of trying to embed proposal and rollout-decision material into the service doc set.
 - Decide whether the request is for `trial mode` or `publish mode`.
 - Default to `trial mode` unless the user explicitly asks to create or update Confluence pages.
 - Decide the initial doc set:
@@ -127,11 +128,15 @@ Read `../explanations/service-documentation-pattern.md` when you need the ration
 
 7. Place diagrams and artifacts where they serve the reader need.
 - Put conceptual flow diagrams in the explanation overview.
+- Put sequence diagrams in the explanation overview when ordered interactions between actors are more important than branching or topology.
 - Put endpoint, event, schema, and entity inventories in the reference page.
 - Put rollout checks, debugging flows, and trace steps in the operability guide.
 - Use traffic analysis as:
   - reference when it is inventory-like
   - explanation when it is clarifying why the system behaves a certain way
+- When a recent PR already captures an important runtime path well, you may reuse the diagraming rules from `../workflows/pr-diagram.md` to draft a current-state diagram, but rewrite it for steady-state documentation and remove PR-specific rollout or verification framing.
+- Prefer diagram source files under `reviews/service-docs/<service-slug>/diagrams/*.mmd` with checked-in SVG snapshots under `reviews/service-docs/<service-slug>/diagrams/rendered/`.
+- Use `scripts/render-mermaid-diagrams` to refresh the SVG snapshots after updating a Mermaid source file.
 - Do not force every diagram, schema, and query into one page.
 
 8. Write or update the output surfaces.

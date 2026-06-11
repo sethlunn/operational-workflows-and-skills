@@ -1,0 +1,14 @@
+interface:
+  display_name: "Technical Design Documentation"
+  short_description: "Draft, revise, or review technical design docs."
+  default_prompt: "Use $technical-design-documentation to turn Jira, PRD, Confluence, and current-state code context into a structured technical design document, or to review an existing design draft for missing requirements, weak tradeoffs, and rollout gaps."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "atlassian"
+      description: "Read Jira, PRD, and Confluence design context, and publish the design doc when requested."
+    - type: "mcp"
+      value: "dynatrace"
+      description: "Ground operational constraints and current-state pain in telemetry when the design depends on production behavior."
+policy:
+  allow_implicit_invocation: true

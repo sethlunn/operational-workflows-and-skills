@@ -1,0 +1,10 @@
+flowchart TD
+  A(["POST /machinelearning-gateway/predictions enters controller    "]) --> B["RunPredictions handler builds model strategy    "]
+  B --> C{"Which models are selected?    "}
+  C --> D[["Execute Unified NCM V1 and optional Global Return Customer concurrently    "]]
+  D --> E{"Attempt results and aggregation status?    "}
+  E -->|success| F["Build Succeeded MachineLearningGatewayResult    "]
+  E -->|mixed or failed attempts| G["Build Failed or PartiallySucceeded gateway result    "]
+  F --> H["Publish best-effort MachineLearningRunPredictionsCompleted event    "]
+  G --> H
+  H --> I(["Return HTTP response with gateway result semantics    "])

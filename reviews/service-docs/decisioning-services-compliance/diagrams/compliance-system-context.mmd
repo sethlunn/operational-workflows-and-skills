@@ -1,0 +1,27 @@
+flowchart LR
+    callers[Upstream Callers\norders\ncheckout-orchestration\ndecision-engine\nfrontend orchestration]
+    api[Compliance API\n/compliance]
+    tila[TILA Flows\ncreate + retrieve]
+    aan[AAN Flows\ncreate + retrieve]
+    bpi[Bank Partner\nIdentification]
+    sql[(SQL Projection Schemas)]
+    cosmos[(Cosmos DB\ncompliance)]
+    blob[(Blob Storage\ntila-disclosures\nadverse-action-notices)]
+    bus[[Azure Service Bus\nservice-compliance\ncompliance-events]]
+    eventhub[[Event Hubs\nEventHubDecisionEngine]]
+    deps[Downstream Services\nrisk-model-2\ncredit-bureau gateway\nmachinelearning-gateway\nLAB]
+
+    callers --> api
+    bus --> api
+    api --> tila
+    api --> aan
+    api --> bpi
+    tila --> sql
+    tila --> blob
+    tila --> deps
+    tila --> eventhub
+    aan --> sql
+    aan --> cosmos
+    aan --> blob
+    aan --> deps
+    bpi --> sql

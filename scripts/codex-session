@@ -5,6 +5,8 @@ set -euo pipefail
 script_dir=${0:A:h}
 skill_repo=${script_dir:h}
 
-"${script_dir}/sync-codex-skills"
+if ! "${script_dir}/sync-codex-skills"; then
+  echo "Warning: failed to refresh Codex skills; continuing with existing links." >&2
+fi
 
 exec codex --add-dir "${skill_repo}" "$@"
