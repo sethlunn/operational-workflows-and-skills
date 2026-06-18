@@ -44,6 +44,8 @@ Recommended starting points:
   `workflows/babysit-pr.md`
 - Independent PR review:
   `workflows/review-pr.md`
+- FY26 performance peer reviews:
+  `workflows/peer-review.md`
 
 ## If You Need Exact Facts
 

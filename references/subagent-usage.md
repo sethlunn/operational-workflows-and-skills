@@ -135,3 +135,11 @@ Use a shared child-result contract when one exists for the workflow family:
 
 - Usually stay local.
 - Review quality often benefits from one coherent reader more than from parallel exploration.
+
+### Peer Review Writing
+
+- Optional fit. Strong only at roster scale, such as a full set of 10 peers.
+- Good split: one bounded evidence-gathering child per peer, returning a compact evidence pack from Jira and GitHub, never a finished review.
+- Keep the parent as the canonical writer and the single thread that collects the reviewer's AI-usage notes and observations.
+- Do not delegate reviewer-only inputs to a child.
+- When used, children should return the `Evidence Pack` portion of `../templates/peer-review-entry.md`, with Jira and GitHub signals separated.
