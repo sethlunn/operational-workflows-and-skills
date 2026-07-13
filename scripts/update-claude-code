@@ -1,48 +1,50 @@
 #!/bin/zsh
 
-set -euo pipefail
+set -u
+set -o pipefail
 
-# Keep the Claude Code CLI current before launching a session.
-# Checks npm at most once per day (override with --force) and never
-# blocks a launch: any check or install failure falls through to the
-# already-installed version.
+# Keep the native Claude Code CLI current before launching a session.
+# Check at most once per day unless forced, and never block a session
+# from using an existing native CLI when an update fails.
 
 check_interval_seconds=$((24 * 60 * 60))
 stamp_file="${CLAUDE_CODE_UPDATE_STAMP:-${HOME}/.cache/claude-code-update-check}"
+claude_bin_dir="${CLAUDE_CODE_BIN_DIR:-${HOME}/.local/bin}"
+claude_bin="${claude_bin_dir}/claude"
+installer_url="https://claude.ai/install.sh"
 
 force=0
 if [[ "${1:-}" == "--force" ]]; then
   force=1
 fi
 
-if (( ! force )) && [[ -f "${stamp_file}" ]]; then
-  last_check=$(stat -f %m "${stamp_file}" 2>/dev/null || echo 0)
+if (( ! force )) && [[ -x "${claude_bin}" && -f "${stamp_file}" ]]; then
+  last_check=$(stat -f %m "${stamp_file}" 2>/dev/null || stat -c %Y "${stamp_file}" 2>/dev/null || echo 0)
   now=$(date +%s)
   if (( now - last_check < check_interval_seconds )); then
     exit 0
   fi
 fi
 
-mkdir -p "${stamp_file:h}"
-touch "${stamp_file}"
+if ! mkdir -p "${stamp_file:h}" || ! touch "${stamp_file}"; then
+  echo "Warning: could not record the Claude Code update check time; continuing with the update." >&2
+fi
 
-installed=$(command claude --version 2>/dev/null | awk '{print $1}' || true)
-latest=$(npm view @anthropic-ai/claude-code version 2>/dev/null || true)
+if [[ -x "${claude_bin}" ]]; then
+  if "${claude_bin}" update; then
+    exit 0
+  fi
 
-if [[ -z "${latest}" ]]; then
-  echo "Could not reach npm to check for a Claude Code update; using the installed version." >&2
+  echo "Warning: failed to update Claude Code; using the installed native version." >&2
   exit 0
 fi
 
-if [[ "${installed}" == "${latest}" ]]; then
-  exit 0
+echo "Native Claude Code was not found at ${claude_bin}; attempting the official installer." >&2
+if curl -fsSL "${installer_url}" | bash; then
+  if [[ -x "${claude_bin}" ]] && "${claude_bin}" --version >/dev/null 2>&1; then
+    exit 0
+  fi
 fi
 
-echo "Updating Claude Code ${installed:-unknown} -> ${latest}..."
-if npm install -g "@anthropic-ai/claude-code@${latest}"; then
-  echo "Claude Code updated to ${latest}."
-else
-  echo "Claude Code update failed; using the installed version (${installed:-unknown})." >&2
-fi
-
+echo "Warning: failed to install the native Claude Code CLI." >&2
 exit 0

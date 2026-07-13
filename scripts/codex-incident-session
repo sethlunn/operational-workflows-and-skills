@@ -17,6 +17,18 @@ esac
 SCRIPT_DIR="${0:P:h}"
 SKILL_REPO="${SCRIPT_DIR:h}"
 WORKDIR="${WORKDIR_ARG:-${CODEX_INCIDENT_WORKDIR:-$PWD}}"
+CODEX_BIN_DIR="${CODEX_INSTALL_DIR:-${HOME}/.local/bin}"
+
+if [[ -d "${CODEX_BIN_DIR}" ]]; then
+  export PATH="${CODEX_BIN_DIR}:${PATH}"
+fi
+
+"${SCRIPT_DIR}/update-codex"
+
+if [[ -d "${CODEX_BIN_DIR}" ]]; then
+  export PATH="${CODEX_BIN_DIR}:${PATH}"
+  rehash
+fi
 
 if ! "${SCRIPT_DIR}/sync-codex-skills"; then
   echo "Warning: failed to refresh Codex skills; continuing with existing links." >&2

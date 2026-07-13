@@ -4,9 +4,50 @@ set -euo pipefail
 
 script_dir=${0:A:h}
 skill_repo=${script_dir:h}
+codex_bin_dir="${CODEX_INSTALL_DIR:-${HOME}/.local/bin}"
+
+if [[ -d "${codex_bin_dir}" ]]; then
+  export PATH="${codex_bin_dir}:${PATH}"
+fi
+
+"${script_dir}/update-codex"
+
+if [[ -d "${codex_bin_dir}" ]]; then
+  export PATH="${codex_bin_dir}:${PATH}"
+  rehash
+fi
 
 if ! "${script_dir}/sync-codex-skills"; then
   echo "Warning: failed to refresh Codex skills; continuing with existing links." >&2
 fi
 
-exec codex --add-dir "${skill_repo}" "$@"
+sandbox_mode=""
+bypass_sandbox=false
+args=("$@")
+i=1
+while (( i <= ${#args} )); do
+  arg="${args[$i]}"
+  case "$arg" in
+    --dangerously-bypass-approvals-and-sandbox)
+      bypass_sandbox=true
+      ;;
+    --sandbox=*)
+      sandbox_mode="${arg#--sandbox=}"
+      ;;
+    --sandbox|-s)
+      if (( i < ${#args} )); then
+        (( i++ ))
+        sandbox_mode="${args[$i]}"
+      fi
+      ;;
+  esac
+  (( i++ ))
+done
+
+if [[ "$sandbox_mode" == "read-only" ]]; then
+  exec codex "$@"
+elif [[ "$bypass_sandbox" == true || "$sandbox_mode" == "workspace-write" || "$sandbox_mode" == "danger-full-access" ]]; then
+  exec codex --add-dir "${skill_repo}" "$@"
+else
+  exec codex --sandbox workspace-write --add-dir "${skill_repo}" "$@"
+fi

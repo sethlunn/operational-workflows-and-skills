@@ -17,8 +17,21 @@ esac
 SCRIPT_DIR="${0:P:h}"
 SKILL_REPO="${SCRIPT_DIR:h}"
 WORKDIR="${WORKDIR_ARG:-${CLAUDE_INCIDENT_WORKDIR:-$PWD}}"
+CLAUDE_BIN_DIR="${CLAUDE_CODE_BIN_DIR:-${HOME}/.local/bin}"
+CLAUDE_BIN="${CLAUDE_BIN_DIR}/claude"
+
+export PATH="${CLAUDE_BIN_DIR}:${PATH}"
 
 "${SCRIPT_DIR}/update-claude-code"
+
+export PATH="${CLAUDE_BIN_DIR}:${PATH}"
+rehash
+
+if [[ ! -x "${CLAUDE_BIN}" ]] || ! "${CLAUDE_BIN}" --version >/dev/null 2>&1; then
+  echo "Could not find a working native Claude Code CLI at: ${CLAUDE_BIN}" >&2
+  exit 127
+fi
+
 "${SCRIPT_DIR}/sync-claude-skills"
 
 if [[ ! -d "$WORKDIR" ]]; then
@@ -59,7 +72,7 @@ EOF
 )
 
 cd "$WORKDIR"
-exec claude \
+exec "${CLAUDE_BIN}" \
   --add-dir "$SKILL_REPO" \
   --permission-mode default \
   "$INITIAL_PROMPT"

@@ -1,0 +1,37 @@
+#!/bin/zsh
+
+set -u
+set -o pipefail
+
+# Keep the Codex CLI current before launching a session. The official
+# installer is idempotent and skips downloading a release that is already
+# installed. Check at most once per day unless forced, and never block a
+# session from using the existing CLI when an update fails.
+
+check_interval_seconds=$((24 * 60 * 60))
+stamp_file="${CODEX_UPDATE_STAMP:-${HOME}/.cache/codex-update-check}"
+installer_url="https://chatgpt.com/codex/install.sh"
+
+force=0
+if [[ "${1:-}" == "--force" ]]; then
+  force=1
+fi
+
+if (( ! force )) && [[ -f "${stamp_file}" ]]; then
+  last_check=$(stat -f %m "${stamp_file}" 2>/dev/null || stat -c %Y "${stamp_file}" 2>/dev/null || echo 0)
+  now=$(date +%s)
+  if (( now - last_check < check_interval_seconds )); then
+    exit 0
+  fi
+fi
+
+if ! mkdir -p "${stamp_file:h}" || ! touch "${stamp_file}"; then
+  echo "Warning: could not record the Codex update check time; continuing with the update." >&2
+fi
+
+if curl -fsSL "${installer_url}" | CODEX_NON_INTERACTIVE=1 sh; then
+  exit 0
+fi
+
+echo "Warning: failed to update Codex CLI; using the installed version." >&2
+exit 0

@@ -4,8 +4,21 @@ set -euo pipefail
 
 script_dir=${0:A:h}
 skill_repo=${script_dir:h}
+claude_bin_dir="${CLAUDE_CODE_BIN_DIR:-${HOME}/.local/bin}"
+claude_bin="${claude_bin_dir}/claude"
+
+export PATH="${claude_bin_dir}:${PATH}"
 
 "${script_dir}/update-claude-code"
+
+export PATH="${claude_bin_dir}:${PATH}"
+rehash
+
+if [[ ! -x "${claude_bin}" ]] || ! "${claude_bin}" --version >/dev/null 2>&1; then
+  echo "Could not find a working native Claude Code CLI at: ${claude_bin}" >&2
+  exit 127
+fi
+
 "${script_dir}/sync-claude-skills"
 
-exec claude --add-dir "${skill_repo}" "$@"
+exec "${claude_bin}" --add-dir "${skill_repo}" "$@"

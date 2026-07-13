@@ -504,10 +504,18 @@ When you want a new session to automatically choose the newest available skill s
 
 That launcher:
 
+- checks for a Codex CLI update at most once per day and installs it through OpenAI's official installer
+- continues with the installed CLI if the update is temporarily unavailable
 - refreshes the skill links before starting Codex
 - prefers the current local checkout when it contains the newest edits or commits
 - fast-forwards the local repo when the tracked upstream is newer and the pull is safe
 - otherwise builds a temporary upstream snapshot and links from that without disturbing local work
+
+To bypass the daily update cache when you know a new Codex release is available, use:
+
+```bash
+./scripts/update-codex --force
+```
 
 If you want to refresh links without starting Codex, use:
 
@@ -519,6 +527,28 @@ If you are intentionally iterating on local uncommitted workflow changes and wan
 
 ```bash
 ./scripts/sync-codex-skills --link-only
+```
+
+## Using This Repo With Claude Code
+
+Install Claude Code with Anthropic's recommended native installer:
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+The `claude-session` and `claude-incident-session` launchers promote the native binary at `~/.local/bin/claude`, check for an update at most once per day with `claude update`, refresh the skill links, and then launch that native binary. A temporary update failure emits a warning but does not block an already installed Claude Code CLI from launching.
+
+To bypass the daily update cache, use:
+
+```bash
+./scripts/update-claude-code --force
+```
+
+If you want to refresh Claude skill links without starting Claude Code, use:
+
+```bash
+./scripts/sync-claude-skills
 ```
 
 ## Incident Session Launcher
