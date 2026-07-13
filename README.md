@@ -1,8 +1,8 @@
 # Operational Workflows and Skills
 
-Portable, company-specific operational workflows and reusable skill adapters for LLM agents.
+Portable, company-specific operational workflows and reusable Codex and Claude Code skill adapters for LLM agents.
 
-This repo keeps the reusable operating model in shared Markdown and keeps model-specific skill wrappers thin. The goal is to make one investigation or analysis pattern reusable across Codex today and other agent environments later.
+This repo keeps the reusable operating model in shared Markdown and keeps model-specific skill wrappers thin. The goal is to make one investigation or analysis pattern reusable across Codex and Claude Code today, without duplicating the procedure in each adapter.
 
 Start with [START-HERE.md](./START-HERE.md).
 
@@ -28,15 +28,18 @@ Good starting points:
 
 - [workflows/pagerduty-incident-analysis.md](./workflows/pagerduty-incident-analysis.md)
 - [workflows/dynatrace-investigation.md](./workflows/dynatrace-investigation.md)
+- [workflows/technical-design-documentation.md](./workflows/technical-design-documentation.md)
 - [workflows/service-system-documentation.md](./workflows/service-system-documentation.md)
 - [workflows/pagerduty-assigned-service-health.md](./workflows/pagerduty-assigned-service-health.md)
 - [workflows/service-endpoint-traffic-analysis.md](./workflows/service-endpoint-traffic-analysis.md)
 - [workflows/service-metric-analysis.md](./workflows/service-metric-analysis.md)
 - [workflows/incident-followup-planning.md](./workflows/incident-followup-planning.md)
+- [workflows/apex-agent-delegation.md](./workflows/apex-agent-delegation.md)
 - [workflows/pr-author-coaching.md](./workflows/pr-author-coaching.md)
 - [workflows/babysit-pr.md](./workflows/babysit-pr.md)
 - [workflows/review-pr.md](./workflows/review-pr.md)
 - [workflows/pr-diagram.md](./workflows/pr-diagram.md)
+- [workflows/peer-review.md](./workflows/peer-review.md)
 
 ### Reference
 
@@ -57,7 +60,10 @@ High-value reference files:
 - [references/confluence-routing.md](./references/confluence-routing.md)
 - [references/dynatrace-query-patterns.md](./references/dynatrace-query-patterns.md)
 - [references/dynatrace-fast-path.md](./references/dynatrace-fast-path.md)
+- [references/technical-design-writing-rules.md](./references/technical-design-writing-rules.md)
+- [references/git-branch-naming.md](./references/git-branch-naming.md)
 - [references/pr-coaching-rubric.md](./references/pr-coaching-rubric.md)
+- [references/peer-review-rubric.md](./references/peer-review-rubric.md)
 - [references/subagent-usage.md](./references/subagent-usage.md)
 - [templates/tutorial-page.md](./templates/tutorial-page.md)
 - [templates/how-to-page.md](./templates/how-to-page.md)
@@ -66,6 +72,9 @@ High-value reference files:
 - [templates/incident-analysis-page.md](./templates/incident-analysis-page.md)
 - [templates/dynatrace-investigation-result.md](./templates/dynatrace-investigation-result.md)
 - [templates/analysis-child-result.md](./templates/analysis-child-result.md)
+- [templates/technical-design-document.md](./templates/technical-design-document.md)
+- [templates/apex-agent-handoff.md](./templates/apex-agent-handoff.md)
+- [templates/peer-review-entry.md](./templates/peer-review-entry.md)
 - [scripts/render-mermaid-diagrams](./scripts/render-mermaid-diagrams)
 - [mermaid.config.json](./mermaid.config.json)
 
@@ -91,17 +100,19 @@ Some explanation-oriented material still lives under `references/` and should mo
 
 This repo is organized around a small set of layers:
 
-1. `skills`
-   Thin entrypoints that tell an agent when to trigger and which shared workflow to read.
+1. `codex/` and `claude/`
+   Thin, model-specific entry adapters that tell an agent when to trigger and which shared workflow to read.
 2. `workflows`
    The real reusable procedure.
 3. `references`
    Stable facts, query patterns, routing rules, and caveat handling.
 4. `templates`
    Output structure for Confluence pages and other reusable artifacts.
-5. `reviews`
+5. `tutorials` and `explanations`
+   Guided learning material and the rationale behind the operating model.
+6. `reviews`
    Design, code, and planning assessments.
-6. `scripts`
+7. `scripts`
    Helper launchers and setup utilities.
 
 The operating rule is simple:
@@ -117,7 +128,7 @@ user request
 
 ## Design Principles
 
-- Keep `SKILL.md` files small and routing-oriented.
+- Keep both Codex and Claude `SKILL.md` files small and routing-oriented.
 - Put reusable business logic in `workflows/`, not in skill wrappers.
 - Put stable supporting knowledge in `references/`, not in workflows unless it is procedural.
 - Put output shape in `templates/`, not process.
@@ -183,7 +194,18 @@ These now share a common service-analysis layer:
 - [references/telemetry-measurability.md](./references/telemetry-measurability.md)
 - [references/confluence-analysis-writing-standard.md](./references/confluence-analysis-writing-standard.md)
 
-### Review And Triage
+### Engineering Design And Delivery
+
+- `technical-design-documentation`
+  Draft or revise a future-state technical design from Jira or PRD requirements, current code, solution options, and rollout constraints.
+- `apex-agent-delegation`
+  Package bounded code-writing work for an APEX-launched agent that opens a draft PR, while keeping review, documentation, runtime verification, and finishing work local.
+- `pr-diagram`
+  Write or revise a PR description around one focused Mermaid flow or sequence diagram.
+
+These capabilities cover the path from design through bounded implementation delegation and reviewer-facing change communication. APEX is intentionally limited to code-writing draft PRs; it is not a runtime for incident, telemetry, documentation-publishing, or PR-review workflows.
+
+### Review, Coaching, And Feedback
 
 - `pr-author-coaching`
   Coaching workflow that analyzes one or more engineers by recent PR history, review themes, and code quality patterns.
@@ -191,6 +213,8 @@ These now share a common service-analysis layer:
   Active code-owner workflow for triaging review comments, making safe revisions, pushing updates, and replying to review threads.
 - `review-pr`
   Requirement-driven PR review workflow that reads Jira, epic, and Confluence context before reviewing the code and discussing findings in session.
+- `peer-review`
+  Claude-only FY26 performance-feedback workflow that combines delivered Jira work, GitHub review signals, and user-provided observations into evidence-backed draft Lattice entries.
 
 These are intentionally separate:
 
@@ -200,6 +224,8 @@ These are intentionally separate:
   Use when you own the PR and want the agent to move it forward by handling review feedback.
 - `review-pr`
   Use when you want an independent review of the PR against the story, design context, and current code.
+- `peer-review`
+  Use when the subject is a person's performance feedback, not the correctness of a pull request.
 
 ## How The Main Flows Fit Together
 
@@ -341,7 +367,9 @@ Rules:
 ## Repository Layout
 
 - [codex/](./codex/)
-  Thin Codex adapters. Each folder contains a `SKILL.md` and usually `agents/openai.yaml`.
+  Thin Codex adapters. Each folder contains a `SKILL.md` and an `agents/openai.yaml` registration file.
+- [claude/](./claude/)
+  Thin Claude Code adapters. Each folder contains a `SKILL.md` that routes to the same shared workflows and support material.
 - [workflows/](./workflows/)
   Shared operational procedures and branch playbooks.
 - [tutorials/](./tutorials/)
@@ -359,18 +387,24 @@ Rules:
 
 ## Current Entry Skills
 
-- [codex/pagerduty-incident-analysis](./codex/pagerduty-incident-analysis/)
-- [codex/dynatrace-investigation](./codex/dynatrace-investigation/)
-- [codex/pagerduty-assigned-service-health](./codex/pagerduty-assigned-service-health/)
-- [codex/technical-design-documentation](./codex/technical-design-documentation/)
-- [codex/service-system-documentation](./codex/service-system-documentation/)
-- [codex/service-endpoint-traffic-analysis](./codex/service-endpoint-traffic-analysis/)
-- [codex/service-metric-analysis](./codex/service-metric-analysis/)
-- [codex/incident-followup-planning](./codex/incident-followup-planning/)
-- [codex/pr-author-coaching](./codex/pr-author-coaching/)
-- [codex/babysit-pr](./codex/babysit-pr/)
-- [codex/review-pr](./codex/review-pr/)
-- [codex/pr-diagram](./codex/pr-diagram/)
+The shared workflow is canonical; the adapter columns show where each workflow is currently discoverable as a model-native skill.
+
+| Capability | Codex adapter | Claude adapter | Primary outcome |
+| --- | --- | --- | --- |
+| PagerDuty incident analysis | [Codex](./codex/pagerduty-incident-analysis/) | [Claude](./claude/pagerduty-incident-analysis/) | Evidence-backed incident analysis and optional Confluence parent page |
+| Dynatrace investigation | [Codex](./codex/dynatrace-investigation/) | [Claude](./claude/dynatrace-investigation/) | Rollout, incident, service-debugging, or exact-id telemetry investigation |
+| PagerDuty assigned-service health | [Codex](./codex/pagerduty-assigned-service-health/) | [Claude](./claude/pagerduty-assigned-service-health/) | Health assessment for currently assigned services over an exact window |
+| Incident follow-up planning | [Codex](./codex/incident-followup-planning/) | [Claude](./claude/incident-followup-planning/) | Validated Jira follow-up story set from incident evidence |
+| Service system documentation | [Codex](./codex/service-system-documentation/) | [Claude](./claude/service-system-documentation/) | Diataxis-aligned overview, reference, and operability documentation |
+| Service endpoint traffic analysis | [Codex](./codex/service-endpoint-traffic-analysis/) | [Claude](./claude/service-endpoint-traffic-analysis/) | Code-backed endpoint inventory mapped to production traffic |
+| Service metric analysis | [Codex](./codex/service-metric-analysis/) | [Claude](./claude/service-metric-analysis/) | Emitted-metric inventory, telemetry trends, semantics, and caveats |
+| Technical design documentation | [Codex](./codex/technical-design-documentation/) | [Claude](./claude/technical-design-documentation/) | Trial-mode design draft or explicitly published Confluence design |
+| APEX agent delegation | [Codex](./codex/apex-agent-delegation/) | [Claude](./claude/apex-agent-delegation/) | Bounded code-writing handoff that targets a draft PR |
+| PR author coaching | [Codex](./codex/pr-author-coaching/) | [Claude](./claude/pr-author-coaching/) | Evidence-backed recurring strengths and issues across recent PRs |
+| Babysit PR | [Codex](./codex/babysit-pr/) | [Claude](./claude/babysit-pr/) | Author-side review triage, safe revisions, verification, push, and replies |
+| Review PR | [Codex](./codex/review-pr/) | [Claude](./claude/review-pr/) | Independent requirement-driven review, session-only by default |
+| PR diagram | [Codex](./codex/pr-diagram/) | [Claude](./claude/pr-diagram/) | Concise PR body with one focused Mermaid diagram |
+| Peer review | Not currently provided | [Claude](./claude/peer-review/) | Private FY26 performance-feedback draft with an evidence appendix |
 
 ## Current Workflows
 
@@ -380,12 +414,14 @@ Rules:
 - [workflows/dynatrace-investigation.md](./workflows/dynatrace-investigation.md)
 - [workflows/service-analysis-common.md](./workflows/service-analysis-common.md)
 - [workflows/technical-design-documentation.md](./workflows/technical-design-documentation.md)
+- [workflows/apex-agent-delegation.md](./workflows/apex-agent-delegation.md)
 - [workflows/service-system-documentation.md](./workflows/service-system-documentation.md)
 - [workflows/incident-followup-planning.md](./workflows/incident-followup-planning.md)
 - [workflows/pr-author-coaching.md](./workflows/pr-author-coaching.md)
 - [workflows/babysit-pr.md](./workflows/babysit-pr.md)
 - [workflows/review-pr.md](./workflows/review-pr.md)
 - [workflows/pr-diagram.md](./workflows/pr-diagram.md)
+- [workflows/peer-review.md](./workflows/peer-review.md)
 
 ### Dynatrace Branch Workflows
 
@@ -413,16 +449,20 @@ Rules:
 - [references/diataxis-writing-rules.md](./references/diataxis-writing-rules.md)
 - [references/diataxis-review-checklist.md](./references/diataxis-review-checklist.md)
 - [references/technical-design-writing-rules.md](./references/technical-design-writing-rules.md)
+- [references/git-branch-naming.md](./references/git-branch-naming.md)
 - [references/dynatrace-fast-path.md](./references/dynatrace-fast-path.md)
 - [references/dynatrace-query-patterns.md](./references/dynatrace-query-patterns.md)
 - [references/telemetry-measurability.md](./references/telemetry-measurability.md)
 - [references/confluence-analysis-writing-standard.md](./references/confluence-analysis-writing-standard.md)
+- [references/incident-analysis-surfaces.md](./references/incident-analysis-surfaces.md)
 - [references/subagent-usage.md](./references/subagent-usage.md)
 
 ### Workflow-Specific Support
 
 - [references/jira-incident-followup.md](./references/jira-incident-followup.md)
+- [references/pr-coaching-rubric.md](./references/pr-coaching-rubric.md)
 - [references/pr-review-context-gathering.md](./references/pr-review-context-gathering.md)
+- [references/peer-review-rubric.md](./references/peer-review-rubric.md)
 - [references/slack-setup.md](./references/slack-setup.md)
 - [references/incident-investigation-lessons-2026-03-27.md](./references/incident-investigation-lessons-2026-03-27.md)
 
@@ -450,12 +490,16 @@ Rules:
   Generic rationale and tradeoff template for explanation-style architecture docs.
 - [templates/technical-design-document.md](./templates/technical-design-document.md)
   Planned-change design-doc template covering goals, requirements, options, and transition plan.
+- [templates/apex-agent-handoff.md](./templates/apex-agent-handoff.md)
+  Launch-ready contract for bounded APEX code-writing delegation and required local follow-up.
 - [templates/endpoint-traffic-analysis-page.md](./templates/endpoint-traffic-analysis-page.md)
   Final page shape for endpoint inventory and traffic analysis.
 - [templates/service-metric-analysis-page.md](./templates/service-metric-analysis-page.md)
   Final page shape for service metric and telemetry analysis.
 - [templates/incident-followup-story.md](./templates/incident-followup-story.md)
   Story-drafting template for incident follow-up work.
+- [templates/peer-review-entry.md](./templates/peer-review-entry.md)
+  Private evidence pack and two paste-ready FY26 performance-feedback entries.
 
 ## Current Explanations
 
@@ -463,12 +507,45 @@ Rules:
   Why the repo is structured around shared workflows, references, templates, and thin skill adapters.
 - [explanations/service-documentation-pattern.md](./explanations/service-documentation-pattern.md)
   Why service documentation should be produced as a Diataxis-aligned doc set, and how evidence, reference, and templates differ.
+- [explanations/incident-analysis-family.md](./explanations/incident-analysis-family.md)
+  How PagerDuty incident orchestration, bounded Dynatrace investigation, and follow-up planning fit together without duplicating ownership.
 - [explanations/incident-analysis-pattern.md](./explanations/incident-analysis-pattern.md)
   Why the incident workflow defaults to `trial mode`, creates a parent surface early, uses bounded child tracks, and runs retrospective cleanup.
 - [explanations/dynatrace-investigation-pattern.md](./explanations/dynatrace-investigation-pattern.md)
   Why the Dynatrace workflow uses a router, narrows entity scope early, prefers one branch, and keeps child investigations bounded.
 - [explanations/dynatrace-evidence-interpretation.md](./explanations/dynatrace-evidence-interpretation.md)
   How to interpret ambiguous Dynatrace evidence such as low-load alerts, telemetry gaps, caller-vs-callee mismatch, and rollout correlation.
+
+## Current Reviewed Artifacts
+
+The `reviews/` tree preserves concrete outputs and design assessments without turning those one-off artifacts into reusable workflow instructions.
+
+Design assessments:
+
+- [reviews/design/dq-8931-extended-fraud-alert-handling-with-krm.md](./reviews/design/dq-8931-extended-fraud-alert-handling-with-krm.md)
+- [reviews/design/payinz-lifecycle-automation.md](./reviews/design/payinz-lifecycle-automation.md)
+- [reviews/design/skills-architecture-and-governance.md](./reviews/design/skills-architecture-and-governance.md)
+
+Published service-documentation source sets:
+
+- [reviews/service-docs/decisioning-services-compliance/](./reviews/service-docs/decisioning-services-compliance/)
+  Compliance landing page, overview, reference, operability guide, AAN-generation deep dive, Mermaid sources, rendered snapshots, and Confluence publication manifest.
+- [reviews/service-docs/provider-gateways-machine-learning-gateway/](./reviews/service-docs/provider-gateways-machine-learning-gateway/)
+  Machine Learning Gateway overview, reference, operability guide, focused flow diagrams, and Confluence publication manifest.
+
+Keep the Markdown and Mermaid source in git as the source of truth. Use each `confluence-manifest.yaml` for stable page ids and publication routing, and regenerate reader-facing diagram snapshots with [scripts/render-mermaid-diagrams](./scripts/render-mermaid-diagrams).
+
+## Launcher And Maintenance Scripts
+
+| Task | Codex | Claude Code |
+| --- | --- | --- |
+| Start a normal managed session | [scripts/codex-session](./scripts/codex-session) | [scripts/claude-session](./scripts/claude-session) |
+| Start a preflighted incident session | [scripts/codex-incident-session](./scripts/codex-incident-session) | [scripts/claude-incident-session](./scripts/claude-incident-session) |
+| Install local skill and shared-root links | [scripts/link-codex-skills](./scripts/link-codex-skills) | [scripts/link-claude-skills](./scripts/link-claude-skills) |
+| Select the newest safe skill source and relink | [scripts/sync-codex-skills](./scripts/sync-codex-skills) | [scripts/sync-claude-skills](./scripts/sync-claude-skills) |
+| Check for a CLI update | [scripts/update-codex](./scripts/update-codex) | [scripts/update-claude-code](./scripts/update-claude-code) |
+
+Diagram snapshots are agent-independent and use [scripts/render-mermaid-diagrams](./scripts/render-mermaid-diagrams) with [mermaid.config.json](./mermaid.config.json).
 
 ## Using This Repo With Codex
 
@@ -537,7 +614,28 @@ Install Claude Code with Anthropic's recommended native installer:
 curl -fsSL https://claude.ai/install.sh | bash
 ```
 
-The `claude-session` and `claude-incident-session` launchers promote the native binary at `~/.local/bin/claude`, check for an update at most once per day with `claude update`, refresh the skill links, and then launch that native binary. A temporary update failure emits a warning but does not block an already installed Claude Code CLI from launching.
+Install the repo-managed skill links with:
+
+```bash
+./scripts/link-claude-skills
+```
+
+That script mirrors the Codex setup: it links every folder under `claude/` into `${CLAUDE_HOME:-$HOME/.claude}/skills/`, backs up conflicting folders, and links `workflows/`, `references/`, `templates/`, `reviews/`, and `scripts/` under the Claude home so shared relative references resolve.
+
+For a managed session, use:
+
+```bash
+./scripts/claude-session
+```
+
+The `claude-session` and `claude-incident-session` launchers:
+
+- promote the native binary at `${CLAUDE_CODE_BIN_DIR:-$HOME/.local/bin}/claude`
+- check for an update at most once per day with `claude update`
+- attempt the official native installer when that binary is not installed yet
+- keep an already installed native CLI usable when a temporary update fails
+- select the newest safe local or tracked-upstream skill source and refresh links
+- expose this repo to the launched Claude Code session with `--add-dir`
 
 To bypass the daily update cache, use:
 
@@ -551,29 +649,40 @@ If you want to refresh Claude skill links without starting Claude Code, use:
 ./scripts/sync-claude-skills
 ```
 
-## Incident Session Launcher
+When intentionally testing uncommitted workflow changes, force the current checkout as the link source with:
 
-There is a dedicated incident launcher:
+```bash
+./scripts/sync-claude-skills --link-only
+```
+
+## Incident Session Launchers
+
+Both agent adapters provide a dedicated incident launcher:
 
 - `codex-incident-session trial`
 - `codex-incident-session publish`
+- `claude-incident-session trial`
+- `claude-incident-session publish`
 
-The script lives at:
+The scripts live at:
 
 - [scripts/codex-incident-session](./scripts/codex-incident-session)
+- [scripts/claude-incident-session](./scripts/claude-incident-session)
 
-What it does:
+Both launchers:
 
-- starts Codex in the target workspace
-- adds this repo as an extra writable directory
-- warms likely PagerDuty and Dynatrace reads early
-- reduces approval friction during live incident work
+- update the native CLI and refresh the corresponding skill links
+- start the selected agent in the target workspace with this repo available
+- preflight harmless PagerDuty and Dynatrace reads before a real incident id is supplied
+- keep preflight read-only in both modes; `trial` skips routine Atlassian access while `publish` warms one harmless Atlassian read
+- stop after preflight and wait for the incident id, reducing approval interruptions during the investigation
 
-By default, the launcher uses your current directory as the target workspace. If you want a different workspace, pass it explicitly:
+By default, each launcher uses the current directory as the target workspace. To use another workspace, pass it as the second argument:
 
 - `codex-incident-session trial /path/to/services`
+- `claude-incident-session trial /path/to/services`
 
-You can also set `CODEX_INCIDENT_WORKDIR`.
+You can also set `CODEX_INCIDENT_WORKDIR` or `CLAUDE_INCIDENT_WORKDIR` for the corresponding launcher.
 
 ## Example Prompts
 
@@ -585,9 +694,13 @@ You can also set `CODEX_INCIDENT_WORKDIR`.
 - `Use $service-endpoint-traffic-analysis to analyze risk-manager endpoint traffic and create or update the Confluence page.`
 - `Use $service-metric-analysis to inspect a repo service, analyze its emitted metrics in Dynatrace, and publish the findings to Confluence.`
 - `Use $incident-followup-planning to validate the incident page and create follow-up Jira stories under the incident epic.`
+- `Use $technical-design-documentation to draft a trial-mode design for DQ-1234 from the Jira requirements and current code.`
+- `Use $apex-agent-delegation to prepare and launch a bounded code-writing handoff for DQ-1234 that opens a draft PR.`
 - `Use $pr-author-coaching to analyze davidsgbang's last 5 PRs in quadpay/quadpay-services and tell me the recurring issues and strengths to coach on.`
 - `Use $babysit-pr to handle the review comments on my PR, make any needed code changes, push updates, and reply to the threads.`
 - `Use $review-pr to review this PR against the linked Jira story, epic if needed, Confluence design docs, and the current code, then discuss the findings in session.`
+- `Use $pr-diagram to rewrite this PR description around the one changed interaction reviewers need to understand.`
+- `Use $peer-review to draft my FY26 feedback for this Zipster from Jira, GitHub, and the observations I provide.` (Claude Code only)
 
 ## Adding New Capabilities
 
@@ -638,10 +751,9 @@ This is the model used by `dynatrace-investigation` and now by the service-analy
 - Distinguish direct evidence from interpretation.
 - If telemetry cannot support a question, say so explicitly instead of inferring beyond the signal.
 
-## Future Adapters
+## Additional Adapter Targets
 
-The shared layout is intended to support additional adapters later, for example:
+Codex and Claude Code are current adapters. The shared layout can support additional thin adapters later, for example:
 
-- [claude/](./claude/)
-- [chatgpt/](./chatgpt/)
-- [cursor/](./cursor/)
+- `chatgpt/`
+- `cursor/`

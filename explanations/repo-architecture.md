@@ -7,7 +7,7 @@ The main design choice is simple:
 - put the real operating procedure in shared Markdown
 - keep model-specific wrappers thin
 
-That keeps the business logic in one place and reduces the chance that Codex, another agent, and a future workflow runner drift into different operating models.
+That keeps the business logic in one place and reduces the chance that Codex, Claude Code, and a future workflow runner drift into different operating models.
 
 ## Why Shared Workflows
 
@@ -15,11 +15,24 @@ The files in `workflows/` are the canonical task procedures.
 
 They are written to be readable by both humans and agents. That matters because operational work changes often, and the lowest-friction way to inspect or update the procedure is to edit one Markdown playbook rather than several model-specific prompt implementations.
 
-## Why Thin Skill Adapters
+## Why Thin Model Adapters
 
-The files in `codex/*/SKILL.md` should stay thin on purpose.
+The files in `codex/*/SKILL.md` and `claude/*/SKILL.md` should stay thin on purpose.
 
-Their job is to point Codex at the right shared workflow, reference, and template files. They should not become a second copy of the business logic. Once they start carrying real procedure, the repo loses its portability advantage.
+Their job is to give each agent environment a native trigger and point it at the right shared workflow, reference, and template files. They should not become a second copy of the business logic. Once they start carrying real procedure, the repo loses its portability advantage.
+
+Most current capabilities have both a Codex adapter and a Claude adapter. Adapter-specific metadata remains local to the adapter: Codex skills also carry `agents/openai.yaml`, while Claude discovers the `SKILL.md` folders linked under its home directory. A capability can be environment-specific when its operating contract requires it; the current `peer-review` entry is Claude-only. The workflow remains shared whenever the procedure itself is portable.
+
+## Why Launchers And Links Are Separate From Workflows
+
+The scripts under `scripts/` handle deterministic environment setup rather than business procedure.
+
+- `link-*` installs repo-backed skill and shared-root symlinks.
+- `sync-*` chooses the newest safe local or tracked-upstream source before relinking.
+- `*-session` checks for native CLI updates, refreshes links, and starts the agent with this repo available.
+- `*-incident-session` also performs harmless read-only tool preflight before waiting for a real incident id.
+
+Keeping that behavior in scripts makes session setup repeatable while leaving the Markdown workflows readable and agent-independent.
 
 ## Why References Are Separate
 
