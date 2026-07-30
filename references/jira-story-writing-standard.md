@@ -14,6 +14,14 @@ Each Key Details field carries only its own content. Never place acceptance crit
 
 Do not populate the legacy template fields `Story Description` (`customfield_10108`) and `Purchasing Issue Outline` (`customfield_10123`). `Initiative Description` (`customfield_10446`) belongs to the incident follow-up flow in [jira-incident-followup.md](./jira-incident-followup.md), not to general scoping.
 
+## Write Mechanics
+
+Verified against the Atlassian MCP connector on `2026-07-30` while editing the DQ-9365 story set:
+
+- The system `description` field accepts a Markdown string when the edit call sets `contentFormat: "markdown"`.
+- The `customfield_10053` and `customfield_10281` doc fields reject strings with `Operation value must be an Atlassian Document`; pass an ADF object (`bulletList` of `listItem` > `paragraph`, inline code via text `marks`) for each in the same edit call.
+- Bold-labeled description components and Confluence deep links survive the Markdown conversion; write them as normal Markdown.
+
 ## Dual-Audience Rule
 
 Every story serves two readers at once:
