@@ -42,6 +42,7 @@ Service analysis and documentation:
 Engineering design and delivery:
 
 - Planned-change technical design: [workflows/technical-design-documentation.md](./workflows/technical-design-documentation.md)
+- Scoping described work or a design doc into right-sized Jira stories: [workflows/jira-story-scoping.md](./workflows/jira-story-scoping.md)
 - Local Jira-story implementation on a safe latest-master branch or worktree: [workflows/implement-jira-story.md](./workflows/implement-jira-story.md)
 - Bounded code-writing delegation to APEX for a draft PR: [workflows/apex-agent-delegation.md](./workflows/apex-agent-delegation.md)
 - Focused Mermaid PR description: [workflows/pr-diagram.md](./workflows/pr-diagram.md)
@@ -62,6 +63,7 @@ Authoring and routing:
 - Diataxis authoring rules: [references/diataxis-writing-rules.md](./references/diataxis-writing-rules.md)
 - Diataxis review checklist: [references/diataxis-review-checklist.md](./references/diataxis-review-checklist.md)
 - Technical-design writing rules: [references/technical-design-writing-rules.md](./references/technical-design-writing-rules.md)
+- Jira story writing standard: [references/jira-story-writing-standard.md](./references/jira-story-writing-standard.md)
 - Confluence routing: [references/confluence-routing.md](./references/confluence-routing.md)
 - Git/Jira branch naming: [references/git-branch-naming.md](./references/git-branch-naming.md)
 
@@ -79,6 +81,7 @@ Output contracts:
 - Incident child investigation: [templates/dynatrace-investigation-result.md](./templates/dynatrace-investigation-result.md)
 - Non-incident child analysis: [templates/analysis-child-result.md](./templates/analysis-child-result.md)
 - Technical design: [templates/technical-design-document.md](./templates/technical-design-document.md)
+- Scoped Jira story: [templates/scoped-jira-story.md](./templates/scoped-jira-story.md)
 - APEX delegation handoff: [templates/apex-agent-handoff.md](./templates/apex-agent-handoff.md)
 - Peer-review entry: [templates/peer-review-entry.md](./templates/peer-review-entry.md)
 - Generic Diataxis templates: [tutorial](./templates/tutorial-page.md), [how-to](./templates/how-to-page.md), [reference](./templates/reference-page.md), and [explanation](./templates/explanation-page.md)

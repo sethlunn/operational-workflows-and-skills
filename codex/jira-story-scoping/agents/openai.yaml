@@ -1,0 +1,6 @@
+interface:
+  display_name: "Jira Story Scoping"
+  short_description: "Scope work into right-sized, dual-audience Jira stories."
+  default_prompt: "Use $jira-story-scoping to scope this work into Jira stories under the epic, and create them after I review the drafts."
+policy:
+  allow_implicit_invocation: true
