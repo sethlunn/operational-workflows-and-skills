@@ -1,0 +1,62 @@
+#!/bin/zsh
+
+set -u
+set -o pipefail
+
+server_name="${1:-atlassian}"
+codex_bin="${CODEX_BIN:-codex}"
+codex_home="${CODEX_HOME:-${HOME}/.codex}"
+credentials_file="${codex_home}/.credentials.json"
+refresh_window_ms=$((5 * 60 * 1000))
+
+case "${CODEX_MCP_AUTO_LOGIN:-1}" in
+  0|false|no)
+    exit 0
+    ;;
+esac
+
+if ! command -v "${codex_bin}" >/dev/null 2>&1; then
+  echo "Warning: could not check ${server_name} MCP authentication because Codex is not on PATH." >&2
+  exit 0
+fi
+
+if ! "${codex_bin}" mcp get "${server_name}" >/dev/null 2>&1; then
+  exit 0
+fi
+
+if ! command -v jq >/dev/null 2>&1; then
+  echo "Warning: could not check ${server_name} MCP authentication because jq is not installed." >&2
+  exit 0
+fi
+
+now_ms=$(( $(date +%s) * 1000 ))
+refresh_threshold_ms=$((now_ms + refresh_window_ms))
+
+if [[ -r "${credentials_file}" ]] && jq -e \
+  --arg credential_prefix "${server_name}|" \
+  --argjson refresh_threshold_ms "${refresh_threshold_ms}" \
+  '
+    any(
+      to_entries[];
+      (.key | startswith($credential_prefix))
+      and (.value.access_token | type == "string" and length > 0)
+      and (.value.refresh_token | type == "string" and length > 0)
+      and (.value.expires_at | type == "number" and . > $refresh_threshold_ms)
+    )
+  ' "${credentials_file}" >/dev/null 2>&1; then
+  exit 0
+fi
+
+if [[ ! -t 0 || ! -t 1 ]]; then
+  echo "Warning: ${server_name} MCP authentication is missing or expired; interactive login was skipped because this is not a terminal." >&2
+  exit 0
+fi
+
+echo "${server_name} MCP authentication is missing or expired; opening login before Codex starts." >&2
+if "${codex_bin}" mcp login "${server_name}"; then
+  echo "${server_name} MCP authentication refreshed." >&2
+  exit 0
+fi
+
+echo "Warning: ${server_name} MCP login failed; Codex will start without a working ${server_name} connection." >&2
+exit 1

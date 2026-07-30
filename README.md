@@ -29,6 +29,7 @@ Good starting points:
 - [workflows/pagerduty-incident-analysis.md](./workflows/pagerduty-incident-analysis.md)
 - [workflows/dynatrace-investigation.md](./workflows/dynatrace-investigation.md)
 - [workflows/technical-design-documentation.md](./workflows/technical-design-documentation.md)
+- [workflows/implement-jira-story.md](./workflows/implement-jira-story.md)
 - [workflows/service-system-documentation.md](./workflows/service-system-documentation.md)
 - [workflows/pagerduty-assigned-service-health.md](./workflows/pagerduty-assigned-service-health.md)
 - [workflows/service-endpoint-traffic-analysis.md](./workflows/service-endpoint-traffic-analysis.md)
@@ -198,12 +199,14 @@ These now share a common service-analysis layer:
 
 - `technical-design-documentation`
   Draft or revise a future-state technical design from Jira or PRD requirements, current code, solution options, and rollout constraints.
+- `implement-jira-story`
+  Read a complete Jira story and its comments, prepare a safe branch or worktree from the latest master, implement the code locally, and verify it against the effective contract.
 - `apex-agent-delegation`
   Package bounded code-writing work for an APEX-launched agent that opens a draft PR, while keeping review, documentation, runtime verification, and finishing work local.
 - `pr-diagram`
   Write or revise a PR description around one focused Mermaid flow or sequence diagram.
 
-These capabilities cover the path from design through bounded implementation delegation and reviewer-facing change communication. APEX is intentionally limited to code-writing draft PRs; it is not a runtime for incident, telemetry, documentation-publishing, or PR-review workflows.
+These capabilities cover the path from design through local Jira-story implementation or bounded implementation delegation and reviewer-facing change communication. APEX is intentionally limited to code-writing draft PRs; it is not a runtime for incident, telemetry, documentation-publishing, or PR-review workflows.
 
 ### Review, Coaching, And Feedback
 
@@ -321,6 +324,26 @@ Child investigations in this family should return:
 
 That template is the default bounded evidence contract for non-incident analysis tracks.
 
+### Jira Story Implementation Flow
+
+```text
+Jira URL or key
+  -> full issue fields and every comment
+  -> effective implementation contract
+  -> repository and worktree preflight
+  -> latest master
+  -> Jira-keyed feature branch
+  -> code and focused verification
+  -> local implementation handoff
+```
+
+Rules:
+
+- comment-sourced requirements remain visible in the effective contract
+- an occupied feature checkout is preserved through a dedicated worktree, even when it is clean
+- a worktree branch starts from freshly fetched `origin/master`
+- commit, push, pull-request creation, and Jira mutation require an explicit follow-up request
+
 ### PR Review Flows
 
 The review family now has three distinct flows because coaching, author-side triage, and reviewer-side review start from different objects and produce different outputs:
@@ -399,6 +422,7 @@ The shared workflow is canonical; the adapter columns show where each workflow i
 | Service endpoint traffic analysis | [Codex](./codex/service-endpoint-traffic-analysis/) | [Claude](./claude/service-endpoint-traffic-analysis/) | Code-backed endpoint inventory mapped to production traffic |
 | Service metric analysis | [Codex](./codex/service-metric-analysis/) | [Claude](./claude/service-metric-analysis/) | Emitted-metric inventory, telemetry trends, semantics, and caveats |
 | Technical design documentation | [Codex](./codex/technical-design-documentation/) | [Claude](./claude/technical-design-documentation/) | Trial-mode design draft or explicitly published Confluence design |
+| Implement Jira story | [Codex](./codex/implement-jira-story/) | [Claude](./claude/implement-jira-story/) | Local implementation and verification on a safe latest-master feature branch |
 | APEX agent delegation | [Codex](./codex/apex-agent-delegation/) | [Claude](./claude/apex-agent-delegation/) | Bounded code-writing handoff that targets a draft PR |
 | PR author coaching | [Codex](./codex/pr-author-coaching/) | [Claude](./claude/pr-author-coaching/) | Evidence-backed recurring strengths and issues across recent PRs |
 | Babysit PR | [Codex](./codex/babysit-pr/) | [Claude](./claude/babysit-pr/) | Author-side review triage, safe revisions, verification, push, and replies |
@@ -414,6 +438,7 @@ The shared workflow is canonical; the adapter columns show where each workflow i
 - [workflows/dynatrace-investigation.md](./workflows/dynatrace-investigation.md)
 - [workflows/service-analysis-common.md](./workflows/service-analysis-common.md)
 - [workflows/technical-design-documentation.md](./workflows/technical-design-documentation.md)
+- [workflows/implement-jira-story.md](./workflows/implement-jira-story.md)
 - [workflows/apex-agent-delegation.md](./workflows/apex-agent-delegation.md)
 - [workflows/service-system-documentation.md](./workflows/service-system-documentation.md)
 - [workflows/incident-followup-planning.md](./workflows/incident-followup-planning.md)
@@ -695,6 +720,7 @@ You can also set `CODEX_INCIDENT_WORKDIR` or `CLAUDE_INCIDENT_WORKDIR` for the c
 - `Use $service-metric-analysis to inspect a repo service, analyze its emitted metrics in Dynatrace, and publish the findings to Confluence.`
 - `Use $incident-followup-planning to validate the incident page and create follow-up Jira stories under the incident epic.`
 - `Use $technical-design-documentation to draft a trial-mode design for DQ-1234 from the Jira requirements and current code.`
+- `Use $implement-jira-story to implement https://quadpay.atlassian.net/browse/DQ-9407 in quadpay-services, including all acceptance criteria and comments.`
 - `Use $apex-agent-delegation to prepare and launch a bounded code-writing handoff for DQ-1234 that opens a draft PR.`
 - `Use $pr-author-coaching to analyze davidsgbang's last 5 PRs in quadpay/quadpay-services and tell me the recurring issues and strengths to coach on.`
 - `Use $babysit-pr to handle the review comments on my PR, make any needed code changes, push updates, and reply to the threads.`

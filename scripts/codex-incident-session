@@ -34,6 +34,8 @@ if ! "${SCRIPT_DIR}/sync-codex-skills"; then
   echo "Warning: failed to refresh Codex skills; continuing with existing links." >&2
 fi
 
+"${SCRIPT_DIR}/ensure-codex-mcp-auth" atlassian || true
+
 if [[ ! -d "$WORKDIR" ]]; then
   echo "Could not find the incident workspace at: $WORKDIR" >&2
   echo "Pass a workspace directory as the second argument or set CODEX_INCIDENT_WORKDIR and rerun." >&2

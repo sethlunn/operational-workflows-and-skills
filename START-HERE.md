@@ -42,6 +42,7 @@ Service analysis and documentation:
 Engineering design and delivery:
 
 - Planned-change technical design: [workflows/technical-design-documentation.md](./workflows/technical-design-documentation.md)
+- Local Jira-story implementation on a safe latest-master branch or worktree: [workflows/implement-jira-story.md](./workflows/implement-jira-story.md)
 - Bounded code-writing delegation to APEX for a draft PR: [workflows/apex-agent-delegation.md](./workflows/apex-agent-delegation.md)
 - Focused Mermaid PR description: [workflows/pr-diagram.md](./workflows/pr-diagram.md)
 
