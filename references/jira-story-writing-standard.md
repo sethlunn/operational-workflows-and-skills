@@ -10,7 +10,7 @@ These field ids were verified against `DQ-9372` (project `DQ`, issue type `Story
 - `Acceptance Criteria`: `customfield_10053`
 - `Definition of Done`: `customfield_10281`
 
-Replace untouched template stubs in the dedicated fields instead of appending below them.
+Each Key Details field carries only its own content. Never place acceptance criteria or Definition of Done content inside the `Description` field; they always go in their dedicated fields, even when an older story such as `DQ-9372` embedded them in the description. Replace untouched template stubs in the dedicated fields instead of appending below them.
 
 Do not populate the legacy template fields `Story Description` (`customfield_10108`) and `Purchasing Issue Outline` (`customfield_10123`). `Initiative Description` (`customfield_10446`) belongs to the incident follow-up flow in [jira-incident-followup.md](./jira-incident-followup.md), not to general scoping.
 
@@ -27,7 +27,7 @@ Meet both by being selective rather than compressed: include only context that c
 
 Size limit: at most two short paragraphs, roughly 8 to 10 lines or sentences as a hard maximum, ideally 5 to 6.
 
-Build the description from these labeled components. Include a component only when real context exists for it; `Goal` is always required.
+Build the description from these bold-labeled components, in the `**Goal:** ...` format established by the DQ scoped-story style. This component list is exhaustive: acceptance criteria and Definition of Done never appear in the description. Include a component only when real context exists for it; `Goal` is always required.
 
 - `Goal:` the outcome this story delivers and why it matters, in one or two sentences.
 - `Implementation guidance:` the intended approach, named patterns, or files to mirror. Label it as guidance unless the approach is genuinely constrained, and say so when it is.

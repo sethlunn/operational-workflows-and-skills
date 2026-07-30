@@ -34,5 +34,6 @@ Follow [../references/jira-story-writing-standard.md](../references/jira-story-w
 ## Jira Write Notes
 
 - Write `Description` to the system description field, `Acceptance Criteria` to `customfield_10053`, and `Definition of Done` to `customfield_10281`.
+- Never place acceptance criteria or Definition of Done content inside the description field; each lives only in its dedicated Key Details field.
 - Replace untouched template stubs in the dedicated fields instead of appending below them.
 - Set the epic as parent, apply the agreed labels, and create `Blocks` links for every `Depends on` entry.

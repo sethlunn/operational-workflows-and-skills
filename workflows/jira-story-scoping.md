@@ -70,6 +70,7 @@ Resolve blocking open questions with the user or the source document before deco
 Apply the writing standard exactly for every draft:
 
 - description built from the labeled components, within the size limit
+- acceptance criteria and Definition of Done written only to their dedicated fields, never inside the description
 - at most three acceptance-criteria scenarios describing behavior, not implementation
 - at most three Definition of Done bullets: the team-standard reference plus story-specific additions only
 - deep links to the specific design sections or code that define the story
