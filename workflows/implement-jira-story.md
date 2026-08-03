@@ -1,6 +1,6 @@
 # Implement Jira Story
 
-Implement a Jira story locally from its complete requirement context, on a safe feature branch based on the latest `master`, and verify the result without disturbing unrelated work.
+Implement a Jira story from its complete requirement context, on a safe feature branch based on the latest `master`, verify the result without disturbing unrelated work, and publish the verified implementation as a draft pull request.
 
 Read `../references/git-branch-naming.md` before creating the implementation branch.
 
@@ -23,8 +23,11 @@ Treat `implement this Jira story` as authorization to:
 - create a local feature branch or worktree
 - edit code and tests
 - run proportionate local verification
+- commit the verified story changes
+- push the feature branch to the expected origin
+- open or update a draft pull request against the selected base branch
 
-Do not commit, push, open a pull request, transition Jira, edit the issue, or add Jira comments unless the user explicitly asks.
+This authorization is limited to implementing the story and publishing its draft pull request. Do not mark the pull request ready, merge it, transition Jira, edit the issue, add Jira comments, or mutate unrelated external state unless the user explicitly asks.
 
 Never discard, overwrite, stash, or silently absorb unrelated local changes. Never switch an occupied checkout away from another feature branch merely to avoid creating a worktree.
 
@@ -87,6 +90,7 @@ Inspect:
 - configured remotes and the expected origin URL
 - the current branch and any uncommitted or untracked work
 - whether the proposed local or remote feature branch already exists
+- whether a pull request already exists for the proposed feature branch
 
 If the repository or origin does not match the requested target, stop and resolve the mismatch before coding.
 
@@ -150,6 +154,10 @@ Run verification in increasing scope:
 2. builds or static checks for touched projects
 3. broader affected-area tests when the change risk or repository instructions justify them
 
+Read `../references/nuget-feed-authentication.md` when a `dotnet` restore, build, or test fails to
+authenticate against the private QuadPay Azure Artifacts feed. Resolve the credential problem and
+finish verification rather than reporting it as blocked.
+
 Then inspect:
 
 - `git status --short`
@@ -159,18 +167,33 @@ Then inspect:
 
 Do not claim a command passed unless it ran successfully. Report skipped or blocked verification with the exact command and reason.
 
-### 8. Hand off the implementation
+### 8. Publish and hand off the draft pull request
 
-Report:
+After the acceptance audit passes:
+
+- stage only the files that belong to the effective implementation contract
+- inspect the staged diff and commit it with a concise message beginning with the Jira key
+- push the feature branch to the expected origin and set its upstream
+- check again for an existing pull request from that branch; never create a duplicate
+- write a reviewer-oriented pull request body with the Jira link, a concise behavior summary, focused verification results, and material caveats; begin the pull request title with the Jira key
+- use the PR diagram workflow when the changed execution path or interaction flow would materially help reviewers
+- create the pull request as a draft against the selected base branch, or update the existing draft when resuming the same implementation
+- re-read the pull request and confirm its URL, draft state, base branch, head branch, title, body, and commit before reporting completion
+
+When GitHub CLI is available, create a new pull request non-interactively with `gh pr create --draft --base <base> --head <branch> --title "<JIRA-KEY>: <summary>" --body-file <path>`. If commit, push, or pull request creation fails, preserve the branch and worktree, retry recoverable authentication failures, and report the exact remaining blocker without claiming the workflow is complete.
+
+Do not mark the pull request ready for review or merge it unless the user explicitly asks.
+
+Then report:
 
 - Jira key and effective scope, including material requirements found only in comments
 - repository, worktree path, branch, and base commit
 - concise implementation summary
 - tests and checks run with results
 - remaining risks, ambiguities, or unverified areas
-- whether changes are uncommitted, committed, pushed, or in a pull request
+- commit SHA and draft pull request URL
 
-Leave the working branch and worktree intact. Continue to commit, push, create a pull request, update Jira, or prepare a PR diagram only when the user asks.
+Leave the working branch and worktree intact. Continue to update Jira, mark the pull request ready, merge it, or perform other follow-up mutations only when the user asks.
 
 ## Stop Conditions
 
@@ -183,3 +206,6 @@ Stop before coding when:
 - issue content and comments contain a material unresolved conflict
 
 Continue with local discovery and report the precise blocker when that can help the user resolve it.
+
+A private NuGet feed `401` is not a stop condition. Resolve it with
+`../references/nuget-feed-authentication.md` and continue.
