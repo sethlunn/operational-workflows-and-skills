@@ -1,0 +1,11 @@
+interface:
+  display_name: "ADR Documentation"
+  short_description: "Write, review, and manage architecture decisions."
+  default_prompt: "Use $adr-documentation to draft, review, revise, or supersede a concise Architecture Decision Record without publishing unless I explicitly ask."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "atlassian"
+      description: "Read Jira and Confluence decision context, and create or update an ADR only when publication is explicitly requested."
+policy:
+  allow_implicit_invocation: true
