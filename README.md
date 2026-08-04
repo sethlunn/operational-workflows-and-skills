@@ -28,6 +28,7 @@ Good starting points:
 
 - [workflows/pagerduty-incident-analysis.md](./workflows/pagerduty-incident-analysis.md)
 - [workflows/dynatrace-investigation.md](./workflows/dynatrace-investigation.md)
+- [workflows/adr-documentation.md](./workflows/adr-documentation.md)
 - [workflows/technical-design-documentation.md](./workflows/technical-design-documentation.md)
 - [workflows/jira-story-scoping.md](./workflows/jira-story-scoping.md)
 - [workflows/implement-jira-story.md](./workflows/implement-jira-story.md)
@@ -63,6 +64,7 @@ High-value reference files:
 - [references/dynatrace-query-patterns.md](./references/dynatrace-query-patterns.md)
 - [references/dynatrace-fast-path.md](./references/dynatrace-fast-path.md)
 - [references/technical-design-writing-rules.md](./references/technical-design-writing-rules.md)
+- [references/adr-writing-rules.md](./references/adr-writing-rules.md)
 - [references/git-branch-naming.md](./references/git-branch-naming.md)
 - [references/pr-coaching-rubric.md](./references/pr-coaching-rubric.md)
 - [references/peer-review-rubric.md](./references/peer-review-rubric.md)
@@ -75,6 +77,7 @@ High-value reference files:
 - [templates/dynatrace-investigation-result.md](./templates/dynatrace-investigation-result.md)
 - [templates/analysis-child-result.md](./templates/analysis-child-result.md)
 - [templates/technical-design-document.md](./templates/technical-design-document.md)
+- [templates/architecture-decision-record.md](./templates/architecture-decision-record.md)
 - [templates/apex-agent-handoff.md](./templates/apex-agent-handoff.md)
 - [templates/peer-review-entry.md](./templates/peer-review-entry.md)
 - [scripts/render-mermaid-diagrams](./scripts/render-mermaid-diagrams)
@@ -198,6 +201,8 @@ These now share a common service-analysis layer:
 
 ### Engineering Design And Delivery
 
+- `adr-documentation`
+  Create, review, revise, supersede, or repair drift in a single-decision Architecture Decision Record, routing detailed design and rollout material to a technical design document.
 - `technical-design-documentation`
   Draft or revise a future-state technical design from Jira or PRD requirements, current code, solution options, and rollout constraints.
 - `jira-story-scoping`
@@ -209,7 +214,7 @@ These now share a common service-analysis layer:
 - `pr-diagram`
   Write or revise a PR description around one focused Mermaid flow or sequence diagram.
 
-These capabilities cover the path from design through story scoping, local Jira-story implementation or bounded implementation delegation, and reviewer-facing change communication. APEX is intentionally limited to code-writing draft PRs; it is not a runtime for incident, telemetry, documentation-publishing, or PR-review workflows.
+These capabilities cover the path from architecture decisions and design through story scoping, local Jira-story implementation or bounded implementation delegation, and reviewer-facing change communication. APEX is intentionally limited to code-writing draft PRs; it is not a runtime for incident, telemetry, documentation-publishing, or PR-review workflows.
 
 ### Review, Coaching, And Feedback
 
@@ -444,6 +449,7 @@ The shared workflow is canonical; the adapter columns show where each workflow i
 | Service system documentation | [Codex](./codex/service-system-documentation/) | [Claude](./claude/service-system-documentation/) | Diataxis-aligned overview, reference, and operability documentation |
 | Service endpoint traffic analysis | [Codex](./codex/service-endpoint-traffic-analysis/) | [Claude](./claude/service-endpoint-traffic-analysis/) | Code-backed endpoint inventory mapped to production traffic |
 | Service metric analysis | [Codex](./codex/service-metric-analysis/) | [Claude](./claude/service-metric-analysis/) | Emitted-metric inventory, telemetry trends, semantics, and caveats |
+| ADR documentation | [Codex](./codex/adr-documentation/) | [Claude](./claude/adr-documentation/) | Focused single-decision record drafted, reviewed, repaired, or superseded; published only on explicit request |
 | Technical design documentation | [Codex](./codex/technical-design-documentation/) | [Claude](./claude/technical-design-documentation/) | Trial-mode design draft or explicitly published Confluence design |
 | Jira story scoping | [Codex](./codex/jira-story-scoping/) | [Claude](./claude/jira-story-scoping/) | Right-sized, dual-audience story set created under an epic after review |
 | Implement Jira story | [Codex](./codex/implement-jira-story/) | [Claude](./claude/implement-jira-story/) | Local implementation and verification on a safe latest-master feature branch |
@@ -461,6 +467,7 @@ The shared workflow is canonical; the adapter columns show where each workflow i
 - [workflows/pagerduty-incident-analysis.md](./workflows/pagerduty-incident-analysis.md)
 - [workflows/dynatrace-investigation.md](./workflows/dynatrace-investigation.md)
 - [workflows/service-analysis-common.md](./workflows/service-analysis-common.md)
+- [workflows/adr-documentation.md](./workflows/adr-documentation.md)
 - [workflows/technical-design-documentation.md](./workflows/technical-design-documentation.md)
 - [workflows/jira-story-scoping.md](./workflows/jira-story-scoping.md)
 - [workflows/implement-jira-story.md](./workflows/implement-jira-story.md)
@@ -499,6 +506,7 @@ The shared workflow is canonical; the adapter columns show where each workflow i
 - [references/diataxis-writing-rules.md](./references/diataxis-writing-rules.md)
 - [references/diataxis-review-checklist.md](./references/diataxis-review-checklist.md)
 - [references/technical-design-writing-rules.md](./references/technical-design-writing-rules.md)
+- [references/adr-writing-rules.md](./references/adr-writing-rules.md)
 - [references/git-branch-naming.md](./references/git-branch-naming.md)
 - [references/dynatrace-fast-path.md](./references/dynatrace-fast-path.md)
 - [references/dynatrace-query-patterns.md](./references/dynatrace-query-patterns.md)
@@ -539,6 +547,8 @@ The shared workflow is canonical; the adapter columns show where each workflow i
   Generic exact-lookup template for contracts, fields, and command docs.
 - [templates/explanation-page.md](./templates/explanation-page.md)
   Generic rationale and tradeoff template for explanation-style architecture docs.
+- [templates/architecture-decision-record.md](./templates/architecture-decision-record.md)
+  Single-decision ADR skeleton with lifecycle metadata, drivers, considered options, outcome, consequences, and confirmation.
 - [templates/technical-design-document.md](./templates/technical-design-document.md)
   Planned-change design-doc template covering goals, requirements, options, and transition plan.
 - [templates/apex-agent-handoff.md](./templates/apex-agent-handoff.md)
@@ -747,6 +757,7 @@ You can also set `CODEX_INCIDENT_WORKDIR` or `CLAUDE_INCIDENT_WORKDIR` for the c
 - `Use $service-endpoint-traffic-analysis to analyze risk-manager endpoint traffic and create or update the Confluence page.`
 - `Use $service-metric-analysis to inspect a repo service, analyze its emitted metrics in Dynatrace, and publish the findings to Confluence.`
 - `Use $incident-followup-planning to validate the incident page and create follow-up Jira stories under the incident epic.`
+- `Use $adr-documentation to draft, review, revise, or supersede a concise Architecture Decision Record without publishing unless I explicitly ask.`
 - `Use $technical-design-documentation to draft a trial-mode design for DQ-1234 from the Jira requirements and current code.`
 - `Use $jira-story-scoping to scope this design doc into stories under the epic, and create them after I review the drafts.`
 - `Use $implement-jira-story to implement https://quadpay.atlassian.net/browse/DQ-9407 in quadpay-services, including all acceptance criteria and comments.`
