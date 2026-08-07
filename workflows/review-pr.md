@@ -49,6 +49,7 @@ Only move into PR-writing or code-changing behavior if the user explicitly asks 
 
 3. Build the current review context.
 - Read inline review comments, replies, unresolved threads, and top-level review summaries.
+- When PR checks include `SonarCloud Code Analysis`, run the shared [SonarCloud PR issues helper](../scripts/sonarcloud-pr-issues) at `../scripts/sonarcloud-pr-issues` relative to this workflow file; resolve that workflow-relative path before executing rather than looking under the target repository. Add `--repo OWNER/REPO` when outside the repository, and include every reported annotation in the review context. This reads the authenticated GitHub check data and does not require an interactive SonarCloud login. Use `--json` when structured output is easier to analyze.
 - Treat existing comments as signals, not as the source of truth.
 - Verify whether earlier comments still apply to the current branch tip before repeating them.
 
@@ -74,6 +75,7 @@ Prefer these GitHub queries:
 - `gh api repos/<owner>/<repo>/pulls/<number>/comments --paginate`
 - `gh api repos/<owner>/<repo>/pulls/<number>/reviews --paginate`
 - GraphQL review-thread queries when you need resolved versus unresolved state
+- `../scripts/sonarcloud-pr-issues <number-or-url> [--repo <owner>/<repo>] [--json]` (path relative to this workflow file)
 
 Prefer these Atlassian reads:
 
