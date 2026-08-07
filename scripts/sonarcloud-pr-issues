@@ -1,0 +1,240 @@
+#!/bin/zsh
+
+set -euo pipefail
+
+check_name="SonarCloud Code Analysis"
+output_format="text"
+repository=""
+head_sha_override=""
+
+usage() {
+  cat <<'EOF'
+Usage: sonarcloud-pr-issues [--repo OWNER/REPO] [--head-sha SHA] [--json] [--check-name NAME] PR
+
+Read SonarCloud pull-request findings from GitHub check-run annotations. PR may
+be a pull-request number or a GitHub pull-request URL. A number uses the current
+repository unless --repo is provided.
+
+Options:
+  --repo OWNER/REPO   Resolve a pull-request number in this repository.
+  --head-sha SHA      Inspect a specific PR commit instead of the current head.
+  --json              Emit structured JSON instead of compact text.
+  --check-name NAME   Override the check-run name.
+  --help              Show this help.
+
+The command uses the current `gh` login; it does not require a SonarCloud login
+or token. It keeps the latest matching check run for each SonarCloud component
+at the selected commit and fetches every annotation page for each run.
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --repo)
+      [[ $# -ge 2 ]] || {
+        usage >&2
+        exit 1
+      }
+      repository="$2"
+      shift 2
+      ;;
+    --json)
+      output_format="json"
+      shift
+      ;;
+    --head-sha)
+      [[ $# -ge 2 ]] || {
+        usage >&2
+        exit 1
+      }
+      head_sha_override="$2"
+      shift 2
+      ;;
+    --check-name)
+      [[ $# -ge 2 ]] || {
+        usage >&2
+        exit 1
+      }
+      check_name="$2"
+      shift 2
+      ;;
+    --help)
+      usage
+      exit 0
+      ;;
+    --*)
+      echo "Unknown option: $1" >&2
+      usage >&2
+      exit 1
+      ;;
+    *)
+      [[ -z "${pr_input:-}" ]] || {
+        echo "Provide exactly one pull request." >&2
+        usage >&2
+        exit 1
+      }
+      pr_input="$1"
+      shift
+      ;;
+  esac
+done
+
+[[ -n "${pr_input:-}" ]] || {
+  usage >&2
+  exit 1
+}
+
+command -v gh >/dev/null 2>&1 || {
+  echo "gh is required. Install it and run 'gh auth login'." >&2
+  exit 1
+}
+
+command -v jq >/dev/null 2>&1 || {
+  echo "jq is required." >&2
+  exit 1
+}
+
+if [[ -z "${repository}" && "${pr_input}" =~ '^https?://github\.com/([^/]+)/([^/]+)/pull/([0-9]+)' ]]; then
+  repository="${match[1]}/${match[2]}"
+fi
+
+if [[ -z "${repository}" ]]; then
+  repository=$(gh repo view --json nameWithOwner --jq '.nameWithOwner') || {
+    echo "Could not resolve the current GitHub repository; pass --repo OWNER/REPO." >&2
+    exit 1
+  }
+fi
+
+pr_json=$(gh pr view "${pr_input}" --repo "${repository}" --json number,headRefOid,url) || {
+  echo "Could not read pull request '${pr_input}' in ${repository}." >&2
+  exit 1
+}
+
+pr_number=$(jq -r '.number' <<< "${pr_json}")
+pr_url=$(jq -r '.url' <<< "${pr_json}")
+head_sha=$(jq -r '.headRefOid' <<< "${pr_json}")
+if [[ -n "${head_sha_override}" ]]; then
+  head_sha="${head_sha_override}"
+fi
+
+tmp_dir=$(mktemp -d /tmp/sonarcloud-pr-issues.XXXXXX)
+trap 'rm -rf -- "${tmp_dir}"' EXIT
+
+checks_pages="${tmp_dir}/check-pages.json"
+checks="${tmp_dir}/checks.json"
+
+gh api --method GET --paginate --slurp \
+  "repos/${repository}/commits/${head_sha}/check-runs" \
+  -f "check_name=${check_name}" \
+  -f 'filter=all' \
+  -f 'per_page=100' > "${checks_pages}" || {
+    echo "Could not read GitHub check runs for ${repository}@${head_sha}." >&2
+    exit 1
+  }
+
+jq --arg check_name "${check_name}" \
+  '[.[].check_runs[] | select(.name == $check_name)]
+  | group_by(.details_url // ("check-run:" + (.id | tostring)))
+  | map(sort_by(.started_at // "", .id) | last)
+  | sort_by(.started_at // "", .id)' \
+  "${checks_pages}" > "${checks}"
+
+check_count=$(jq 'length' "${checks}")
+[[ "${check_count}" -gt 0 ]] || {
+  echo "No '${check_name}' check runs found for ${repository}#${pr_number} at ${head_sha}." >&2
+  exit 2
+}
+
+check_ids=("${(@f)$(jq -r '.[].id' "${checks}")}")
+run_files=()
+
+for check_id in "${check_ids[@]}"; do
+  annotation_pages="${tmp_dir}/annotation-pages-${check_id}.json"
+  annotations="${tmp_dir}/annotations-${check_id}.json"
+  run_output="${tmp_dir}/run-${check_id}.json"
+
+  gh api --method GET --paginate --slurp \
+    "repos/${repository}/check-runs/${check_id}/annotations" \
+    -f 'per_page=100' > "${annotation_pages}" || {
+      echo "Could not read annotations for GitHub check run ${check_id}." >&2
+      exit 1
+    }
+
+  jq '[.[][]]' "${annotation_pages}" > "${annotations}"
+
+  jq --argjson check_id "${check_id}" --slurpfile annotations "${annotations}" '
+    .[]
+    | select(.id == $check_id)
+    | {
+        id,
+        name,
+        status,
+        conclusion,
+        started_at,
+        completed_at,
+        details_url,
+        title: .output.title,
+        summary: .output.summary,
+        reported_annotation_count: .output.annotations_count,
+        annotations: ($annotations[0] | map({
+          path,
+          start_line,
+          end_line,
+          start_column,
+          end_column,
+          annotation_level,
+          title,
+          message,
+          raw_details,
+          blob_href
+        }))
+      }
+  ' "${checks}" > "${run_output}"
+  run_files+=("${run_output}")
+done
+
+result="${tmp_dir}/result.json"
+jq -s \
+  --arg repository "${repository}" \
+  --argjson pr_number "${pr_number}" \
+  --arg pr_url "${pr_url}" \
+  --arg head_sha "${head_sha}" \
+  --arg check_name "${check_name}" '
+    . as $runs
+    | {
+        repository: $repository,
+        pull_request: {number: $pr_number, url: $pr_url},
+        head_sha: $head_sha,
+        check_name: $check_name,
+        check_run_count: ($runs | length),
+        annotation_count: ($runs | map(.annotations | length) | add // 0),
+        check_runs: $runs
+      }
+  ' "${run_files[@]}" > "${result}"
+
+if [[ "${output_format}" == "json" ]]; then
+  jq '.' "${result}"
+  exit 0
+fi
+
+jq -r '
+  "SonarCloud findings for \(.repository)#\(.pull_request.number) at \(.head_sha[0:12])",
+  "Checks: \(.check_run_count) | Issues: \(.annotation_count)",
+  (.check_runs | to_entries[] |
+    "\nRun \(.key + 1): \(.value.title // .value.name) [\(.value.status)/\(.value.conclusion // "pending")]",
+    "Details: \(.value.details_url)",
+    (if (.value.annotations | length) == 0 then
+      "  No annotations."
+    else
+      (.value.annotations | to_entries[] |
+        "  \(.key + 1). \(.value.path):\(.value.start_line // 1) [\(.value.annotation_level)]",
+        "     \(.value.title // .value.message // "Untitled issue")",
+        (if (.value.title != null and .value.message != null) then
+          "     \(.value.message | gsub("^\\s+|\\s+$"; ""))"
+        else
+          empty
+        end)
+      )
+    end)
+  )
+' "${result}"
