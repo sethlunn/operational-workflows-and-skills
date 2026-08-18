@@ -3,6 +3,7 @@
 Implement a Jira story from its complete requirement context, on a safe feature branch based on the latest `master`, verify the result without disturbing unrelated work, and publish the verified implementation as a draft pull request.
 
 Read `../references/git-branch-naming.md` before creating the implementation branch.
+Read `../references/local-context-layout.md` before choosing a worktree path.
 
 ## Inputs
 
@@ -117,7 +118,7 @@ git fetch origin master
 git worktree add -b {STORY-KEY}/brief_snake_case_title <worktree-path> origin/master
 ```
 
-The worktree path should be specific and durable enough for the user to find, such as a sibling directory containing the repository name and lowercased story key. Creating the branch directly from freshly fetched `origin/master` is the worktree equivalent of switching to `master` and pulling it.
+Place the worktree per `../references/local-context-layout.md`: a sibling of the main checkout at the workspace root, named `<repo>-<lowercased story key>`, such as `quadpay-services-dq-9457`. Creating the branch directly from freshly fetched `origin/master` is the worktree equivalent of switching to `master` and pulling it.
 
 If `master` cannot be fetched or updated, stop rather than implementing from a knowingly stale base. If the feature branch already exists locally or remotely, inspect its commit and worktree state. Resume it only when it is clearly the same requested implementation; otherwise ask before choosing a different branch or overwriting anything.
 
@@ -193,7 +194,7 @@ Then report:
 - remaining risks, ambiguities, or unverified areas
 - commit SHA and draft pull request URL
 
-Leave the working branch and worktree intact. Continue to update Jira, mark the pull request ready, merge it, or perform other follow-up mutations only when the user asks.
+Leave the working branch and worktree intact. Continue to update Jira, mark the pull request ready, merge it, or perform other follow-up mutations only when the user asks. Once the PR merges, the worktree and local branch become prune candidates under the cleanup rules in `../references/local-context-layout.md`.
 
 ## Stop Conditions
 

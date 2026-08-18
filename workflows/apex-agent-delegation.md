@@ -158,6 +158,8 @@ Optional variables:
 
 Use [../templates/apex-agent-handoff.md](../templates/apex-agent-handoff.md).
 
+When the handoff is saved to disk rather than returned inline, write it to `local-context/handoffs/` under the workspace root per `../references/local-context-layout.md`, never to the workspace root or a tracked repo.
+
 The handoff must include:
 
 - requested launch mode: `handoff-only`, `launch-if-available`, or `launch-now`

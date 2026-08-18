@@ -66,6 +66,7 @@ Authoring and routing:
 - Jira story writing standard: [references/jira-story-writing-standard.md](./references/jira-story-writing-standard.md)
 - Confluence routing: [references/confluence-routing.md](./references/confluence-routing.md)
 - Git/Jira branch naming: [references/git-branch-naming.md](./references/git-branch-naming.md)
+- Workspace and local-context layout: [references/local-context-layout.md](./references/local-context-layout.md)
 
 Investigation and review evidence:
 

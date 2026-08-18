@@ -35,7 +35,7 @@ Read `../templates/peer-review-entry.md` for the per-peer output contract.
 
 Default to `draft-only, reviewer-verified`.
 
-- Write drafts to a private path outside this repo. Default to `~/peer-reviews-fy26/`, one file per peer. Never write peer feedback into the tracked repo.
+- Write drafts to a private path outside this repo. Default to `local-context/peer-reviews-fy26/` under the workspace root per `../references/local-context-layout.md`, one file per peer. Never write peer feedback into any tracked repo.
 - Never submit to Lattice and never message the peer. The reviewer pastes the two answers in themselves after verifying.
 - The AI-usage notes and the reviewer's observations come only from the reviewer. Do not infer them from code or tickets, and do not invent examples, metrics, or quotes.
 - Claim only what the evidence supports. Surface thin claims to the reviewer and ask for a concrete example instead of filling the gap.

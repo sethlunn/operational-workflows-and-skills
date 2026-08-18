@@ -7,7 +7,7 @@ Validate an existing incident page and a second analysis, then turn the validate
 Accept any of:
 
 - a Confluence incident page URL or page id
-- a separate RAC, final assessment, or another agent's summary
+- a separate RAC, final assessment, or another agent's summary; when supplied as a bare local filename, look in `local-context/incidents/` under the workspace root per `../references/local-context-layout.md`
 - a Jira epic key or epic URL for the follow-up work
 - optional PagerDuty incident ids, Dynatrace problem ids, or service names
 

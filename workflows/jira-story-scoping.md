@@ -10,7 +10,7 @@ Accept any of:
 
 - an interactive description of the work, requirements, and context from the user
 - a Confluence design document URL or page id
-- a local context or handoff Markdown file, including one that already contains a story breakdown
+- a local context or handoff Markdown file, including one that already contains a story breakdown; when the user gives a bare filename, look in `local-context/story-context/` and `local-context/handoffs/` under the workspace root per `../references/local-context-layout.md`
 - an optional target project, epic key, labels, or team conventions
 
 ## Modes
